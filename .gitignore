@@ -38,6 +38,7 @@ ENV/
 
 # Data
 data/
+!data/README.md
 datasets/
 *.nii
 *.nii.gz
