@@ -1,0 +1,2 @@
+# Segmentierung-von-CT-Aufnahmen-extrahierter-Z-hne-mittels-Deep-Learning
+Deep-Learning-Projekt zur 3D-Segmentierung von Zähnen in µCT-Aufnahmen. Ziel: Modelltraining mit annotierten Datensätzen (Zahnschmelz, Dentin, Pulpa), Evaluation auf internem und externem Testset. Erstelle Code für Datenvorverarbeitung, Training (z. B. 3D U-Net), Metriken (Dice, IoU), Evaluierung und optional Active-Learning-Feedback-Loop.
