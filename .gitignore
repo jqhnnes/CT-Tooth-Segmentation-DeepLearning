@@ -37,8 +37,7 @@ ENV/
 .ipynb_checkpoints
 
 # Data
-data/
-!data/README.md
+data/nnuNet_raw_data
 datasets/
 *.nii
 *.nii.gz
