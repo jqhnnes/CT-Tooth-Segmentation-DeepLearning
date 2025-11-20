@@ -28,9 +28,9 @@
       "preprocessor_name": "DefaultPreprocessor",
       "batch_size": 4,
       "patch_size": [
-        64,
-        128,
-        160
+        160,
+        160,
+        128
       ],
       "median_image_size_in_voxels": [
         239.0,
@@ -46,7 +46,7 @@
         "CTNormalization"
       ],
       "use_mask_for_norm": [
-        true
+        false
       ],
       "resampling_fn_data": "resample_data_or_seg_to_shape",
       "resampling_fn_seg": "resample_data_or_seg_to_shape",
@@ -74,12 +74,12 @@
         "arch_kwargs": {
           "n_stages": 6,
           "features_per_stage": [
-            24,
-            48,
-            96,
-            192,
-            240,
-            240
+            32,
+            64,
+            128,
+            256,
+            320,
+            320
           ],
           "conv_op": "torch.nn.modules.conv.Conv3d",
           "kernel_sizes": [
@@ -147,20 +147,20 @@
             ]
           ],
           "n_conv_per_stage": [
-            2,
-            2,
-            2,
-            2,
-            2,
-            2
+            3,
+            3,
+            3,
+            3,
+            3,
+            3
           ],
           "n_conv_per_stage_decoder": [
-            2,
-            2,
-            2,
-            2,
-            2,
-            2
+            3,
+            3,
+            3,
+            3,
+            3,
+            3
           ],
           "conv_bias": true,
           "norm_op": "torch.nn.modules.instancenorm.InstanceNorm3d",
@@ -182,7 +182,7 @@
           "nonlin"
         ]
       },
-      "batch_dice": true
+      "batch_dice": false
     }
   },
   "experiment_planner_used": "ExperimentPlanner",

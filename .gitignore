@@ -69,3 +69,8 @@ htmlcov/
 tmp/
 temp/
 *.tmp
+
+# HPO
+hpo_results/
+preprocessing_output/
+

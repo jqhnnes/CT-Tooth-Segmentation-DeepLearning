@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import argparse
 import os
 import sys
 import json
@@ -43,9 +44,11 @@ hpo_dir = "hpo"
 # Base-Ordner für HPO-Preprocessing-Outputs innerhalb von hpo/
 hpo_preprocessing_base = os.path.join(hpo_dir, "preprocessing_output")
 template_plan_path = os.path.join(hpo_dir, "nnUNetPlans_template.json")
+dataset_output_dir = os.path.join(hpo_preprocessing_base, dataset_name)
 
 os.makedirs(hpo_dir, exist_ok=True)
 os.makedirs(hpo_preprocessing_base, exist_ok=True)
+os.makedirs(dataset_output_dir, exist_ok=True)
 
 # ---- Prüfungen ----
 if not os.path.exists(input_folder):
@@ -69,6 +72,32 @@ if not os.path.exists(template_plan_path):
 
 
 # ---- Hilfsfunktionen ----
+def detect_next_trial_index(base_dir):
+    max_idx = -1
+    if os.path.isdir(base_dir):
+        for entry in os.listdir(base_dir):
+            match = re.match(r"trial_(\d+)", entry)
+            if match:
+                max_idx = max(max_idx, int(match.group(1)))
+    return max_idx + 1
+
+
+def reserve_trial_slot(base_dir):
+    """
+    Gibt den nächsten freien Trial-Namen zurück und legt den Ordner direkt an,
+    damit parallel laufende Prozesse sich nicht in die Quere kommen.
+    """
+    while True:
+        trial_idx = detect_next_trial_index(base_dir)
+        trial_name = f"trial_{trial_idx}"
+        trial_dir = os.path.join(base_dir, trial_name)
+        try:
+            os.makedirs(trial_dir)
+            return trial_idx, trial_name, trial_dir
+        except FileExistsError:
+            # Zwischen detect() und makedirs() wurde der Ordner angelegt -> noch einmal versuchen
+            continue
+
 def replace_hpo_parameters(obj, patch_tuple, batch_size, features_per_stage=None, 
                           n_conv_per_stage=None, batch_dice=None, use_mask_for_norm=None):
     """
@@ -160,15 +189,8 @@ def objective(trial):
     # Normalisierung mit Mask (kann bei CT-Daten helfen)
     use_mask_for_norm = trial.suggest_categorical("use_mask_for_norm", [False, True])
 
-    trial_plan_path = os.path.join(
-        hpo_dir, f"nnUNetPlans_temp_{trial.number}.json"
-    )
-    
-    # Erstelle Ordnerstruktur: preprocessing_output/DatasetXXX/trial_X/
-    # Alles soll direkt in trial_X/ liegen (ohne zusätzlichen DatasetXXX-Unterordner)
-    dataset_output_dir = os.path.join(hpo_preprocessing_base, dataset_name)
-    trial_output_dir = os.path.join(dataset_output_dir, f"trial_{trial.number}")
-    os.makedirs(trial_output_dir, exist_ok=True)
+    trial_idx, trial_name, trial_output_dir = reserve_trial_slot(dataset_output_dir)
+    trial_plan_path = os.path.join(hpo_dir, f"nnUNetPlans_temp_{trial_name}.json")
     
     # Temporärer Ordner für nnUNet (nnUNet erwartet: nnUNet_preprocessed/DatasetXXX/...)
     # Wir setzen nnUNet_preprocessed auf dataset_output_dir, damit nnUNet dort DatasetXXX/ erstellt
@@ -223,7 +245,7 @@ def objective(trial):
         str(max(1, min(8, os.cpu_count() or 1))),
     ]
 
-    print(f"\n[Trial {trial.number}] ===== HPO-Parameter =====")
+    print(f"\n[{trial_name}] ===== HPO-Parameter =====")
     print(f"  Patch: {patch}")
     print(f"  Batch size: {batch_size}")
     print(f"  Features base: {features_base} -> {features_per_stage}")
@@ -262,26 +284,31 @@ def objective(trial):
     # Er maximiert einfach die Summe der Parameter, was NICHT sinnvoll ist.
     # Für echte HPO musst du hier eine echte Metrik verwenden (z.B. Dice-Score nach Training).
     proxy_score = patch_x + patch_y + patch_z + batch_size + features_base + n_conv_per_stage
-    print(f"[Trial {trial.number}] Proxy score: {proxy_score} (NUR PLATZHALTER!)")
+    print(f"[{trial_name}] Proxy score: {proxy_score} (NUR PLATZHALTER!)")
     return proxy_score
 
 
 # ---- Study starten ----
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Starte nnUNet HPO Preprocessing-Trials.")
+    parser.add_argument(
+        "--n_trials",
+        type=int,
+        default=10,
+        help="Anzahl neuer Trials, die in diesem Lauf gestartet werden (Default: 10).",
+    )
+    args = parser.parse_args()
+
+    next_idx = detect_next_trial_index(dataset_output_dir)
+    print(
+        f"Starte Optuna-Run mit {args.n_trials} neuen Trials. "
+        f"Nächster verfügbarer Ordner: trial_{next_idx}."
+    )
+
     # HINWEIS: Mit erweiterten Parametern ist der Suchraum größer!
-    # Aktuell optimiert werden:
-    # - patch_size: 3^3 = 27 Kombinationen
-    # - batch_size: 2 Optionen
-    # - features_base: 3 Optionen
-    # - n_conv_per_stage: 2 Optionen
-    # - batch_dice: 2 Optionen
-    # - use_mask_for_norm: 2 Optionen
     # Gesamt: ~27 * 2 * 3 * 2 * 2 * 2 = ~1,296 mögliche Kombinationen
-    # 
-    # Mit n_trials=10 wird nur ein kleiner Teil des Suchraums erkundet.
-    # Für umfassende HPO solltest du n_trials erhöhen (z.B. 50-100).
     study = optuna.create_study(direction="maximize")
-    study.optimize(objective, n_trials=10)
+    study.optimize(objective, n_trials=args.n_trials)
 
     if study.trials:
         print("Beste Trial-Parameter:", study.best_trial.params)
