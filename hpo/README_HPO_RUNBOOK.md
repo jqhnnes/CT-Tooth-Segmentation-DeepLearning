@@ -1,7 +1,10 @@
 # nnU-Net HPO Runbook
 
-Central place to track the recurring shell commands and their purpose while operating
-the HPO pipeline.
+This folder contains everything needed to conduct hyperparameter optimization (HPO)
+for nnU-Net on the CT Tooth Segmentation task. The goal: generate many plan variants
+(via Optuna), train each trial in isolation, and compare how preprocessing choices
+impact downstream Dice. All scripts, trial outputs, and logs live here so the entire
+workflow can be reproduced from a single README.
 
 ## 0. How this folder is organized
 
