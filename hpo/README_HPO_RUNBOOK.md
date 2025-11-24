@@ -3,7 +3,17 @@
 Central place to track the recurring shell commands and their purpose while operating
 the HPO pipeline.
 
-## 0. Environment
+## 0. How this folder is organized
+
+- `nnunet_hpo_preprocess.py`, `nnunet_train_eval_pipeline.py`, … – helper scripts described per section below.
+- `nnUNetPlans_template.json` – plan blueprint that Optuna copies/mutates when generating each trial.
+  - Contains default patch size, batch size, network settings; every trial writes its own modified copy.
+- `preprocessing_output/` – trial-specific preprocessed datasets (`trial_X/Dataset001...`).
+- `training_output/` – archived results (checkpoints/logs) copied after each training run.
+- `results/` – evaluation logs per trial/config/trainer.
+- Use this README as the “landing page” whenever you open `hpo/` in GitHub.
+
+## 1. Environment
 
 ```bash
 cd /ssd/geiger/CT-Tooth-Segmentation-DeepLearning
@@ -13,7 +23,7 @@ source scripts/nnunet_env.sh   # exports nnUNet_raw/_preprocessed/_results
 
 - Always execute new commands from the project root after the environment has been activated.
 
-## 1. Preprocessing / HPO trial generation
+## 2. Preprocessing / HPO trial generation
 
 ### Prepare raw dataset / labels (optional)
 
@@ -63,7 +73,7 @@ python hpo/fix_decoder_lengths.py --root hpo/preprocessing_output/Dataset001_Gro
 python hpo/check_trial_labels.py --source trials --trial trial_0
 ```
 
-## 2. Fixing a broken case (e.g. AW062 spacing issue)
+## 3. Fixing a broken case (e.g. AW062 spacing issue)
 
 ```bash
 python hpo/fix_case_spacing_and_reprocess.py \
@@ -76,7 +86,7 @@ python hpo/fix_case_spacing_and_reprocess.py \
 - Regenerates this case inside every `trial_X` so all trials stay in sync.
 - Repeat later with `--skip_raw_fix` to rebuild trial data only.
 
-## 3. Resetting stale fold data (optional)
+## 4. Resetting stale fold data (optional)
 
 ```bash
 rm -rf data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_0
@@ -85,7 +95,7 @@ rm -rf data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d
 - Removes leftover checkpoints/logs if a previous run aborted mid-validation.
 - The pipeline already clears `fold_*`, but manual cleanup can be handy when debugging.
 
-## 4. Launching the training pipeline
+## 5. Launching the training pipeline
 
 ### Train only (1 fold, no evaluation)
 
@@ -119,13 +129,13 @@ python hpo/nnunet_train_eval_pipeline.py \
   - `--device cuda:1` / `--device cpu`: force a specific device.
   - Automatic CPU fallback occurs if GPU evaluation raises OOM.
 
-## 5. Monitoring
+## 6. Monitoring
 
 - Training log: `data/nnUNet_results/.../fold_0/training_log_*.txt`
 - Evaluation log: `hpo/results/<dataset>/<trial>/<config>/<trainer>/evaluation.log`
 - Archived checkpoints: `hpo/training_output/<trial>/nnUNet_results/...`
 
-## 6. Troubleshooting snippets
+## 7. Troubleshooting snippets
 
 Check spacing/shape of a single preprocessed case:
 
