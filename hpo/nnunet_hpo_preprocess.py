@@ -98,6 +98,66 @@ def reserve_trial_slot(base_dir):
             # Zwischen detect() und makedirs() wurde der Ordner angelegt -> noch einmal versuchen
             continue
 
+
+def ensure_fingerprint_for_all_trials(base_dir: str, dataset_name: str, dataset_id: int):
+    """
+    Stellt sicher, dass jeder Trial-Ordner eine dataset_fingerprint.json enthält.
+    Falls keine vorhanden ist, wird sie einmalig extrahiert und anschließend verteilt.
+    """
+    if not os.path.isdir(base_dir):
+        return
+
+    trial_dirs = sorted(
+        [
+            os.path.join(base_dir, entry)
+            for entry in os.listdir(base_dir)
+            if re.match(r"trial_\d+$", entry)
+        ],
+        key=lambda p: int(os.path.basename(p).split("_")[1]),
+    )
+    if not trial_dirs:
+        return
+
+    source_fingerprint = None
+    for trial_dir in trial_dirs:
+        candidate = os.path.join(trial_dir, dataset_name, "dataset_fingerprint.json")
+        if os.path.exists(candidate):
+            source_fingerprint = candidate
+            break
+
+    if not source_fingerprint:
+        global_fingerprint = os.path.join(
+            nnunet_preprocessed, dataset_name, "dataset_fingerprint.json"
+        )
+        if not os.path.exists(global_fingerprint):
+            print(
+                "[INFO] Keine dataset_fingerprint.json gefunden. "
+                "Extrahiere einmalig über nnUNetv2_extract_fingerprint ..."
+            )
+            extract_cmd = ["nnUNetv2_extract_fingerprint", "-d", str(dataset_id)]
+            subprocess.run(extract_cmd, check=True)
+        if os.path.exists(global_fingerprint):
+            source_fingerprint = global_fingerprint
+
+    if not source_fingerprint or not os.path.exists(source_fingerprint):
+        print(
+            "[WARN] Konnte keine dataset_fingerprint.json finden oder erstellen. "
+            "Bitte manuell prüfen."
+        )
+        return
+
+    for trial_dir in trial_dirs:
+        target = os.path.join(trial_dir, dataset_name, "dataset_fingerprint.json")
+        if os.path.abspath(source_fingerprint) == os.path.abspath(target):
+            continue
+        target_parent = os.path.dirname(target)
+        if not os.path.isdir(target_parent):
+            continue
+        if os.path.exists(target):
+            continue
+        shutil.copy2(source_fingerprint, target)
+        print(f"[{os.path.basename(trial_dir)}] dataset_fingerprint.json ergänzt.")
+
 def replace_hpo_parameters(obj, patch_tuple, batch_size, features_per_stage=None, 
                           n_conv_per_stage=None, batch_dice=None, use_mask_for_norm=None):
     """
@@ -194,7 +254,7 @@ def objective(trial):
     
     # Temporärer Ordner für nnUNet (nnUNet erwartet: nnUNet_preprocessed/DatasetXXX/...)
     # Wir setzen nnUNet_preprocessed auf dataset_output_dir, damit nnUNet dort DatasetXXX/ erstellt
-    # Danach verschieben wir alles nach trial_X/
+    # Danach verschieben wir alles nach trial_X/DatasetXXX/
     temp_preprocessed_base = dataset_output_dir
     temp_preprocessed_dir = os.path.join(temp_preprocessed_base, dataset_name)
     os.makedirs(temp_preprocessed_dir, exist_ok=True)
@@ -257,13 +317,27 @@ def objective(trial):
 
     subprocess.run(cmd, check=True, env=env)
     
-    # 5) Verschiebe alle Dateien vom temporären Ordner nach trial_X/
-    # nnUNet hat alles in temp_preprocessed_dir erstellt, wir wollen es in trial_output_dir
+    # 5) Stelle sicher, dass dataset_fingerprint.json im temporären Ordner vorhanden ist
+    # (wird normalerweise automatisch vom Preprocessing erstellt, aber zur Sicherheit prüfen)
+    fingerprint_in_temp = os.path.join(temp_preprocessed_dir, "dataset_fingerprint.json")
+    if not os.path.exists(fingerprint_in_temp):
+        print(f"[{trial_name}] dataset_fingerprint.json fehlt, extrahiere sie jetzt...")
+        extract_cmd = ["nnUNetv2_extract_fingerprint", "-d", str(dataset_id)]
+        # Verwende das temporäre nnUNet_preprocessed (env wurde bereits oben gesetzt)
+        subprocess.run(extract_cmd, check=True, env=env)
+        if not os.path.exists(fingerprint_in_temp):
+            print(f"[WARN] {trial_name}: dataset_fingerprint.json konnte nicht erstellt werden.")
+    
+    # 6) Verschiebe alle Dateien vom temporären Ordner nach trial_X/DatasetXXX/
+    trial_dataset_dir = os.path.join(trial_output_dir, dataset_name)
+    os.makedirs(trial_dataset_dir, exist_ok=True)
+    
     if os.path.exists(temp_preprocessed_dir):
         # Verschiebe alle Inhalte von DatasetXXX/ nach trial_X/
+        # (dataset_fingerprint.json wird dabei automatisch mit verschoben)
         for item in os.listdir(temp_preprocessed_dir):
             src = os.path.join(temp_preprocessed_dir, item)
-            dst = os.path.join(trial_output_dir, item)
+            dst = os.path.join(trial_dataset_dir, item)
             if os.path.exists(dst):
                 if os.path.isdir(dst):
                     shutil.rmtree(dst)
@@ -275,6 +349,13 @@ def objective(trial):
             os.rmdir(temp_preprocessed_dir)
         except OSError:
             pass  # Ordner nicht leer oder existiert nicht
+    
+    # Bestätigung
+    fingerprint_in_trial = os.path.join(trial_dataset_dir, "dataset_fingerprint.json")
+    if os.path.exists(fingerprint_in_trial):
+        print(f"[{trial_name}] ✓ dataset_fingerprint.json erfolgreich in Trial-Ordner kopiert")
+    else:
+        print(f"[WARN] {trial_name}: dataset_fingerprint.json fehlt im Trial-Ordner nach Verschieben!")
 
     # === HIER: Platzhalter-Metrik ===
     # Preprocessing liefert keine Performance-Metrik. Du musst diesen Teil ersetzen,
@@ -290,7 +371,9 @@ def objective(trial):
 
 # ---- Study starten ----
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Starte nnUNet HPO Preprocessing-Trials.")
+    parser = argparse.ArgumentParser(
+        description="Starte nnUNet HPO Preprocessing-Trials."
+    )
     parser.add_argument(
         "--n_trials",
         type=int,
@@ -315,3 +398,6 @@ if __name__ == "__main__":
         print("Beste Trial-Wert:", study.best_value)
     else:
         print("Keine abgeschlossenen Trials vorhanden.")
+
+    # Stelle sicher, dass alle Trials eine dataset_fingerprint.json besitzen
+    ensure_fingerprint_for_all_trials(dataset_output_dir, dataset_name, dataset_id)
