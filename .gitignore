@@ -69,3 +69,28 @@ htmlcov/
 tmp/
 temp/
 *.tmp
+
+# HPO - Large output directories (should not be committed)
+hpo/preprocessing_output/
+hpo/training_output/
+hpo/results/
+hpo/best_model/*.pth
+hpo/best_model/checkpoint_*.pth
+hpo/analysis/*.json
+hpo/config/nnUNetPlans_temp_*.json
+
+# Keep structure but ignore large files
+!hpo/preprocessing_output/.gitkeep
+!hpo/training_output/.gitkeep
+!hpo/results/.gitkeep
+!hpo/best_model/README.md
+!hpo/best_model/parameters.json
+!hpo/best_model/nnUNetPlans.json
+
+
+# HPO - Temporary and cache files
+hpo/**/*.pkl
+hpo/**/*.npy
+hpo/**/__pycache__/
+hpo/**/*.pyc
+hpo/**/.DS_Store

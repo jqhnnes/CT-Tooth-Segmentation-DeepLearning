@@ -1,0 +1,26 @@
+{
+  "patch_size": [
+    160,
+    160,
+    64
+  ],
+  "batch_size": 4,
+  "features_per_stage": [
+    24,
+    48,
+    96,
+    192,
+    240,
+    240
+  ],
+  "n_conv_per_stage": [
+    2,
+    2,
+    2,
+    2,
+    2,
+    2
+  ],
+  "batch_dice": false,
+  "use_mask_for_norm": false
+}
