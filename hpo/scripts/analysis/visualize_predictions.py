@@ -33,7 +33,7 @@ import nibabel as nib
 import numpy as np
 
 # Add project root to Python path
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
@@ -174,7 +174,16 @@ def get_case_list(pred_dir: Path, cases: Optional[List[str]]) -> List[str]:
     
     # Get all cases from prediction directory
     pred_files = list(pred_dir.glob("*.nii.gz"))
-    case_list = [f.stem.replace("_0000", "") for f in pred_files]
+    # Extract case IDs: remove _0000 suffix and .nii extension if present
+    case_list = []
+    for f in pred_files:
+        stem = f.stem  # e.g., "AW011-C0005304.nii" (stem removes .gz, not .nii.gz)
+        # Remove .nii if present (for .nii.gz files, stem still contains .nii)
+        if stem.endswith('.nii'):
+            stem = stem[:-4]  # Remove .nii
+        # Remove _0000 suffix if present
+        case_id = stem.replace("_0000", "")
+        case_list.append(case_id)
     return sorted(case_list)
 
 
@@ -188,13 +197,15 @@ def visualize_case(
     dataset_name: str,
 ):
     """Create visualization for a single case."""
-    # Find files
-    pred_file = pred_dir / f"{case_id}_0000.nii.gz"
+    # Find prediction file (try both with and without _0000 suffix)
+    pred_file = pred_dir / f"{case_id}.nii.gz"
     if not pred_file.exists():
-        # Try without _0000 suffix
-        pred_file = pred_dir / f"{case_id}.nii.gz"
+        pred_file = pred_dir / f"{case_id}_0000.nii.gz"
     
+    # Ground truth file
     gt_file = gt_dir / f"{case_id}.nii.gz"
+    
+    # Input image file (nnU-Net uses _0000 suffix for images)
     img_file = img_dir / f"{case_id}_0000.nii.gz"
     
     if not pred_file.exists():
@@ -252,7 +263,8 @@ def visualize_case(
 def main():
     args = parse_args()
     
-    output_dir = Path(args.output_dir)
+    # Create output directory with trial subdirectory
+    output_dir = Path(args.output_dir) / args.trial
     output_dir.mkdir(parents=True, exist_ok=True)
     
     print("=" * 80)
