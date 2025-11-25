@@ -1,302 +1,215 @@
-# 3D Tooth Segmentation using Deep Learning
+# 3D Tooth Segmentation using nnU-Net
 
-Deep-Learning-Projekt zur 3D-Segmentierung von Zähnen in µCT-Aufnahmen (Micro-CT Scans).
+A deep learning project for 3D segmentation of tooth structures from micro-CT (µCT) scans using the nnU-Net framework. This project implements a complete pipeline for automated segmentation of dental tissues including enamel, dentin, and pulp.
 
-## Projektübersicht
+## 🎯 Project Overview
 
-Dieses Projekt implementiert eine vollständige Pipeline für die 3D-Segmentierung von Zahnstrukturen aus µCT-Aufnahmen mittels Deep Learning. Das System segmentiert drei Hauptklassen:
-- **Zahnschmelz (Enamel)**: Äußere Schutzschicht
-- **Dentin**: Hauptbestandteil der Zahnsubstanz
-- **Pulpa**: Inneres Zahnmark
+This project focuses on semantic segmentation of tooth structures in 3D CT volumes. The system uses nnU-Net, a self-configuring framework for biomedical image segmentation, to automatically segment three main dental tissue classes:
 
-## Features
+- **Enamel**: The outer protective layer of the tooth
+- **Dentin**: The main hard tissue component
+- **Pulp**: The inner soft tissue containing nerves and blood vessels
 
-✅ **3D U-Net Architektur** für volumetrische Segmentierung  
-✅ **Umfassende Datenvorverarbeitung** (Resampling, Normalisierung, Augmentation)  
-✅ **Mehrere Loss-Funktionen** (Dice, Focal, Combined, Tversky)  
-✅ **Evaluation Metriken** (Dice Score, IoU, Hausdorff Distance)  
-✅ **Training & Evaluation** auf internem und externem Testset  
-✅ **Optional: Active Learning** für iterative Modellverbesserung  
-✅ **TensorBoard Integration** für Trainingsvisualisierung  
+The project includes a comprehensive hyperparameter optimization (HPO) pipeline using Optuna to systematically explore parameter spaces and identify optimal configurations.
 
-## Projektstruktur
+## ✨ Key Features
+
+- 🔬 **nnU-Net Framework**: Leverages the state-of-the-art nnU-Net architecture for biomedical segmentation
+- 🎛️ **Hyperparameter Optimization**: Automated HPO pipeline with Optuna for systematic parameter search
+- 📊 **Comprehensive Evaluation**: Multiple metrics including Dice Score, IoU, and Hausdorff Distance
+- 🏆 **Best Model Selection**: Automated identification and preparation of top-performing models
+- 🔄 **Reproducible Workflow**: Complete pipeline from preprocessing to evaluation with full traceability
+- 📈 **Performance Tracking**: Detailed logging and analysis of all trials and experiments
+
+## 📁 Project Structure
 
 ```
-.
-├── src/
-│   ├── models/
-│   │   ├── __init__.py
-│   │   └── unet3d.py              # 3D U-Net Implementierung
-│   ├── data/
-│   │   ├── __init__.py
-│   │   ├── preprocessing.py       # Datenvorverarbeitung
-│   │   └── dataset.py             # PyTorch Dataset Klassen
-│   ├── utils/
-│   │   ├── __init__.py
-│   │   ├── metrics.py             # Evaluation Metriken
-│   │   └── losses.py              # Loss-Funktionen
-│   ├── training/
-│   │   ├── train.py               # Training Script
-│   │   └── active_learning.py     # Active Learning Modul
-│   └── evaluation/
-│       └── evaluate.py            # Evaluation Script
-├── configs/
-│   └── train_config.yaml          # Konfigurationsdatei
-├── notebooks/
-│   ├── 01_training_example.ipynb
-│   └── 02_data_exploration.ipynb
-├── requirements.txt
-├── .gitignore
-└── README.md
+CT-Tooth-Segmentation-DeepLearning/
+├── hpo/                          # Hyperparameter Optimization
+│   ├── scripts/                  # HPO pipeline scripts
+│   │   ├── preprocessing/       # Preprocessing and trial generation
+│   │   ├── training/            # Training and evaluation pipeline
+│   │   ├── analysis/            # Model comparison and analysis
+│   │   └── utils/               # Utility scripts
+│   ├── config/                  # Configuration templates
+│   ├── docs/                    # Documentation
+│   ├── best_model/              # Best performing model (trial_8, Dice: 0.9725)
+│   ├── preprocessing_output/    # Preprocessed datasets per trial
+│   ├── training_output/         # Trained models and checkpoints
+│   └── results/                 # Evaluation results
+├── scripts/                      # Main project scripts
+│   └── nnunet_env.sh            # Environment setup
+├── data/                        # Data directory (not in repo)
+├── notebooks/                   # Jupyter notebooks for exploration
+└── README.md                    # This file
 ```
 
-## Installation
+## 🚀 Quick Start
 
-### 1. Repository klonen
-```bash
-git clone https://github.com/jqhnnes/Segmentierung-von-CT-Aufnahmen-extrahierter-Z-hne-mittels-Deep-Learning.git
-cd Segmentierung-von-CT-Aufnahmen-extrahierter-Z-hne-mittels-Deep-Learning
-```
+### Prerequisites
 
-### 2. Virtual Environment erstellen (empfohlen)
-```bash
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-# oder
-venv\Scripts\activate  # Windows
-```
+- Python 3.8+
+- CUDA-capable GPU (recommended)
+- nnU-Net v2 installed
+- Conda environment (see `environment.yml`)
 
-### 3. Dependencies installieren
-```bash
-pip install -r requirements.txt
-```
+### Setup
 
-## Datenformat
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd CT-Tooth-Segmentation-DeepLearning
+   ```
 
-### Erwartete Verzeichnisstruktur
-```
-data/
-├── train/
-│   ├── images/
-│   │   ├── tooth_001.npy
-│   │   ├── tooth_002.npy
-│   │   └── ...
-│   ├── masks/
-│   │   ├── tooth_001.npy
-│   │   ├── tooth_002.npy
-│   │   └── ...
-│   └── metadata.json (optional)
-├── val/
-│   ├── images/
-│   └── masks/
-├── test_internal/
-│   ├── images/
-│   └── masks/
-└── test_external/
-    ├── images/
-    └── masks/
-```
+2. **Set up environment**
+   ```bash
+   conda env create -f environment.yml
+   conda activate <env-name>
+   source scripts/nnunet_env.sh
+   ```
 
-### Datenformat
-- **Images**: NumPy arrays (.npy) mit Form (D, H, W) - 3D-Volumen
-- **Masks**: NumPy arrays (.npy) mit Integer-Labels:
-  - 0: Background
-  - 1: Enamel (Zahnschmelz)
-  - 2: Dentin
-  - 3: Pulpa
+3. **Prepare your data**
+   - Organize your CT scans following nnU-Net conventions
+   - Place data in the directory specified by `nnUNet_raw` environment variable
 
-### Metadata (optional)
-```json
-{
-  "tooth_001": {
-    "spacing": [0.15, 0.15, 0.15],
-    "patient_id": "P001"
-  }
-}
-```
+## 📖 Usage
 
-## Verwendung
+### Hyperparameter Optimization
 
-### 1. Training
-
-#### Command Line
-```bash
-python src/training/train.py \
-    --train_data data/train \
-    --val_data data/val \
-    --batch_size 2 \
-    --num_epochs 100 \
-    --lr 0.0001 \
-    --checkpoint_dir checkpoints \
-    --log_dir logs
-```
-
-#### Mit Konfigurationsdatei
-```bash
-python src/training/train.py --config configs/train_config.yaml
-```
-
-#### Python Script
-```python
-from src.models import UNet3D
-from src.data import CTPreprocessor, VolumeAugmenter, create_data_loaders
-from src.utils import get_loss_function
-from src.training.train import Trainer
-
-# Model erstellen
-model = UNet3D(n_channels=1, n_classes=4, base_channels=32)
-
-# Data Loaders erstellen
-preprocessor = CTPreprocessor(target_size=(128, 128, 128))
-augmenter = VolumeAugmenter()
-train_loader, val_loader = create_data_loaders(
-    train_root='data/train',
-    val_root='data/val',
-    preprocessor=preprocessor,
-    augmenter=augmenter
-)
-
-# Training konfigurieren
-criterion = get_loss_function('combined', num_classes=4)
-optimizer = torch.optim.AdamW(model.parameters(), lr=1e-4)
-
-trainer = Trainer(model, train_loader, val_loader, criterion, optimizer)
-trainer.train(num_epochs=100)
-```
-
-### 2. Evaluation
+The project includes a comprehensive HPO pipeline to systematically explore parameter spaces:
 
 ```bash
-python src/evaluation/evaluate.py \
-    --checkpoint checkpoints/best.pth \
-    --internal_test data/test_internal \
-    --external_test data/test_external \
-    --output_dir evaluation_results \
-    --save_predictions
+# Generate HPO trials
+python hpo/scripts/preprocessing/nnunet_hpo_preprocess.py --n_trials 50
+
+# Train and evaluate trials
+python hpo/scripts/training/nnunet_train_eval_pipeline.py --folds 0
+
+# Prepare best model for deployment
+python hpo/scripts/analysis/prepare_best_model.py
 ```
 
-### 3. TensorBoard Visualisierung
+For detailed HPO documentation, see [`hpo/README.md`](hpo/README.md).
+
+### Training a Single Model
 
 ```bash
-tensorboard --logdir logs
+# Standard nnU-Net training
+nnUNetv2_train <DATASET_ID> <CONFIG> <FOLD> -tr nnUNetTrainer -p nnUNetPlans
 ```
 
-Öffne dann `http://localhost:6006` im Browser.
+### Evaluation
 
-## Evaluation Metriken
-
-Das System berechnet folgende Metriken:
-
-- **Dice Score**: Überlappungsmaß zwischen Vorhersage und Ground Truth
-- **IoU (Intersection over Union)**: Jaccard Index
-- **Hausdorff Distance**: Maximaler Abstand zwischen Oberflächen
-- **Volume Similarity**: Ähnlichkeit der segmentierten Volumina
-- **Precision & Recall**: Klassifikationsmetriken
-
-## Active Learning (Optional)
-
-Für iterative Modellverbesserung:
-
-```python
-from src.training.active_learning import ActiveLearner, UncertaintyEstimator
-
-# Uncertainty-basierte Sampleauswahl
-learner = ActiveLearner(
-    model=trained_model,
-    unlabeled_pool=unlabeled_files,
-    uncertainty_method='entropy'
-)
-
-# Uncertainties berechnen
-uncertainties = learner.compute_uncertainties(preprocessor)
-
-# Samples für Annotation auswählen
-selected_samples = learner.select_samples(n_samples=10, strategy='uncertainty')
+```bash
+# Evaluate trained model
+nnUNetv2_evaluate -d <DATASET_ID> -c <CONFIG> -tr nnUNetTrainer -p nnUNetPlans -f <FOLD>
 ```
 
-## Modellarchitektur
+## 📊 Results
 
-### 3D U-Net
-- **Encoder**: 5 Stufen mit Double Convolution Blocks
-- **Decoder**: 4 Upsampling-Stufen mit Skip Connections
-- **Output**: 4 Klassen (Background, Enamel, Dentin, Pulpa)
-- **Aktivierung**: Softmax für Klassenprobabilitäten
+### Best Model Performance
 
-### Loss-Funktionen
-- **Dice Loss**: Direkte Optimierung des Dice Scores
-- **Focal Loss**: Fokus auf schwierige Samples
-- **Combined Loss**: Gewichtete Kombination mehrerer Losses
-- **Tversky Loss**: Kontrolle über False Positives/Negatives
+After running 10 HPO trials, the best performing model achieved:
 
-## Konfiguration
+- **Trial**: `trial_8`
+- **Dice Score**: **0.9725**
+- **Configuration**:
+  - Patch Size: [160, 160, 64]
+  - Batch Size: 4
+  - Features Base: 24
+  - Batch Dice: False
+  - Use Mask for Norm: False
 
-Alle Hyperparameter können in `configs/train_config.yaml` angepasst werden:
+### Top 3 Trials
 
-```yaml
-model:
-  n_classes: 4
-  base_channels: 32
+| Rank | Trial | Dice Score | Key Parameters |
+|------|-------|------------|----------------|
+| 1 | trial_8 | 0.9725 | Patch: [160,160,64], Batch: 4 |
+| 2 | trial_1 | 0.9723 | Patch: [128,64,128], Batch: 2 |
+| 3 | trial_3 | 0.9721 | Patch: [64,128,64], Batch: 2 |
 
-training:
-  batch_size: 2
-  num_epochs: 100
-  learning_rate: 0.0001
+For detailed parameter analysis, see [`hpo/docs/BEST_PARAMETERS_SUMMARY.md`](hpo/docs/BEST_PARAMETERS_SUMMARY.md).
 
-data:
-  target_size: [128, 128, 128]
-  target_spacing: [0.1, 0.1, 0.1]
+## 🔧 Configuration
+
+### Environment Variables
+
+Set the following environment variables (via `scripts/nnunet_env.sh`):
+
+- `nnUNet_raw`: Path to raw dataset directory
+- `nnUNet_preprocessed`: Path to preprocessed data
+- `nnUNet_results`: Path to training results
+
+### Dataset Format
+
+The project follows nnU-Net conventions:
+
+```
+nnUNet_raw/
+└── Dataset001_GroundTruth/
+    ├── imagesTr/          # Training images
+    ├── labelsTr/          # Training labels
+    ├── imagesTs/          # Test images (optional)
+    └── dataset.json       # Dataset metadata
 ```
 
-## Beispiel Notebooks
+## 📈 Evaluation Metrics
 
-- `notebooks/01_training_example.ipynb`: Vollständiges Trainingsbeispiel
-- `notebooks/02_data_exploration.ipynb`: Datenexploration und Visualisierung
+The system computes the following metrics:
 
-## Hardware-Anforderungen
+- **Dice Score**: Overlap measure between prediction and ground truth
+- **IoU (Intersection over Union)**: Jaccard index
+- **Hausdorff Distance**: Maximum surface distance
+- **Volume Similarity**: Volume overlap ratio
+- **Precision & Recall**: Classification metrics
 
-- **Minimum**: 8 GB RAM, GPU mit 6 GB VRAM
-- **Empfohlen**: 16 GB RAM, GPU mit 11+ GB VRAM
-- **CPU-only**: Möglich, aber deutlich langsamer
+## 🛠️ Development
 
-## Tipps für bessere Ergebnisse
+### Project Components
 
-1. **Datenaugmentation**: Nutze Rotation, Flipping und Elastic Deformation
-2. **Class Weighting**: Bei unbalancierten Klassen Gewichte anpassen
-3. **Learning Rate**: Starte mit 1e-4 und nutze Scheduler
-4. **Batch Size**: Größer = stabiler, aber mehr VRAM nötig
-5. **Preprocessing**: Normalisierung und Clipping sind wichtig
+- **HPO Pipeline**: Automated hyperparameter search using Optuna
+- **Training Pipeline**: Automated training and evaluation workflow
+- **Analysis Tools**: Model comparison and best model selection
+- **Utility Scripts**: Data validation, label remapping, and preprocessing fixes
 
-## Troubleshooting
+### Key Scripts
 
-### CUDA Out of Memory
-- Reduziere `batch_size`
-- Reduziere `target_size`
-- Reduziere `base_channels` im Modell
-- Nutze `gradient_checkpointing`
+- `hpo/scripts/preprocessing/nnunet_hpo_preprocess.py`: Generate HPO trials
+- `hpo/scripts/training/nnunet_train_eval_pipeline.py`: Train and evaluate models
+- `hpo/scripts/analysis/prepare_best_model.py`: Prepare best model for deployment
+- `hpo/scripts/utils/`: Various utility scripts for data management
 
-### Schlechte Segmentierung
-- Überprüfe Datenqualität und Labels
-- Erhöhe Trainingsdauer
-- Passe Loss-Funktion an (z.B. höheres `dice_weight`)
-- Nutze Class Weights bei unbalancierten Klassen
+## 📚 Documentation
 
-## Zitation
+- **[HPO Runbook](hpo/README.md)**: Complete guide for hyperparameter optimization
+- **[Best Parameters Summary](hpo/docs/BEST_PARAMETERS_SUMMARY.md)**: Analysis of top-performing configurations
+- **[Best Model Documentation](hpo/best_model/README.md)**: Instructions for using the best model
 
-Wenn du dieses Projekt verwendest, bitte zitiere:
+## 🎓 Citation
+
+If you use this project in your research, please cite:
 
 ```bibtex
 @software{tooth_segmentation_2025,
   author = {Johannes},
-  title = {3D Tooth Segmentation using Deep Learning},
+  title = {3D Tooth Segmentation using nnU-Net},
   year = {2025},
   url = {https://github.com/jqhnnes/Segmentierung-von-CT-Aufnahmen-extrahierter-Z-hne-mittels-Deep-Learning}
 }
 ```
 
-## Lizenz
+## 📝 License
 
-Dieses Projekt steht unter der MIT-Lizenz.
+This project is licensed under the MIT License.
 
-## Kontakt
+## 🤝 Contributing
 
-Bei Fragen oder Problemen öffne bitte ein Issue auf GitHub.
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📧 Contact
+
+For questions or issues, please open an issue on GitHub.
+
+---
+
+**Note**: This project uses nnU-Net v2. For more information about nnU-Net, visit the [official repository](https://github.com/MIC-DKFZ/nnUNet).
