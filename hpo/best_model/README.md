@@ -1,10 +1,10 @@
-# Bestes Modell: trial_8
+# Best Model: trial_8
 
 ## Performance
 - **Dice Score**: 0.9725
-- **Rang**: 1 von 10 Trials
+- **Rank**: 1 out of 10 trials
 
-## Parameter
+## Parameters
 - **Patch Size**: [160, 160, 64]
 - **Batch Size**: 4
 - **Features Base**: 24
@@ -13,9 +13,9 @@
 - **Batch Dice**: False
 - **Use Mask for Norm**: False
 
-## Verwendung
+## Usage
 
-### 1. Vorhersagen erstellen
+### 1. Create Predictions
 
 ```bash
 nnUNetv2_predict \
@@ -28,11 +28,11 @@ nnUNetv2_predict \
     -f 0
 ```
 
-**Wichtig**: Stelle sicher, dass:
-- `nnUNet_results` auf `hpo/training_output/trial_8/nnUNet_results` zeigt
-- `nnUNet_preprocessed` auf `hpo/preprocessing_output/Dataset001_GroundTruth/trial_8` zeigt
+**Important**: Make sure that:
+- `nnUNet_results` points to `hpo/training_output/trial_8/nnUNet_results`
+- `nnUNet_preprocessed` points to `hpo/preprocessing_output/Dataset001_GroundTruth/trial_8`
 
-### 2. Modell weiter trainieren
+### 2. Continue Training
 
 ```bash
 nnUNetv2_train \
@@ -55,13 +55,13 @@ nnUNetv2_evaluate \
     -f 0
 ```
 
-## Dateien
+## Files
 
-- `checkpoint_best.pth`: Bestes Modell (Dice: 0.9725)
-- `nnUNetPlans.json`: Plans-Datei mit Parametern
-- `parameters.json`: Parameter als JSON
+- `checkpoint_best.pth`: Best model (Dice: 0.9725)
+- `nnUNetPlans.json`: Plans file with parameters
+- `parameters.json`: Parameters as JSON
 
-## Original-Pfade
+## Original Paths
 
 - **Checkpoint**: `hpo/training_output/trial_8/nnUNet_results/.../checkpoint_best.pth`
 - **Plans**: `hpo/preprocessing_output/Dataset001_GroundTruth/trial_8/.../nnUNetPlans.json`

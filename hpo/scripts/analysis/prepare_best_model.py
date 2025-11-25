@@ -1,28 +1,32 @@
 #!/usr/bin/env python3
 """
-Bereitet das beste Modell (trial_8) für weitere Experimente vor.
+Prepare the best model (trial_8) for further experiments.
 
-Kopiert Checkpoints, Plans und erstellt eine README mit Anweisungen.
+This script copies checkpoints, plans, and creates a README with instructions
+for using the best performing model from the HPO trials.
+
+Usage:
+    python hpo/scripts/analysis/prepare_best_model.py
 """
 import json
 import shutil
 from pathlib import Path
 
 BEST_TRIAL = "trial_8"
-# OUTPUT_DIR relativ zum hpo-Verzeichnis
+# OUTPUT_DIR relative to hpo directory
 HPO_DIR = Path(__file__).resolve().parents[1]
 OUTPUT_DIR = HPO_DIR / "best_model"
 DATASET_NAME = "Dataset001_GroundTruth"
 
 def main():
     print("=" * 80)
-    print("BEREITE BESTES MODELL VOR (trial_8)")
+    print("PREPARING BEST MODEL (trial_8)")
     print("=" * 80)
     print()
     
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     
-    # 1. Kopiere Checkpoint
+    # 1. Copy checkpoint
     checkpoint_src = (
         HPO_DIR
         / "training_output"
@@ -37,11 +41,11 @@ def main():
     if checkpoint_src.exists():
         checkpoint_dst = OUTPUT_DIR / "checkpoint_best.pth"
         shutil.copy2(checkpoint_src, checkpoint_dst)
-        print(f"✓ Checkpoint kopiert: {checkpoint_dst}")
+        print(f"✓ Checkpoint copied: {checkpoint_dst}")
     else:
-        print(f"⚠ Checkpoint nicht gefunden: {checkpoint_src}")
+        print(f"⚠ Checkpoint not found: {checkpoint_src}")
     
-    # 2. Kopiere Plans-Datei
+    # 2. Copy plans file
     plans_src = (
         HPO_DIR
         / "preprocessing_output"
@@ -54,11 +58,11 @@ def main():
     if plans_src.exists():
         plans_dst = OUTPUT_DIR / "nnUNetPlans.json"
         shutil.copy2(plans_src, plans_dst)
-        print(f"✓ Plans-Datei kopiert: {plans_dst}")
+        print(f"✓ Plans file copied: {plans_dst}")
     else:
-        print(f"⚠ Plans-Datei nicht gefunden: {plans_src}")
+        print(f"⚠ Plans file not found: {plans_src}")
     
-    # 3. Lade Parameter
+    # 3. Load parameters
     if plans_src.exists():
         with open(plans_src, 'r') as f:
             plans = json.load(f)
@@ -75,20 +79,20 @@ def main():
             'use_mask_for_norm': config.get('use_mask_for_norm', [False])[0] if isinstance(config.get('use_mask_for_norm'), list) else config.get('use_mask_for_norm')
         }
         
-        # Speichere Parameter
+        # Save parameters
         params_file = OUTPUT_DIR / "parameters.json"
         with open(params_file, 'w') as f:
             json.dump(parameters, f, indent=2)
-        print(f"✓ Parameter gespeichert: {params_file}")
+        print(f"✓ Parameters saved: {params_file}")
     
-    # 4. Erstelle README
-    readme_content = f"""# Bestes Modell: {BEST_TRIAL}
+    # 4. Create README
+    readme_content = f"""# Best Model: {BEST_TRIAL}
 
 ## Performance
 - **Dice Score**: 0.9725
-- **Rang**: 1 von 10 Trials
+- **Rank**: 1 of 10 trials
 
-## Parameter
+## Parameters
 - **Patch Size**: [160, 160, 64]
 - **Batch Size**: 4
 - **Features Base**: 24
@@ -97,9 +101,9 @@ def main():
 - **Batch Dice**: False
 - **Use Mask for Norm**: False
 
-## Verwendung
+## Usage
 
-### 1. Vorhersagen erstellen
+### 1. Generate Predictions
 
 ```bash
 nnUNetv2_predict \\
@@ -112,11 +116,11 @@ nnUNetv2_predict \\
     -f 0
 ```
 
-**Wichtig**: Stelle sicher, dass:
-- `nnUNet_results` auf `hpo/training_output/{BEST_TRIAL}/nnUNet_results` zeigt
-- `nnUNet_preprocessed` auf `hpo/preprocessing_output/{DATASET_NAME}/{BEST_TRIAL}` zeigt
+**Important**: Make sure that:
+- `nnUNet_results` points to `hpo/training_output/{BEST_TRIAL}/nnUNet_results`
+- `nnUNet_preprocessed` points to `hpo/preprocessing_output/{DATASET_NAME}/{BEST_TRIAL}`
 
-### 2. Modell weiter trainieren
+### 2. Continue Training
 
 ```bash
 nnUNetv2_train \\
@@ -139,13 +143,13 @@ nnUNetv2_evaluate \\
     -f 0
 ```
 
-## Dateien
+## Files
 
-- `checkpoint_best.pth`: Bestes Modell (Dice: 0.9725)
-- `nnUNetPlans.json`: Plans-Datei mit Parametern
-- `parameters.json`: Parameter als JSON
+- `checkpoint_best.pth`: Best model (Dice: 0.9725)
+- `nnUNetPlans.json`: Plans file with parameters
+- `parameters.json`: Parameters as JSON
 
-## Original-Pfade
+## Original Paths
 
 - **Checkpoint**: `hpo/training_output/{BEST_TRIAL}/nnUNet_results/.../checkpoint_best.pth`
 - **Plans**: `hpo/preprocessing_output/{DATASET_NAME}/{BEST_TRIAL}/.../nnUNetPlans.json`
@@ -155,14 +159,14 @@ nnUNetv2_evaluate \\
     readme_file = OUTPUT_DIR / "README.md"
     with open(readme_file, 'w', encoding='utf-8') as f:
         f.write(readme_content)
-    print(f"✓ README erstellt: {readme_file}")
+    print(f"✓ README created: {readme_file}")
     
     print()
     print("=" * 80)
-    print("FERTIG!")
+    print("DONE!")
     print("=" * 80)
-    print(f"\nBestes Modell vorbereitet in: {OUTPUT_DIR}")
-    print(f"\nSiehe {readme_file} für weitere Anweisungen.")
+    print(f"\nBest model prepared in: {OUTPUT_DIR}")
+    print(f"\nSee {readme_file} for further instructions.")
 
 if __name__ == "__main__":
     main()

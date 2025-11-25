@@ -1,4 +1,14 @@
 #!/usr/bin/env python3
+"""
+Hyperparameter Optimization (HPO) preprocessing script for nnU-Net.
+
+This script uses Optuna to generate multiple hyperparameter configurations and
+runs nnUNetv2_preprocess for each trial. Each trial gets its own preprocessed
+dataset with specific parameter settings.
+
+Example:
+    python hpo/scripts/preprocessing/nnunet_hpo_preprocess.py --n_trials 50
+"""
 import argparse
 import os
 import sys
@@ -9,23 +19,25 @@ import optuna
 import re
 from copy import deepcopy
 
-# stelle sicher, dass das Projekt-Root im Python-Pfad liegt,
-# damit `scripts` und andere Module gefunden werden
+# Ensure project root is in Python path so `scripts` and other modules can be found
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
-# falls du ein custom load_env hast (wie in deinem Projekt), lade es:
+# Load custom environment setup
 from scripts.nnunet_env import load_env
 
 load_env()
 
-# ---- Pfade / Konfiguration ----
+# ---- Paths / Configuration ----
 dataset_name = "Dataset001_GroundTruth"
-# Extrahiere Dataset-ID aus dem Namen (z.B. "Dataset001_GroundTruth" -> 1)
+# Extract dataset ID from name (e.g., "Dataset001_GroundTruth" -> 1)
 match = re.search(r"Dataset(\d+)", dataset_name)
 if not match:
-    raise ValueError(f"Konnte keine Dataset-ID aus '{dataset_name}' extrahieren. Erwartetes Format: 'DatasetXXX_...'")
+    raise ValueError(
+        f"Could not extract dataset ID from '{dataset_name}'. "
+        "Expected format: 'DatasetXXX_...'"
+    )
 dataset_id = int(match.group(1))
 
 nnunet_raw = os.environ.get("nnUNet_raw")
@@ -34,14 +46,14 @@ nnunet_results = os.environ.get("nnUNet_results")
 
 if not all([nnunet_raw, nnunet_preprocessed, nnunet_results]):
     raise EnvironmentError(
-        "nnUNet erfordert die Umgebungsvariablen 'nnUNet_raw', "
-        "'nnUNet_preprocessed' und 'nnUNet_results'. Bitte setze sie "
-        "z.B. in scripts/nnunet_env.sh."
+        "nnUNet requires the environment variables 'nnUNet_raw', "
+        "'nnUNet_preprocessed' and 'nnUNet_results'. Please set them "
+        "e.g. in scripts/nnunet_env.sh."
     )
 
 input_folder = os.path.join(nnunet_raw, dataset_name)
 hpo_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
-# Base-Ordner für HPO-Preprocessing-Outputs innerhalb von hpo/
+# Base directory for HPO preprocessing outputs within hpo/
 hpo_preprocessing_base = os.path.join(hpo_dir, "preprocessing_output")
 template_plan_path = os.path.join(hpo_dir, "config", "nnUNetPlans_template.json")
 dataset_output_dir = os.path.join(hpo_preprocessing_base, dataset_name)
@@ -50,29 +62,37 @@ os.makedirs(hpo_dir, exist_ok=True)
 os.makedirs(hpo_preprocessing_base, exist_ok=True)
 os.makedirs(dataset_output_dir, exist_ok=True)
 
-# ---- Prüfungen ----
+# ---- Validation ----
 if not os.path.exists(input_folder):
     raise FileNotFoundError(
-        f"Input folder '{input_folder}' existiert nicht. Bitte nnUNet_raw korrekt setzen."
+        f"Input folder '{input_folder}' does not exist. Please set nnUNet_raw correctly."
     )
 if not os.path.exists(
     os.path.join(input_folder, "imagesTr")
 ) or not os.path.exists(os.path.join(input_folder, "labelsTr")):
     raise FileNotFoundError(
-        f"imagesTr oder labelsTr fehlen im Input-Ordner '{input_folder}'."
+        f"imagesTr or labelsTr missing in input folder '{input_folder}'."
     )
 
 if not os.path.exists(template_plan_path):
-    # keine Template vorhanden — Hinweis geben (siehe weiter unten wie du eine Template erzeugst)
     raise FileNotFoundError(
-        f"Template-Plan '{template_plan_path}' nicht gefunden.\n"
-        "Erzeuge eine Plan-Vorlage, z.B. durch einmaliges Ausführen des nnUNetv2 planning steps (siehe README von nnUNetv2) "
-        "oder lege manuell eine JSON mit den bisherigen Plan-Feldern an."
+        f"Template plan '{template_plan_path}' not found.\n"
+        "Create a plan template, e.g., by running nnUNetv2 planning steps once "
+        "(see nnUNetv2 README) or create a JSON manually with the plan fields."
     )
 
 
-# ---- Hilfsfunktionen ----
+# ---- Helper Functions ----
 def detect_next_trial_index(base_dir):
+    """
+    Detects the highest trial index in the base directory.
+    
+    Args:
+        base_dir: Directory containing trial_X folders
+        
+    Returns:
+        Next available trial index (highest + 1)
+    """
     max_idx = -1
     if os.path.isdir(base_dir):
         for entry in os.listdir(base_dir):
@@ -84,8 +104,14 @@ def detect_next_trial_index(base_dir):
 
 def reserve_trial_slot(base_dir):
     """
-    Gibt den nächsten freien Trial-Namen zurück und legt den Ordner direkt an,
-    damit parallel laufende Prozesse sich nicht in die Quere kommen.
+    Returns the next available trial name and creates the directory immediately
+    to prevent race conditions with parallel processes.
+    
+    Args:
+        base_dir: Base directory for trial folders
+        
+    Returns:
+        Tuple of (trial_idx, trial_name, trial_dir)
     """
     while True:
         trial_idx = detect_next_trial_index(base_dir)
@@ -95,14 +121,19 @@ def reserve_trial_slot(base_dir):
             os.makedirs(trial_dir)
             return trial_idx, trial_name, trial_dir
         except FileExistsError:
-            # Zwischen detect() und makedirs() wurde der Ordner angelegt -> noch einmal versuchen
+            # Directory was created between detect() and makedirs() -> try again
             continue
 
 
 def ensure_fingerprint_for_all_trials(base_dir: str, dataset_name: str, dataset_id: int):
     """
-    Stellt sicher, dass jeder Trial-Ordner eine dataset_fingerprint.json enthält.
-    Falls keine vorhanden ist, wird sie einmalig extrahiert und anschließend verteilt.
+    Ensures that every trial directory contains a dataset_fingerprint.json.
+    If none exists, it is extracted once and then distributed to all trials.
+    
+    Args:
+        base_dir: Base directory containing trial folders
+        dataset_name: Name of the dataset
+        dataset_id: nnU-Net dataset ID
     """
     if not os.path.isdir(base_dir):
         return
@@ -131,8 +162,8 @@ def ensure_fingerprint_for_all_trials(base_dir: str, dataset_name: str, dataset_
         )
         if not os.path.exists(global_fingerprint):
             print(
-                "[INFO] Keine dataset_fingerprint.json gefunden. "
-                "Extrahiere einmalig über nnUNetv2_extract_fingerprint ..."
+                "[INFO] No dataset_fingerprint.json found. "
+                "Extracting once via nnUNetv2_extract_fingerprint ..."
             )
             extract_cmd = ["nnUNetv2_extract_fingerprint", "-d", str(dataset_id)]
             subprocess.run(extract_cmd, check=True)
@@ -141,8 +172,8 @@ def ensure_fingerprint_for_all_trials(base_dir: str, dataset_name: str, dataset_
 
     if not source_fingerprint or not os.path.exists(source_fingerprint):
         print(
-            "[WARN] Konnte keine dataset_fingerprint.json finden oder erstellen. "
-            "Bitte manuell prüfen."
+            "[WARN] Could not find or create dataset_fingerprint.json. "
+            "Please check manually."
         )
         return
 
@@ -156,19 +187,29 @@ def ensure_fingerprint_for_all_trials(base_dir: str, dataset_name: str, dataset_
         if os.path.exists(target):
             continue
         shutil.copy2(source_fingerprint, target)
-        print(f"[{os.path.basename(trial_dir)}] dataset_fingerprint.json ergänzt.")
+        print(f"[{os.path.basename(trial_dir)}] dataset_fingerprint.json added.")
 
 def replace_hpo_parameters(obj, patch_tuple, batch_size, features_per_stage=None, 
                           n_conv_per_stage=None, batch_dice=None, use_mask_for_norm=None):
     """
-    Traversiert ein dict/list und ersetzt HPO-Parameter:
-    - patch_size: Patch-Größe
-    - batch_size: Batch-Größe
-    - features_per_stage: Anzahl Features pro Stage
-    - n_conv_per_stage: Anzahl Convolutions pro Stage
-    - batch_dice: Batch-Dice Loss Flag
-    - use_mask_for_norm: Mask für Normalisierung
-    Diese Funktion verändert obj in-place.
+    Traverses a dict/list and replaces HPO parameters:
+    - patch_size: Patch size
+    - batch_size: Batch size
+    - features_per_stage: Number of features per stage
+    - n_conv_per_stage: Number of convolutions per stage
+    - batch_dice: Batch-Dice Loss flag
+    - use_mask_for_norm: Mask for normalization
+    
+    This function modifies obj in-place.
+    
+    Args:
+        obj: Dictionary or list to traverse
+        patch_tuple: Tuple of (patch_x, patch_y, patch_z)
+        batch_size: Batch size value
+        features_per_stage: List of features per stage
+        n_conv_per_stage: List of convolutions per stage
+        batch_dice: Boolean flag for batch dice
+        use_mask_for_norm: Boolean flag for mask normalization
     """
     if isinstance(obj, dict):
         for k, v in obj.items():
@@ -196,7 +237,7 @@ def replace_hpo_parameters(obj, patch_tuple, batch_size, features_per_stage=None
                 obj[k] = n_conv_per_stage
             # n_conv_per_stage_decoder
             elif "n_conv_per_stage_decoder" in lk and isinstance(v, list) and n_conv_per_stage is not None:
-                # Decoder hat typischerweise n_stages-1 Convs
+                # Decoder typically has n_stages-1 convolutions
                 obj[k] = n_conv_per_stage[:-1] if len(n_conv_per_stage) > 1 else n_conv_per_stage
             # batch_dice
             elif "batch_dice" in lk and batch_dice is not None:
@@ -212,23 +253,32 @@ def replace_hpo_parameters(obj, patch_tuple, batch_size, features_per_stage=None
             if isinstance(obj[i], (dict, list)):
                 replace_hpo_parameters(obj[i], patch_tuple, batch_size, features_per_stage,
                                       n_conv_per_stage, batch_dice, use_mask_for_norm)
-    # primitive types werden nicht weiter traversiert
+    # Primitive types are not traversed further
 
 
-# ---- Objective für Optuna ----
+# ---- Optuna Objective Function ----
 def objective(trial):
-    # ===== PARAMETERRAUM =====
-    # Patch-Größen (wichtig für Memory/Performance Trade-off)
+    """
+    Optuna objective function that generates hyperparameters and runs preprocessing.
+    
+    Args:
+        trial: Optuna trial object
+        
+    Returns:
+        Proxy score (placeholder - should be replaced with actual validation metric)
+    """
+    # ===== PARAMETER SPACE =====
+    # Patch sizes (important for memory/performance trade-off)
     patch_x = trial.suggest_categorical("patch_x", [64, 128, 160])
     patch_y = trial.suggest_categorical("patch_y", [64, 128, 160])
     patch_z = trial.suggest_categorical("patch_z", [64, 128, 160])
     patch = (patch_x, patch_y, patch_z)
     
-    # Batch-Größe
+    # Batch size
     batch_size = trial.suggest_categorical("batch_size", [2, 4])
     
-    # Network-Kapazität: Features pro Stage
-    # Optionen: kleinere (weniger Memory) vs größere (mehr Kapazität)
+    # Network capacity: Features per stage
+    # Options: smaller (less memory) vs larger (more capacity)
     features_base = trial.suggest_categorical("features_base", [24, 32, 48])
     features_per_stage = [
         features_base,
@@ -239,27 +289,27 @@ def objective(trial):
         features_base * 10
     ]
     
-    # Anzahl Convolutions pro Stage (mehr = tieferes Netzwerk)
+    # Number of convolutions per stage (more = deeper network)
     n_conv_per_stage = trial.suggest_categorical("n_conv_per_stage", [2, 3])
     n_conv_list = [n_conv_per_stage] * 6  # 6 stages
     
-    # Batch-Dice Loss (kann Performance beeinflussen)
+    # Batch-Dice Loss (can affect performance)
     batch_dice = trial.suggest_categorical("batch_dice", [False, True])
     
-    # Normalisierung mit Mask (kann bei CT-Daten helfen)
+    # Normalization with mask (can help with CT data)
     use_mask_for_norm = trial.suggest_categorical("use_mask_for_norm", [False, True])
 
     trial_idx, trial_name, trial_output_dir = reserve_trial_slot(dataset_output_dir)
     trial_plan_path = os.path.join(hpo_dir, "config", f"nnUNetPlans_temp_{trial_name}.json")
     
-    # Temporärer Ordner für nnUNet (nnUNet erwartet: nnUNet_preprocessed/DatasetXXX/...)
-    # Wir setzen nnUNet_preprocessed auf dataset_output_dir, damit nnUNet dort DatasetXXX/ erstellt
-    # Danach verschieben wir alles nach trial_X/DatasetXXX/
+    # Temporary directory for nnUNet (nnUNet expects: nnUNet_preprocessed/DatasetXXX/...)
+    # We set nnUNet_preprocessed to dataset_output_dir so nnUNet creates DatasetXXX/ there
+    # Afterwards we move everything to trial_X/DatasetXXX/
     temp_preprocessed_base = dataset_output_dir
     temp_preprocessed_dir = os.path.join(temp_preprocessed_base, dataset_name)
     os.makedirs(temp_preprocessed_dir, exist_ok=True)
 
-    # 1) lade template, modifiziere und speichere Trial-plan
+    # 1) Load template, modify and save trial plan
     with open(template_plan_path, "r") as f:
         plan = json.load(f)
 
@@ -267,38 +317,38 @@ def objective(trial):
     replace_hpo_parameters(plan_mod, patch, batch_size, features_per_stage,
                           n_conv_list, batch_dice, use_mask_for_norm)
 
-    # Speichere die modifizierte Plans-Datei im hpo-Ordner (für Nachvollziehbarkeit)
+    # Save the modified plans file in the hpo directory (for traceability)
     with open(trial_plan_path, "w") as f:
         json.dump(plan_mod, f, indent=2)
     
-    # 2) Kopiere die Plans-Datei an den temporären Ort, wo nnUNet sie erwartet
-    # nnUNet sucht nach: nnUNet_preprocessed/DatasetXXX/nnUNetPlans.json
+    # 2) Copy the plans file to the temporary location where nnUNet expects it
+    # nnUNet looks for: nnUNet_preprocessed/DatasetXXX/nnUNetPlans.json
     plans_in_temp = os.path.join(temp_preprocessed_dir, "nnUNetPlans.json")
     shutil.copy2(trial_plan_path, plans_in_temp)
 
-    # 3) Kopiere dataset.json, weil nnUNetv2_preprocess sie im nnUNet_preprocessed-Folder erwartet
+    # 3) Copy dataset.json because nnUNetv2_preprocess expects it in the nnUNet_preprocessed folder
     dataset_json_src = os.path.join(input_folder, "dataset.json")
     if not os.path.exists(dataset_json_src):
         raise FileNotFoundError(
-            f"dataset.json nicht gefunden unter '{dataset_json_src}'. "
-            "Bitte stelle sicher, dass dein nnUNet_raw Dataset komplett ist."
+            f"dataset.json not found at '{dataset_json_src}'. "
+            "Please ensure your nnUNet_raw dataset is complete."
         )
     dataset_json_temp = os.path.join(temp_preprocessed_dir, "dataset.json")
     shutil.copy2(dataset_json_src, dataset_json_temp)
     
-    # 4) Aufruf nnUNetv2_preprocess mit dem Trial-plan
-    # Setze temporär nnUNet_preprocessed auf dataset_output_dir
-    # nnUNet erstellt dann: preprocessing_output/DatasetXXX/DatasetXXX/...
+    # 4) Call nnUNetv2_preprocess with the trial plan
+    # Temporarily set nnUNet_preprocessed to dataset_output_dir
+    # nnUNet will then create: preprocessing_output/DatasetXXX/DatasetXXX/...
     env = os.environ.copy()
     env["nnUNet_preprocessed"] = os.path.abspath(temp_preprocessed_base)
     
-    # nnUNet verwendet -plans_name (ohne .json) und sucht die Datei im Dataset-Ordner
+    # nnUNet uses -plans_name (without .json) and looks for the file in the dataset directory
     cmd = [
         "nnUNetv2_preprocess",
         "-d",
         str(dataset_id),
         "-plans_name",
-        "nnUNetPlans",  # Name ohne .json - nnUNet sucht nach nnUNetPlans.json
+        "nnUNetPlans",  # Name without .json - nnUNet looks for nnUNetPlans.json
         "-c",
         "3d_fullres",
         "--num_processes",
@@ -317,24 +367,24 @@ def objective(trial):
 
     subprocess.run(cmd, check=True, env=env)
     
-    # 5) Stelle sicher, dass dataset_fingerprint.json im temporären Ordner vorhanden ist
-    # (wird normalerweise automatisch vom Preprocessing erstellt, aber zur Sicherheit prüfen)
+    # 5) Ensure dataset_fingerprint.json exists in the temporary directory
+    # (usually created automatically by preprocessing, but check for safety)
     fingerprint_in_temp = os.path.join(temp_preprocessed_dir, "dataset_fingerprint.json")
     if not os.path.exists(fingerprint_in_temp):
-        print(f"[{trial_name}] dataset_fingerprint.json fehlt, extrahiere sie jetzt...")
+        print(f"[{trial_name}] dataset_fingerprint.json missing, extracting now...")
         extract_cmd = ["nnUNetv2_extract_fingerprint", "-d", str(dataset_id)]
-        # Verwende das temporäre nnUNet_preprocessed (env wurde bereits oben gesetzt)
+        # Use the temporary nnUNet_preprocessed (env was already set above)
         subprocess.run(extract_cmd, check=True, env=env)
         if not os.path.exists(fingerprint_in_temp):
-            print(f"[WARN] {trial_name}: dataset_fingerprint.json konnte nicht erstellt werden.")
+            print(f"[WARN] {trial_name}: Could not create dataset_fingerprint.json.")
     
-    # 6) Verschiebe alle Dateien vom temporären Ordner nach trial_X/DatasetXXX/
+    # 6) Move all files from temporary directory to trial_X/DatasetXXX/
     trial_dataset_dir = os.path.join(trial_output_dir, dataset_name)
     os.makedirs(trial_dataset_dir, exist_ok=True)
     
     if os.path.exists(temp_preprocessed_dir):
-        # Verschiebe alle Inhalte von DatasetXXX/ nach trial_X/
-        # (dataset_fingerprint.json wird dabei automatisch mit verschoben)
+        # Move all contents from DatasetXXX/ to trial_X/
+        # (dataset_fingerprint.json is automatically moved with it)
         for item in os.listdir(temp_preprocessed_dir):
             src = os.path.join(temp_preprocessed_dir, item)
             dst = os.path.join(trial_dataset_dir, item)
@@ -344,60 +394,60 @@ def objective(trial):
                 else:
                     os.remove(dst)
             shutil.move(src, dst)
-        # Lösche den leeren DatasetXXX-Ordner
+        # Delete the empty DatasetXXX directory
         try:
             os.rmdir(temp_preprocessed_dir)
         except OSError:
-            pass  # Ordner nicht leer oder existiert nicht
+            pass  # Directory not empty or doesn't exist
     
-    # Bestätigung
+    # Confirmation
     fingerprint_in_trial = os.path.join(trial_dataset_dir, "dataset_fingerprint.json")
     if os.path.exists(fingerprint_in_trial):
-        print(f"[{trial_name}] ✓ dataset_fingerprint.json erfolgreich in Trial-Ordner kopiert")
+        print(f"[{trial_name}] ✓ dataset_fingerprint.json successfully copied to trial directory")
     else:
-        print(f"[WARN] {trial_name}: dataset_fingerprint.json fehlt im Trial-Ordner nach Verschieben!")
+        print(f"[WARN] {trial_name}: dataset_fingerprint.json missing in trial directory after move!")
 
-    # === HIER: Platzhalter-Metrik ===
-    # Preprocessing liefert keine Performance-Metrik. Du musst diesen Teil ersetzen,
-    # wenn du echte Validationsergebnisse willst (z.B. trainiere kurz ein Modell und evaluiere).
+    # === PLACEHOLDER METRIC ===
+    # Preprocessing does not provide a performance metric. You must replace this part
+    # if you want real validation results (e.g., train a model briefly and evaluate).
     #
-    # WICHTIG: Der aktuelle Proxy-Score ist nur ein Platzhalter!
-    # Er maximiert einfach die Summe der Parameter, was NICHT sinnvoll ist.
-    # Für echte HPO musst du hier eine echte Metrik verwenden (z.B. Dice-Score nach Training).
+    # IMPORTANT: The current proxy score is only a placeholder!
+    # It simply maximizes the sum of parameters, which is NOT meaningful.
+    # For real HPO, you must use a real metric here (e.g., Dice score after training).
     proxy_score = patch_x + patch_y + patch_z + batch_size + features_base + n_conv_per_stage
-    print(f"[{trial_name}] Proxy score: {proxy_score} (NUR PLATZHALTER!)")
+    print(f"[{trial_name}] Proxy score: {proxy_score} (PLACEHOLDER ONLY!)")
     return proxy_score
 
 
-# ---- Study starten ----
+# ---- Start Study ----
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Starte nnUNet HPO Preprocessing-Trials."
+        description="Start nnUNet HPO preprocessing trials."
     )
     parser.add_argument(
         "--n_trials",
         type=int,
         default=10,
-        help="Anzahl neuer Trials, die in diesem Lauf gestartet werden (Default: 10).",
+        help="Number of new trials to start in this run (default: 10).",
     )
     args = parser.parse_args()
 
     next_idx = detect_next_trial_index(dataset_output_dir)
     print(
-        f"Starte Optuna-Run mit {args.n_trials} neuen Trials. "
-        f"Nächster verfügbarer Ordner: trial_{next_idx}."
+        f"Starting Optuna run with {args.n_trials} new trials. "
+        f"Next available directory: trial_{next_idx}."
     )
 
-    # HINWEIS: Mit erweiterten Parametern ist der Suchraum größer!
-    # Gesamt: ~27 * 2 * 3 * 2 * 2 * 2 = ~1,296 mögliche Kombinationen
+    # NOTE: With extended parameters, the search space is larger!
+    # Total: ~27 * 2 * 3 * 2 * 2 * 2 = ~1,296 possible combinations
     study = optuna.create_study(direction="maximize")
     study.optimize(objective, n_trials=args.n_trials)
 
     if study.trials:
-        print("Beste Trial-Parameter:", study.best_trial.params)
-        print("Beste Trial-Wert:", study.best_value)
+        print("Best trial parameters:", study.best_trial.params)
+        print("Best trial value:", study.best_value)
     else:
-        print("Keine abgeschlossenen Trials vorhanden.")
+        print("No completed trials found.")
 
-    # Stelle sicher, dass alle Trials eine dataset_fingerprint.json besitzen
+    # Ensure all trials have a dataset_fingerprint.json
     ensure_fingerprint_for_all_trials(dataset_output_dir, dataset_name, dataset_id)

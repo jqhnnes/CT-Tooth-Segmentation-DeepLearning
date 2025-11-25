@@ -14,17 +14,17 @@ from typing import List
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Korrigiere n_conv_per_stage_decoder in allen Trial-Plänen."
+        description="Fix n_conv_per_stage_decoder in all trial plans."
     )
     parser.add_argument(
         "--dataset",
         default="Dataset001_GroundTruth",
-        help="Dataset-Name unter hpo/preprocessing_output/.",
+        help="Dataset name under hpo/preprocessing_output/.",
     )
     parser.add_argument(
         "--plans_file",
-        default="/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/hpo/nnUNetPlans_template.json",
-        help="Pfad zur Plan-Template-Datei (nur als Info/Default, optional).",
+        default="/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/hpo/config/nnUNetPlans_template.json",
+        help="Path to plan template file (info/default only, optional).",
     )
     return parser.parse_args()
 
@@ -75,11 +75,11 @@ def main():
     args = parse_args()
     dataset_dir = Path("hpo") / "preprocessing_output" / args.dataset
     if not dataset_dir.exists():
-        raise FileNotFoundError(f"Dataset-Ordner '{dataset_dir}' existiert nicht.")
+        raise FileNotFoundError(f"Dataset directory '{dataset_dir}' does not exist.")
 
     plan_files = find_plan_files(dataset_dir)
     if not plan_files:
-        print("Keine Plan-Dateien gefunden.")
+        print("No plan files found.")
         return
 
     fixed = 0
@@ -88,7 +88,7 @@ def main():
             print(f"Fix applied: {plan_path}")
             fixed += 1
 
-    print(f"Decoder-Längen korrigiert in {fixed} Dateien.")
+    print(f"Decoder lengths corrected in {fixed} files.")
 
 
 if __name__ == "__main__":

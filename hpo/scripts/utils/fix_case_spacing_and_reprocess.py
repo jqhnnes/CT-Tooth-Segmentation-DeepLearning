@@ -244,7 +244,7 @@ def main():
     trial_base = Path("hpo") / "preprocessing_output" / dataset_name
     trial_dirs = list_trial_dirs(trial_base, args.trials)
     if not trial_dirs:
-        print(f"Keine Trials unter {trial_base} gefunden.")
+        print(f"No trials found under {trial_base}.")
         return
 
     for trial_dir in trial_dirs:
@@ -257,10 +257,10 @@ def main():
                 raw_dataset_dir,
             )
         except Exception as exc:  # noqa: BLE001
-            print(f"[WARN] {trial_dir.name}: Fehler beim Reprocessen ({exc}).")
+            print(f"[WARN] {trial_dir.name}: Error during reprocessing ({exc}).")
             raise
 
-    print("\nFertig – alle ausgewählten Trials besitzen nun aktualisierte Dateien.")
+    print("\nDone – all selected trials now have updated files.")
 
 
 if __name__ == "__main__":

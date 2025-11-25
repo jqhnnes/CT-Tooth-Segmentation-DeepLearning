@@ -20,23 +20,23 @@ except ImportError:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Remappe Maskenlabels auf einen Maximalwert."
+        description="Remap mask labels to a maximum value."
     )
     parser.add_argument(
         "--dataset",
         default="Dataset001_GroundTruth",
-        help="Dataset-Name unter nnUNet_raw.",
+        help="Dataset name under nnUNet_raw.",
     )
     parser.add_argument(
         "--nnunet_raw",
         default="data/nnUNet_raw",
-        help="Pfad zum nnUNet_raw-Ordner (Default: data/nnUNet_raw).",
+        help="Path to nnUNet_raw directory (default: data/nnUNet_raw).",
     )
     parser.add_argument(
         "--max_label",
         type=int,
         default=3,
-        help="Alle Labelwerte größer als dieser Wert werden darauf gekappt.",
+        help="All label values greater than this value will be capped to it.",
     )
     return parser.parse_args()
 
@@ -44,7 +44,7 @@ def parse_args() -> argparse.Namespace:
 def remap_labels(dataset_dir: Path, max_label: int):
     labels_dir = dataset_dir / "labelsTr"
     if not labels_dir.exists():
-        raise FileNotFoundError(f"labelsTr nicht gefunden unter '{labels_dir}'.")
+        raise FileNotFoundError(f"labelsTr not found at '{labels_dir}'.")
 
     seg_files = sorted(labels_dir.glob("*.nii*"))
     iterator = tqdm(seg_files, desc="Remapping", unit="file") if tqdm else seg_files

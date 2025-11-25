@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 """
-Starte automatisiert das Training (und optional die Evaluation) für bereits
-vorbereitete HPO-Trials aus `hpo/preprocessing_output/<Dataset>/trial_X`.
+Automated training and evaluation pipeline for preprocessed HPO trials.
 
-Beispielaufruf:
-    python hpo/nnunet_train_eval_pipeline.py \
+This script trains and optionally evaluates models for HPO trials located in
+`hpo/preprocessing_output/<Dataset>/trial_X`. It handles staging of preprocessed
+data, training, result archiving, and evaluation.
+
+Example:
+    python hpo/scripts/training/nnunet_train_eval_pipeline.py \
         --trials trial_0 trial_3 \
         --folds 0 1 \
         --trainer nnUNetTrainer \
@@ -19,7 +22,7 @@ import sys
 from pathlib import Path
 from typing import Iterable, List, Tuple
 
-# Projekt-Root in den Python-Pfad aufnehmen
+# Add project root to Python path
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -33,93 +36,96 @@ TRAINING_OUTPUT_ROOT = Path("hpo") / "training_output"
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Trainiere und evaluiere nacheinander vorbereitete HPO-Trials."
+        description="Train and evaluate preprocessed HPO trials sequentially."
     )
     parser.add_argument(
         "--dataset_name",
         default="Dataset001_GroundTruth",
-        help="Name des Datasets (muss dem Ordner unter nnUNet_raw entsprechen).",
+        help="Dataset name (must match folder under nnUNet_raw).",
     )
     parser.add_argument(
         "--trials",
         nargs="*",
-        help="Spezifische Trials (z.B. trial_0 trial_5). Standard: alle vorhandenen.",
+        help="Specific trials (e.g., trial_0 trial_5). Default: all available.",
     )
     parser.add_argument(
         "--folds",
         nargs="+",
         default=["0"],
-        help="Folds, die trainiert werden sollen (z.B. 0 1 2 3 4).",
+        help="Folds to train (e.g., 0 1 2 3 4).",
     )
     parser.add_argument(
         "--trainer",
         default="nnUNetTrainer",
-        help="Trainer-Klasse für nnUNetv2 (Default: nnUNetTrainer).",
+        help="Trainer class for nnUNetv2 (default: nnUNetTrainer).",
     )
     parser.add_argument(
         "--configuration",
         default="3d_fullres",
-        help="nnUNetv2-Configuration (z.B. 3d_fullres, 3d_lowres).",
+        help="nnUNetv2 configuration (e.g., 3d_fullres, 3d_lowres).",
     )
     parser.add_argument(
         "--plans_name",
         default="nnUNetPlans",
-        help="Name der Plans-Datei (ohne .json). Muss je Trial im Ordner liegen.",
+        help="Name of plans file (without .json). Must be present in each trial folder.",
     )
     parser.add_argument(
         "--device",
         default=None,
-        help="Optionaler Device-String für nnUNetv2_train (z.B. cuda, cuda:1, cpu).",
+        help="Optional device string for nnUNetv2_train (e.g., cuda, cuda:1, cpu).",
     )
     parser.add_argument(
         "--skip_evaluation",
         action="store_true",
-        help="Nur trainieren, keine nnUNetv2_evaluate-Aufrufe.",
+        help="Train only, no nnUNetv2_evaluate calls.",
     )
     parser.add_argument(
         "--only_evaluate",
         action="store_true",
-        help="Überspringe das Training und führe nur nnUNetv2_evaluate aus.",
+        help="Skip training and run only nnUNetv2_evaluate.",
     )
     parser.add_argument(
         "--stop_on_error",
         action="store_true",
-        help="Beende nach dem ersten fehlgeschlagenen Trial (Default: weiter).",
+        help="Stop after first failed trial (default: continue).",
     )
     parser.add_argument(
         "--eval_timeout",
         type=int,
-        default=7200,  # 2 Stunden Standard-Timeout
-        help="Timeout für Evaluation in Sekunden (Default: 7200 = 2h). 0 = kein Timeout.",
+        default=7200,  # 2 hours default timeout
+        help="Timeout for evaluation in seconds (default: 7200 = 2h). 0 = no timeout.",
     )
     return parser.parse_args()
 
 
 def ensure_env_vars():
+    """Ensure all required nnUNet environment variables are set."""
     required = ["nnUNet_raw", "nnUNet_preprocessed", "nnUNet_results"]
     missing = [var for var in required if not os.environ.get(var)]
     if missing:
         raise EnvironmentError(
-            "Folgende nnUNet-Umgebungsvariablen fehlen: "
-            f"{', '.join(missing)}. Bitte in scripts/nnunet_env.sh setzen."
+            f"Missing nnUNet environment variables: {', '.join(missing)}. "
+            "Please set them in scripts/nnunet_env.sh."
         )
 
 
 def extract_dataset_id(dataset_name: str) -> int:
+    """Extract dataset ID from dataset name (e.g., 'Dataset001_GroundTruth' -> 1)."""
     match = re.search(r"Dataset(\d+)", dataset_name)
     if not match:
         raise ValueError(
-            f"Konnte keine Dataset-ID aus '{dataset_name}' extrahieren. "
-            "Erwartetes Format: 'DatasetXXX_...'."
+            f"Could not extract dataset ID from '{dataset_name}'. "
+            "Expected format: 'DatasetXXX_...'."
         )
     return int(match.group(1))
 
 
 def list_trial_dirs(base_dir: Path) -> List[Path]:
+    """List all trial directories in the base directory."""
     if not base_dir.exists():
         raise FileNotFoundError(
-            f"Trial-Basisordner '{base_dir}' existiert nicht. "
-            "Bitte zuerst das Preprocessing durchführen."
+            f"Trial base directory '{base_dir}' does not exist. "
+            "Please run preprocessing first."
         )
     trial_dirs: List[Path] = []
     for entry in base_dir.iterdir():
@@ -138,8 +144,8 @@ def filter_trials(all_trials: List[Path], selection: Iterable[str] | None) -> Li
     missing = sorted(selection_set - set(available))
     if missing:
         raise FileNotFoundError(
-            "Folgende Trials existieren nicht unter preprocessing_output: "
-            + ", ".join(missing)
+            f"The following trials do not exist under preprocessing_output: "
+            f"{', '.join(missing)}"
         )
     for name in selection:
         resolved.append(available[name])
@@ -174,8 +180,8 @@ def skip_completed_trials(
 
     if skipped:
         print(
-            "[INFO] Überspringe bereits trainierte Trials "
-            f"(im training_output vorhanden): {skipped}"
+            f"[INFO] Skipping already trained trials "
+            f"(present in training_output): {skipped}"
         )
     return remaining
 
@@ -193,7 +199,7 @@ def stage_preprocessed_dataset(trial_dir: Path, dataset_name: str) -> Tuple[Path
     source_dataset_dir = trial_dir / dataset_name
     if not source_dataset_dir.exists():
         raise FileNotFoundError(
-            f"{source_dataset_dir} existiert nicht. Preprocessing vor Training erneut ausführen."
+            f"{source_dataset_dir} does not exist. Please run preprocessing before training."
         )
 
     try:
@@ -234,7 +240,7 @@ def persist_training_results(
     results_root = Path(os.environ["nnUNet_results"]).resolve()
     source_dir = results_root / dataset_name
     if not source_dir.exists():
-        print(f"[WARN] Kein nnUNet_results-Ordner unter {source_dir} gefunden.")
+        print(f"[WARN] No nnUNet_results directory found at {source_dir}.")
         return None
 
     target_dir = get_archived_results_dir(trial_name, dataset_name)
@@ -253,8 +259,8 @@ def cleanup_fold_results(
     fold: str,
 ):
     """
-    Entfernt etwaige Reste alter Trainingsläufe (z.B. aus vorherigen Trials),
-    damit jedes Training mit einem sauberen Ordner startet.
+    Removes any remnants of old training runs (e.g., from previous trials)
+    so each training starts with a clean directory.
     """
     results_root = Path(os.environ["nnUNet_results"]).resolve()
     run_dir = (
@@ -281,14 +287,14 @@ def run_eval_cmd(
     timeout: int | None = None,
 ) -> None:
     """
-    Führt einen Evaluations-Befehl aus mit optionalem Timeout.
+    Execute an evaluation command with optional timeout.
     
     Args:
-        cmd: Kommando als Liste
-        env: Umgebungsvariablen
-        log_file: Log-Datei
-        mode: Datei-Modus ('w' oder 'a')
-        timeout: Timeout in Sekunden (None = kein Timeout)
+        cmd: Command as list
+        env: Environment variables
+        log_file: Log file path
+        mode: File mode ('w' or 'a')
+        timeout: Timeout in seconds (None = no timeout)
     """
     with open(log_file, mode) as fh:
         try:
@@ -310,9 +316,9 @@ def run_eval_cmd(
                     stderr=subprocess.STDOUT
                 )
         except subprocess.TimeoutExpired:
-            # Schreibe Timeout-Meldung ins Log
-            fh.write(f"\n\n[ERROR] Evaluation-Timeout nach {timeout} Sekunden!\n")
-            fh.write("Der Prozess wurde abgebrochen.\n")
+            # Write timeout message to log
+            fh.write(f"\n\n[ERROR] Evaluation timeout after {timeout} seconds!\n")
+            fh.write("Process was aborted.\n")
             raise
 
 
@@ -366,7 +372,7 @@ def train_trial(
             configuration,
             str(fold),
         )
-        print(f"[{trial_dir.name}/fold{fold}] Starte Training …")
+        print(f"[{trial_dir.name}/fold{fold}] Starting training...")
         train_cmd = [
             "nnUNetv2_train",
             str(dataset_id),
@@ -381,7 +387,7 @@ def train_trial(
             train_cmd.extend(["--device", device])
 
         run_cmd(train_cmd, env, f"{trial_dir.name}/fold{fold}/train")
-        print(f"[{trial_dir.name}/fold{fold}] Training abgeschlossen.")
+        print(f"[{trial_dir.name}/fold{fold}] Training completed.")
 
 
 def evaluate_trial(
@@ -402,20 +408,20 @@ def evaluate_trial(
     gt_dir = Path(os.environ["nnUNet_raw"]) / dataset_name / "labelsTr"
     if not gt_dir.exists():
         raise FileNotFoundError(
-            f"Ground-truth labels nicht gefunden: {gt_dir}. "
-            "Stelle sicher, dass nnUNet_raw korrekt gesetzt ist."
+            f"Ground-truth labels not found: {gt_dir}. "
+            "Please ensure nnUNet_raw is set correctly."
         )
 
     dataset_json = trial_dir / dataset_name / "dataset.json"
     if not dataset_json.exists():
         raise FileNotFoundError(
-            f"dataset.json für {trial_dir.name} fehlt unter {dataset_json}."
+            f"dataset.json for {trial_dir.name} missing at {dataset_json}."
         )
 
     plans_file = trial_dir / dataset_name / f"{plans_name}.json"
     if not plans_file.exists():
         raise FileNotFoundError(
-            f"{plans_name}.json für {trial_dir.name} fehlt unter {plans_file}."
+            f"{plans_name}.json for {trial_dir.name} missing at {plans_file}."
         )
 
     results_root = Path(env["nnUNet_results"]).resolve()
@@ -432,8 +438,8 @@ def evaluate_trial(
         pred_dir = pred_root / f"fold_{fold}" / "validation"
         if not pred_dir.exists():
             print(
-                f"[WARN] Vorhersage-Ordner für {trial_dir.name} Fold {fold} fehlt ({pred_dir}). "
-                "Überspringe Evaluation dieses Folds."
+                f"[WARN] Prediction directory for {trial_dir.name} Fold {fold} missing ({pred_dir}). "
+                "Skipping evaluation for this fold."
             )
             continue
 
@@ -472,13 +478,13 @@ def main():
     ).resolve()
     all_trials = list_trial_dirs(trial_base_dir)
     if not all_trials:
-        print(f"Keine Trials unter {trial_base_dir} gefunden.")
+        print(f"No trials found under {trial_base_dir}.")
         return
 
     selected_trials = filter_trials(all_trials, args.trials)
     print(
-        f"Gefundene Trials: {[t.name for t in selected_trials]} "
-        f"(Dataset-ID: {dataset_id}, Trainer: {args.trainer}, Config: {args.configuration})"
+        f"Found trials: {[t.name for t in selected_trials]} "
+        f"(Dataset ID: {dataset_id}, Trainer: {args.trainer}, Config: {args.configuration})"
     )
     folds = [str(fold) for fold in args.folds]
 
@@ -488,15 +494,15 @@ def main():
     )
     if not selected_trials:
         print(
-            "Keine neuen Trials zum Trainieren. Entferne ggf. training_output/trial_X, "
-            "um einen Trial erneut zu starten."
+            "No new trials to train. Remove training_output/trial_X if you want "
+            "to restart a trial."
         )
         return
 
     failed_trials: List[str] = []
 
     for trial_dir in selected_trials:
-        print(f"\n===== Starte Trial {trial_dir.name} =====")
+        print(f"\n===== Starting Trial {trial_dir.name} =====")
         dataset_stage, used_symlink = stage_preprocessed_dataset(
             trial_dir, args.dataset_name
         )
@@ -508,8 +514,8 @@ def main():
         if args.only_evaluate:
             if not pre_archived_dir.exists():
                 print(
-                    f"[WARN] Trial {trial_dir.name} besitzt keine archivierten Ergebnisse "
-                    "unter training_output/. Überspringe."
+                    f"[WARN] Trial {trial_dir.name} has no archived results "
+                    "under training_output/. Skipping."
                 )
                 cleanup_staged_dataset(dataset_stage, used_symlink)
                 continue
@@ -533,12 +539,12 @@ def main():
                 )
                 if archived_results_dir:
                     print(
-                        f"[{trial_dir.name}] Ergebnisse archiviert unter {archived_results_dir}."
+                        f"[{trial_dir.name}] Results archived at {archived_results_dir}."
                     )
                     env["nnUNet_results"] = str(archived_results_dir.parent)
                 else:
                     print(
-                        f"[WARN] Konnte Ergebnisse für {trial_dir.name} nicht archivieren."
+                        f"[WARN] Could not archive results for {trial_dir.name}."
                     )
             if not args.skip_evaluation:
                 evaluate_trial(
@@ -554,25 +560,25 @@ def main():
                 )
         except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
             if isinstance(exc, subprocess.TimeoutExpired):
-                error_msg = f"Timeout nach {args.eval_timeout}s"
+                error_msg = f"Timeout after {args.eval_timeout}s"
             else:
-                error_msg = f"Exit-Code {exc.returncode}"
+                error_msg = f"Exit code {exc.returncode}"
             print(
-                f"[WARN] Trial {trial_dir.name} fehlgeschlagen ({error_msg})."
+                f"[WARN] Trial {trial_dir.name} failed ({error_msg})."
             )
             failed_trials.append(trial_dir.name)
             if args.stop_on_error:
                 raise
             else:
-                print("Fahre mit dem nächsten Trial fort …")
+                print("Continuing with next trial...")
         finally:
             cleanup_staged_dataset(dataset_stage, used_symlink)
 
-    print("\nAlle angeforderten Trials wurden bearbeitet.")
+    print("\nAll requested trials have been processed.")
     if failed_trials:
-        print(f"Fehlgeschlagene Trials ({len(failed_trials)}): {failed_trials}")
+        print(f"Failed trials ({len(failed_trials)}): {failed_trials}")
     else:
-        print("Alle Trials erfolgreich abgeschlossen.")
+        print("All trials completed successfully.")
 
 
 if __name__ == "__main__":

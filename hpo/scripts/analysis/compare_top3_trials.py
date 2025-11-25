@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 """
-Vergleicht die Top 3 Trials auf einem Testset.
+Compare the top 3 trials on a test set.
 
-Verwendung:
-    python hpo/compare_top3_trials.py --testset labelsTs
+This script generates predictions and evaluates them for the top 3 performing
+HPO trials, allowing for direct comparison of their performance.
+
+Usage:
+    python hpo/scripts/analysis/compare_top3_trials.py --testset labelsTs
 """
 import argparse
 import os
@@ -11,7 +14,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-# Projekt-Root in den Python-Pfad aufnehmen
+# Add project root to Python path
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -30,41 +33,42 @@ PLANS_NAME = "nnUNetPlans"
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="Vergleicht die Top 3 Trials auf einem Testset."
+        description="Compare the top 3 trials on a test set."
     )
     parser.add_argument(
         "--testset",
         default="labelsTs",
-        help="Testset-Ordner (labelsTs oder labelsVal). Default: labelsTs",
+        help="Test set folder (labelsTs or labelsVal). Default: labelsTs",
     )
     parser.add_argument(
         "--folds",
         nargs="+",
         default=["0"],
-        help="Folds zu evaluieren. Default: 0",
+        help="Folds to evaluate. Default: 0",
     )
     parser.add_argument(
         "--output_dir",
-        default="hpo/top3_comparison",
-        help="Ausgabe-Ordner für Vergleichsergebnisse. Default: hpo/top3_comparison",
+        default="hpo/analysis",
+        help="Output directory for comparison results. Default: hpo/analysis",
     )
     return parser.parse_args()
 
 
 def ensure_env_vars():
+    """Ensure all required nnUNet environment variables are set."""
     required = ["nnUNet_raw", "nnUNet_preprocessed", "nnUNet_results"]
     missing = [var for var in required if not os.environ.get(var)]
     if missing:
         raise EnvironmentError(
-            f"Fehlende Umgebungsvariablen: {', '.join(missing)}"
+            f"Missing environment variables: {', '.join(missing)}"
         )
 
 
 def predict_with_trial(trial_name: str, testset: str, fold: str, env: dict):
-    """Erstellt Vorhersagen für einen Trial auf dem Testset."""
-    print(f"\n[{trial_name}] Erstelle Vorhersagen für {testset}...")
+    """Generate predictions for a trial on the test set."""
+    print(f"\n[{trial_name}] Generating predictions for {testset}...")
     
-    # Setze nnUNet_results auf den archivierten Ordner
+    # Set nnUNet_results to the archived directory
     results_dir = (
         Path("hpo")
         / "training_output"
@@ -74,13 +78,13 @@ def predict_with_trial(trial_name: str, testset: str, fold: str, env: dict):
     
     if not results_dir.exists():
         raise FileNotFoundError(
-            f"Trial {trial_name} hat keine archivierten Ergebnisse unter {results_dir}"
+            f"Trial {trial_name} has no archived results at {results_dir}"
         )
     
     trial_env = env.copy()
     trial_env["nnUNet_results"] = str(results_dir)
     
-    # Setze nnUNet_preprocessed auf den Trial-Preprocessing-Ordner
+    # Set nnUNet_preprocessed to the trial preprocessing directory
     preprocessed_dir = (
         Path("hpo")
         / "preprocessing_output"
@@ -91,12 +95,12 @@ def predict_with_trial(trial_name: str, testset: str, fold: str, env: dict):
     
     if not preprocessed_dir.exists():
         raise FileNotFoundError(
-            f"Trial {trial_name} hat kein Preprocessing unter {preprocessed_dir}"
+            f"Trial {trial_name} has no preprocessing at {preprocessed_dir}"
         )
     
     trial_env["nnUNet_preprocessed"] = str(preprocessed_dir.parent)
     
-    # Vorhersage-Ordner
+    # Prediction directory
     pred_dir = (
         results_dir
         / DATASET_NAME
@@ -106,12 +110,12 @@ def predict_with_trial(trial_name: str, testset: str, fold: str, env: dict):
     )
     pred_dir.mkdir(parents=True, exist_ok=True)
     
-    # Prüfe ob bereits Vorhersagen existieren
+    # Check if predictions already exist
     if list(pred_dir.glob("*.nii.gz")):
-        print(f"[{trial_name}] Vorhersagen existieren bereits in {pred_dir}")
+        print(f"[{trial_name}] Predictions already exist at {pred_dir}")
         return pred_dir
     
-    # nnUNetv2_predict Aufruf
+    # nnUNetv2_predict call
     cmd = [
         "nnUNetv2_predict",
         "-i", str(Path(os.environ["nnUNet_raw"]) / DATASET_NAME / testset.replace("labels", "images")),
@@ -121,7 +125,7 @@ def predict_with_trial(trial_name: str, testset: str, fold: str, env: dict):
         "-tr", TRAINER,
         "-p", PLANS_NAME,
         "-f", fold,
-        "--disable_tta",  # Schneller ohne TTA
+        "--disable_tta",  # Faster without TTA
     ]
     
     print(f"[{trial_name}] -> {' '.join(cmd)}")
@@ -131,21 +135,21 @@ def predict_with_trial(trial_name: str, testset: str, fold: str, env: dict):
 
 
 def evaluate_predictions(trial_name: str, pred_dir: Path, testset: str, output_dir: Path, env: dict):
-    """Evaluiert die Vorhersagen eines Trials."""
-    print(f"\n[{trial_name}] Evaluiere Vorhersagen...")
+    """Evaluate predictions for a trial."""
+    print(f"\n[{trial_name}] Evaluating predictions...")
     
     gt_dir = Path(os.environ["nnUNet_raw"]) / DATASET_NAME / testset
     if not gt_dir.exists():
-        raise FileNotFoundError(f"Ground-truth Ordner nicht gefunden: {gt_dir}")
+        raise FileNotFoundError(f"Ground-truth directory not found: {gt_dir}")
     
-    # Lade dataset.json und plans.json vom Trial
+    # Load dataset.json and plans.json from trial
     trial_dir = Path("hpo") / "preprocessing_output" / DATASET_NAME / trial_name
     dataset_json = trial_dir / DATASET_NAME / "dataset.json"
     plans_json = trial_dir / DATASET_NAME / f"{PLANS_NAME}.json"
     
     if not dataset_json.exists() or not plans_json.exists():
         raise FileNotFoundError(
-            f"Trial {trial_name} fehlt dataset.json oder {PLANS_NAME}.json"
+            f"Trial {trial_name} missing dataset.json or {PLANS_NAME}.json"
         )
     
     summary_file = output_dir / f"{trial_name}_{testset}_summary.json"
@@ -176,10 +180,10 @@ def main():
     env = os.environ.copy()
     
     print("=" * 80)
-    print("VERGLEICH DER TOP 3 TRIALS")
+    print("TOP 3 TRIALS COMPARISON")
     print("=" * 80)
     print(f"Trials: {', '.join(TOP_3_TRIALS)}")
-    print(f"Testset: {args.testset}")
+    print(f"Test set: {args.testset}")
     print(f"Folds: {', '.join(args.folds)}")
     print(f"Output: {output_dir}")
     print()
@@ -191,10 +195,10 @@ def main():
         
         for fold in args.folds:
             try:
-                # Erstelle Vorhersagen
+                # Generate predictions
                 pred_dir = predict_with_trial(trial_name, args.testset, fold, env)
                 
-                # Evaluiere Vorhersagen
+                # Evaluate predictions
                 summary_file = evaluate_predictions(
                     trial_name, pred_dir, args.testset, output_dir, env
                 )
@@ -205,16 +209,16 @@ def main():
                 }
                 
             except Exception as e:
-                print(f"[ERROR] {trial_name} Fold {fold} fehlgeschlagen: {e}")
+                print(f"[ERROR] {trial_name} Fold {fold} failed: {e}")
                 results[trial_name][fold] = {'error': str(e)}
     
-    # Zusammenfassung
+    # Summary
     print("\n" + "=" * 80)
-    print("ZUSAMMENFASSUNG")
+    print("SUMMARY")
     print("=" * 80)
-    print(f"\nErgebnisse gespeichert in: {output_dir}")
-    print("\nZum Anzeigen der Ergebnisse:")
-    print("  python hpo/analyze_comparison.py --results_dir", output_dir)
+    print(f"\nResults saved to: {output_dir}")
+    print("\nTo view results:")
+    print(f"  python hpo/scripts/analysis/analyze_comparison.py --results_dir {output_dir}")
     
     return results
 
