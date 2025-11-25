@@ -8,13 +8,33 @@ workflow can be reproduced from a single README.
 
 ## 0. How this folder is organized
 
-- `nnunet_hpo_preprocess.py`, `nnunet_train_eval_pipeline.py`, … – helper scripts described per section below.
-- `nnUNetPlans_template.json` – plan blueprint that Optuna copies/mutates when generating each trial.
-  - Contains default patch size, batch size, network settings; every trial writes its own modified copy.
-- `preprocessing_output/` – trial-specific preprocessed datasets (`trial_X/Dataset001...`).
-- `training_output/` – archived results (checkpoints/logs) copied after each training run.
-- `results/` – evaluation logs per trial/config/trainer.
-- Use this README as the “landing page” whenever you open `hpo/` in GitHub.
+```
+hpo/
+├── scripts/                    # All Python scripts
+│   ├── preprocessing/          # Preprocessing scripts
+│   │   └── nnunet_hpo_preprocess.py
+│   ├── training/               # Training & Evaluation
+│   │   └── nnunet_train_eval_pipeline.py
+│   ├── analysis/               # Analysis & Comparison
+│   │   ├── compare_top3_trials.py
+│   │   └── prepare_best_model.py
+│   └── utils/                  # Utility scripts
+│       ├── check_trial_labels.py
+│       ├── fix_case_spacing_and_reprocess.py
+│       ├── fix_decoder_lengths.py
+│       └── remap_labels.py
+├── config/                     # Templates & Configuration
+│   └── nnUNetPlans_template.json
+├── docs/                       # Additional Documentation
+│   └── BEST_PARAMETERS_SUMMARY.md
+├── analysis/                   # Analysis Results (JSON)
+│   ├── best_parameters_summary.json
+│   └── top3_analysis.json
+├── best_model/                 # Best Model (trial_8)
+├── preprocessing_output/        # Trial-specific preprocessed datasets
+├── training_output/            # Archived training results
+└── results/                    # Evaluation logs per trial
+```
 
 ## 1. Environment
 
@@ -35,7 +55,7 @@ source scripts/nnunet_env.sh   # exports nnUNet_raw/_preprocessed/_results
 - `remap_labels.py` (fix invalid label IDs before preprocessing):
 
 ```bash
-python hpo/remap_labels.py --dataset Dataset001_GroundTruth --max_label 3
+python hpo/scripts/utils/remap_labels.py --dataset Dataset001_GroundTruth --max_label 3
 ```
 
   - `--dataset`: name under `nnUNet_raw`; script reads `imagesTr/labelsTr`.
@@ -45,7 +65,7 @@ python hpo/remap_labels.py --dataset Dataset001_GroundTruth --max_label 3
 ### Start new trials (Optuna + nnUNetv2_preprocess)
 
 ```bash
-python hpo/nnunet_hpo_preprocess.py --n_trials 5
+python hpo/scripts/preprocessing/nnunet_hpo_preprocess.py --n_trials 5
 ```
 
 - Generates `n_trials` new hyperparameter samples, runs `nnUNetv2_preprocess` for each,
@@ -64,7 +84,7 @@ python hpo/nnunet_hpo_preprocess.py --n_trials 5
 - `fix_decoder_lengths.py` (repair old plan files):
 
 ```bash
-python hpo/fix_decoder_lengths.py --root hpo/preprocessing_output/Dataset001_GroundTruth
+python hpo/scripts/utils/fix_decoder_lengths.py --root hpo/preprocessing_output/Dataset001_GroundTruth
 ```
 
   - `--root`: directory that contains the `trial_X` folders.
@@ -73,13 +93,13 @@ python hpo/fix_decoder_lengths.py --root hpo/preprocessing_output/Dataset001_Gro
 - Inspect trial labels if needed:
 
 ```bash
-python hpo/check_trial_labels.py --source trials --trial trial_0
+python hpo/scripts/utils/check_trial_labels.py --source trials --trial trial_0
 ```
 
 ## 3. Fixing a broken case (e.g. AW062 spacing issue)
 
 ```bash
-python hpo/fix_case_spacing_and_reprocess.py \
+python hpo/scripts/utils/fix_case_spacing_and_reprocess.py \
     --case_id AW062-C0005656 \
     --spacing 0.04 0.04 0.04 \
     --backup
@@ -103,7 +123,7 @@ rm -rf data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d
 ### Train only (1 fold, no evaluation)
 
 ```bash
-python hpo/nnunet_train_eval_pipeline.py --folds 0 --skip_evaluation
+python hpo/scripts/training/nnunet_train_eval_pipeline.py --folds 0 --skip_evaluation
 ```
 
 - Trains all pending trials fold 0, archives results under `hpo/training_output/...`.
@@ -119,7 +139,7 @@ python hpo/nnunet_train_eval_pipeline.py --folds 0 --skip_evaluation
 2. Evaluate archived results afterwards:
 
 ```bash
-python hpo/nnunet_train_eval_pipeline.py \
+python hpo/scripts/training/nnunet_train_eval_pipeline.py \
     --folds 0 \
     --only_evaluate \
     --trials trial_0 trial_1

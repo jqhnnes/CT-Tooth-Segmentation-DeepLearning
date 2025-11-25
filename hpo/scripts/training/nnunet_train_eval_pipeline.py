@@ -20,7 +20,7 @@ from pathlib import Path
 from typing import Iterable, List, Tuple
 
 # Projekt-Root in den Python-Pfad aufnehmen
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
@@ -316,6 +316,18 @@ def run_eval_cmd(
             raise
 
 
+def sanitize_summary_file(summary_file: Path):
+    """
+    Replaces NaN tokens with null so the JSON is standards-compliant.
+    """
+    if not summary_file.exists():
+        return
+    text = summary_file.read_text()
+    if "NaN" not in text:
+        return
+    summary_file.write_text(text.replace("NaN", "null"))
+
+
 def with_device(cmd: List[str], device: str | None) -> List[str]:
     """
     Returns a copy of cmd with --device <value> replaced (or appended) by `device`.
@@ -374,58 +386,79 @@ def train_trial(
 
 def evaluate_trial(
     trial_dir: Path,
-    dataset_id: int,
+    dataset_name: str,
     folds: List[str],
     configuration: str,
     trainer: str,
     plans_name: str,
     env: dict,
     eval_base: Path,
-    device: str | None,
     timeout: int | None = None,
 ):
-    eval_cmd = [
-        "nnUNetv2_evaluate",
-        str(dataset_id),
-        "-c",
-        configuration,
-        "-tr",
-        trainer,
-        "-p",
-        plans_name,
-    ]
-    for fold in folds:
-        eval_cmd.extend(["-f", str(fold)])
+    """
+    Evaluates each requested fold by comparing the validation predictions against the
+    corresponding ground-truth labels using nnUNetv2_evaluate_folder.
+    """
+    gt_dir = Path(os.environ["nnUNet_raw"]) / dataset_name / "labelsTr"
+    if not gt_dir.exists():
+        raise FileNotFoundError(
+            f"Ground-truth labels nicht gefunden: {gt_dir}. "
+            "Stelle sicher, dass nnUNet_raw korrekt gesetzt ist."
+        )
 
-    if device:
-        eval_cmd.extend(["--device", device])
+    dataset_json = trial_dir / dataset_name / "dataset.json"
+    if not dataset_json.exists():
+        raise FileNotFoundError(
+            f"dataset.json für {trial_dir.name} fehlt unter {dataset_json}."
+        )
 
-    log_file = eval_base / "evaluation.log"
+    plans_file = trial_dir / dataset_name / f"{plans_name}.json"
+    if not plans_file.exists():
+        raise FileNotFoundError(
+            f"{plans_name}.json für {trial_dir.name} fehlt unter {plans_file}."
+        )
+
+    results_root = Path(env["nnUNet_results"]).resolve()
+    pred_root = (
+        results_root
+        / dataset_name
+        / f"{trainer}__{plans_name}__{configuration}"
+    )
+
     timeout_str = f" (Timeout: {timeout}s)" if timeout and timeout > 0 else ""
-    print(f"[{trial_dir.name}/evaluate] -> {' '.join(eval_cmd)}{timeout_str} (log: {log_file})")
+    log_file = eval_base / "evaluation.log"
 
-    try:
-        run_eval_cmd(eval_cmd, env, log_file, "w", timeout=timeout)
-    except subprocess.TimeoutExpired:
+    for idx, fold in enumerate(folds):
+        pred_dir = pred_root / f"fold_{fold}" / "validation"
+        if not pred_dir.exists():
+            print(
+                f"[WARN] Vorhersage-Ordner für {trial_dir.name} Fold {fold} fehlt ({pred_dir}). "
+                "Überspringe Evaluation dieses Folds."
+            )
+            continue
+
+        summary_file = eval_base / f"fold_{fold}_summary.json"
+        eval_cmd = [
+            "nnUNetv2_evaluate_folder",
+            str(gt_dir),
+            str(pred_dir),
+            "-djfile",
+            str(dataset_json),
+            "-pfile",
+            str(plans_file),
+            "-o",
+            str(summary_file),
+            "--chill",
+        ]
+
         print(
-            f"[ERROR] Evaluation für {trial_dir.name} hat Timeout erreicht "
-            f"({timeout}s). Überspringe diesen Trial."
+            f"[{trial_dir.name}/evaluate] -> {' '.join(eval_cmd)}{timeout_str} "
+            f"(log: {log_file})"
         )
-        raise
-    except subprocess.CalledProcessError as exc:
-        # Automatic fallback to CPU if evaluation failed (e.g., due to OOM)
-        if device == "cpu":
-            raise
-        print(
-            f"[WARN] Evaluation für {trial_dir.name} auf Device '{device}' fehlgeschlagen "
-            f"(Exit-Code {exc.returncode}). Versuche Fallback auf CPU ohne TTA ..."
-        )
-        cpu_cmd = with_device(eval_cmd, "cpu")
-        fallback_env = env.copy()
-        fallback_env["NNUNet_no_tta"] = "1"
-        # Bei Fallback Timeout halbieren, da CPU langsamer ist
-        fallback_timeout = timeout // 2 if timeout and timeout > 0 else None
-        run_eval_cmd(cpu_cmd, fallback_env, log_file, "a", timeout=fallback_timeout)
+
+        mode = "w" if idx == 0 else "a"
+        run_eval_cmd(eval_cmd, env, log_file, mode=mode, timeout=timeout)
+        sanitize_summary_file(summary_file)
 
 
 
@@ -480,7 +513,7 @@ def main():
                 )
                 cleanup_staged_dataset(dataset_stage, used_symlink)
                 continue
-            env["nnUNet_results"] = str(pre_archived_dir)
+            env["nnUNet_results"] = str(pre_archived_dir.parent)
         archived_results_dir: Path | None = None
         try:
             if not args.only_evaluate:
@@ -502,7 +535,7 @@ def main():
                     print(
                         f"[{trial_dir.name}] Ergebnisse archiviert unter {archived_results_dir}."
                     )
-                    env["nnUNet_results"] = str(archived_results_dir)
+                    env["nnUNet_results"] = str(archived_results_dir.parent)
                 else:
                     print(
                         f"[WARN] Konnte Ergebnisse für {trial_dir.name} nicht archivieren."
@@ -510,14 +543,13 @@ def main():
             if not args.skip_evaluation:
                 evaluate_trial(
                     trial_dir,
-                    dataset_id,
+                    args.dataset_name,
                     folds,
                     args.configuration,
                     args.trainer,
                     args.plans_name,
                     env,
                     eval_base,
-                    args.device,
                     timeout=args.eval_timeout if args.eval_timeout > 0 else None,
                 )
         except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:

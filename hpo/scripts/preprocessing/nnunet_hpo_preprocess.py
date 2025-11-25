@@ -11,7 +11,7 @@ from copy import deepcopy
 
 # stelle sicher, dass das Projekt-Root im Python-Pfad liegt,
 # damit `scripts` und andere Module gefunden werden
-PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
@@ -40,10 +40,10 @@ if not all([nnunet_raw, nnunet_preprocessed, nnunet_results]):
     )
 
 input_folder = os.path.join(nnunet_raw, dataset_name)
-hpo_dir = "hpo"
+hpo_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 # Base-Ordner für HPO-Preprocessing-Outputs innerhalb von hpo/
 hpo_preprocessing_base = os.path.join(hpo_dir, "preprocessing_output")
-template_plan_path = os.path.join(hpo_dir, "nnUNetPlans_template.json")
+template_plan_path = os.path.join(hpo_dir, "config", "nnUNetPlans_template.json")
 dataset_output_dir = os.path.join(hpo_preprocessing_base, dataset_name)
 
 os.makedirs(hpo_dir, exist_ok=True)
@@ -250,7 +250,7 @@ def objective(trial):
     use_mask_for_norm = trial.suggest_categorical("use_mask_for_norm", [False, True])
 
     trial_idx, trial_name, trial_output_dir = reserve_trial_slot(dataset_output_dir)
-    trial_plan_path = os.path.join(hpo_dir, f"nnUNetPlans_temp_{trial_name}.json")
+    trial_plan_path = os.path.join(hpo_dir, "config", f"nnUNetPlans_temp_{trial_name}.json")
     
     # Temporärer Ordner für nnUNet (nnUNet erwartet: nnUNet_preprocessed/DatasetXXX/...)
     # Wir setzen nnUNet_preprocessed auf dataset_output_dir, damit nnUNet dort DatasetXXX/ erstellt
