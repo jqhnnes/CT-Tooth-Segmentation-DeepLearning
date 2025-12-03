@@ -20,7 +20,7 @@ import re
 from copy import deepcopy
 
 # Ensure project root is in Python path so `scripts` and other modules can be found
-PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../.."))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
@@ -189,8 +189,16 @@ def ensure_fingerprint_for_all_trials(base_dir: str, dataset_name: str, dataset_
         shutil.copy2(source_fingerprint, target)
         print(f"[{os.path.basename(trial_dir)}] dataset_fingerprint.json added.")
 
-def replace_hpo_parameters(obj, patch_tuple, batch_size, features_per_stage=None, 
-                          n_conv_per_stage=None, batch_dice=None, use_mask_for_norm=None):
+def replace_hpo_parameters(
+    obj,
+    patch_tuple,
+    batch_size,
+    features_per_stage=None,
+    n_conv_per_stage=None,
+    batch_dice=None,
+    use_mask_for_norm=None,
+    spacing=None,
+):
     """
     Traverses a dict/list and replaces HPO parameters:
     - patch_size: Patch size
@@ -199,6 +207,7 @@ def replace_hpo_parameters(obj, patch_tuple, batch_size, features_per_stage=None
     - n_conv_per_stage: Number of convolutions per stage
     - batch_dice: Batch-Dice Loss flag
     - use_mask_for_norm: Mask for normalization
+    - spacing: Target voxel spacing
     
     This function modifies obj in-place.
     
@@ -210,6 +219,7 @@ def replace_hpo_parameters(obj, patch_tuple, batch_size, features_per_stage=None
         n_conv_per_stage: List of convolutions per stage
         batch_dice: Boolean flag for batch dice
         use_mask_for_norm: Boolean flag for mask normalization
+        spacing: Tuple of (sx, sy, sz) target spacing values
     """
     if isinstance(obj, dict):
         for k, v in obj.items():
@@ -232,27 +242,55 @@ def replace_hpo_parameters(obj, patch_tuple, batch_size, features_per_stage=None
             # Features per stage
             elif "features_per_stage" in lk and isinstance(v, list) and features_per_stage is not None:
                 obj[k] = features_per_stage
-            # n_conv_per_stage (encoder)
-            elif "n_conv_per_stage" in lk and isinstance(v, list) and n_conv_per_stage is not None:
-                obj[k] = n_conv_per_stage
-            # n_conv_per_stage_decoder
-            elif "n_conv_per_stage_decoder" in lk and isinstance(v, list) and n_conv_per_stage is not None:
+            # n_conv_per_stage_decoder must be handled before generic encoder branch
+            elif (
+                "n_conv_per_stage_decoder" in lk
+                and isinstance(v, list)
+                and n_conv_per_stage is not None
+            ):
                 # Decoder typically has n_stages-1 convolutions
                 obj[k] = n_conv_per_stage[:-1] if len(n_conv_per_stage) > 1 else n_conv_per_stage
+            # n_conv_per_stage (encoder)
+            elif (
+                "n_conv_per_stage" in lk
+                and "decoder" not in lk
+                and isinstance(v, list)
+                and n_conv_per_stage is not None
+            ):
+                obj[k] = n_conv_per_stage
             # batch_dice
             elif "batch_dice" in lk and batch_dice is not None:
                 obj[k] = batch_dice
             # use_mask_for_norm
             elif "use_mask_for_norm" in lk and isinstance(v, list) and use_mask_for_norm is not None:
                 obj[k] = [use_mask_for_norm]
+            # spacings (only adjust config spacing field)
+            elif k == "spacing" and isinstance(v, list) and spacing is not None and len(v) == 3:
+                obj[k] = [float(spacing[0]), float(spacing[1]), float(spacing[2])]
             else:
-                replace_hpo_parameters(v, patch_tuple, batch_size, features_per_stage,
-                                    n_conv_per_stage, batch_dice, use_mask_for_norm)
+                replace_hpo_parameters(
+                    v,
+                    patch_tuple,
+                    batch_size,
+                    features_per_stage,
+                    n_conv_per_stage,
+                    batch_dice,
+                    use_mask_for_norm,
+                    spacing,
+                )
     elif isinstance(obj, list):
         for i in range(len(obj)):
             if isinstance(obj[i], (dict, list)):
-                replace_hpo_parameters(obj[i], patch_tuple, batch_size, features_per_stage,
-                                      n_conv_per_stage, batch_dice, use_mask_for_norm)
+                replace_hpo_parameters(
+                    obj[i],
+                    patch_tuple,
+                    batch_size,
+                    features_per_stage,
+                    n_conv_per_stage,
+                    batch_dice,
+                    use_mask_for_norm,
+                    spacing,
+                )
     # Primitive types are not traversed further
 
 
@@ -268,11 +306,17 @@ def objective(trial):
         Proxy score (placeholder - should be replaced with actual validation metric)
     """
     # ===== PARAMETER SPACE =====
-    # Patch sizes (important for memory/performance trade-off)
-    patch_x = trial.suggest_categorical("patch_x", [64, 128, 160])
-    patch_y = trial.suggest_categorical("patch_y", [64, 128, 160])
-    patch_z = trial.suggest_categorical("patch_z", [64, 128, 160])
-    patch = (patch_x, patch_y, patch_z)
+    # Curated patch options (top-performing setups from analysis)
+    patch = trial.suggest_categorical(
+        "patch",
+        [
+            (160, 160, 64),   # trial_8
+            (128, 128, 160),  # trial_4
+            (128, 128, 128),  # trial_7
+            (128, 64, 128),   # trial_1
+            (64, 128, 64),    # trial_3
+        ],
+    )
     
     # Batch size
     batch_size = trial.suggest_categorical("batch_size", [2, 4])
@@ -289,15 +333,26 @@ def objective(trial):
         features_base * 10
     ]
     
-    # Number of convolutions per stage (more = deeper network)
-    n_conv_per_stage = trial.suggest_categorical("n_conv_per_stage", [2, 3])
+    # Number of convolutions per stage fixed to 2 (best across analysis)
+    n_conv_per_stage = 2
     n_conv_list = [n_conv_per_stage] * 6  # 6 stages
     
-    # Batch-Dice Loss (can affect performance)
-    batch_dice = trial.suggest_categorical("batch_dice", [False, True])
+    # Batch-Dice Loss (mostly false, but allow exploration)
+    batch_dice = trial.suggest_categorical("batch_dice", [False, False, True])
     
-    # Normalization with mask (can help with CT data)
-    use_mask_for_norm = trial.suggest_categorical("use_mask_for_norm", [False, True])
+    # Masked normalization is detrimental -> hardcode False
+    use_mask_for_norm = False
+
+    # Encourage higher-resolution spacings for smoother surfaces
+    spacing = trial.suggest_categorical(
+        "spacing",
+        [
+            (0.1, 0.1, 0.1),
+            (0.08, 0.08, 0.08),
+            (0.05, 0.05, 0.05),
+            (0.06, 0.06, 0.06),  # bias towards finest spacing
+        ],
+    )
 
     trial_idx, trial_name, trial_output_dir = reserve_trial_slot(dataset_output_dir)
     trial_plan_path = os.path.join(hpo_dir, "config", f"nnUNetPlans_temp_{trial_name}.json")
@@ -314,8 +369,16 @@ def objective(trial):
         plan = json.load(f)
 
     plan_mod = deepcopy(plan)
-    replace_hpo_parameters(plan_mod, patch, batch_size, features_per_stage,
-                          n_conv_list, batch_dice, use_mask_for_norm)
+    replace_hpo_parameters(
+        plan_mod,
+        patch,
+        batch_size,
+        features_per_stage,
+        n_conv_list,
+        batch_dice,
+        use_mask_for_norm,
+        spacing,
+    )
 
     # Save the modified plans file in the hpo directory (for traceability)
     with open(trial_plan_path, "w") as f:
@@ -362,6 +425,7 @@ def objective(trial):
     print(f"  Convs per stage: {n_conv_per_stage}")
     print(f"  Batch Dice: {batch_dice}")
     print(f"  Use mask for norm: {use_mask_for_norm}")
+    print(f"  Target spacing: {spacing}")
     print(f"  Output: {trial_output_dir}")
     print("Command:", " ".join(cmd))
 
@@ -414,7 +478,7 @@ def objective(trial):
     # IMPORTANT: The current proxy score is only a placeholder!
     # It simply maximizes the sum of parameters, which is NOT meaningful.
     # For real HPO, you must use a real metric here (e.g., Dice score after training).
-    proxy_score = patch_x + patch_y + patch_z + batch_size + features_base + n_conv_per_stage
+    proxy_score = sum(patch) + batch_size + features_base + n_conv_per_stage - sum(spacing)
     print(f"[{trial_name}] Proxy score: {proxy_score} (PLACEHOLDER ONLY!)")
     return proxy_score
 
