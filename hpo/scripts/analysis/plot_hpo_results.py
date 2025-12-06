@@ -11,7 +11,7 @@ Usage:
 import json
 import sys
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Any, Dict, List, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -29,19 +29,6 @@ OUTPUT_DIR = ANALYSIS_DIR / "plots"
 def load_trial_results() -> Dict[str, Dict]:
     """Load Dice scores and parameters for all trials."""
     trials_data = {}
-    
-    # Load best parameters summary for parameter information
-    summary_file = ANALYSIS_DIR / "best_parameters_summary.json"
-    if summary_file.exists():
-        with open(summary_file, 'r') as f:
-            summary = json.load(f)
-        
-        # Extract top 3 trials data
-        for trial_name, trial_data in summary.get("top_3_trials", {}).items():
-            trials_data[trial_name] = {
-                "dice": trial_data["dice_score"],
-                "parameters": trial_data["parameters"]
-            }
     
     # Load all trial results from summary.json files
     for trial_dir in RESULTS_DIR.iterdir():
@@ -62,38 +49,32 @@ def load_trial_results() -> Dict[str, Dict]:
         if dice_score is None:
             continue
         
-        # Load parameters from preprocessing output if not already loaded
-        if trial_name not in trials_data:
-            plans_file = Path("hpo") / "preprocessing_output" / "Dataset001_GroundTruth" / trial_name / "Dataset001_GroundTruth" / "nnUNetPlans.json"
-            if plans_file.exists():
-                with open(plans_file, 'r') as f:
-                    plans = json.load(f)
-                
-                config = plans.get("configurations", {}).get("3d_fullres", {})
-                arch = config.get("architecture", {}).get("arch_kwargs", {})
-                
-                features_per_stage = arch.get("features_per_stage", [])
-                features_base = features_per_stage[0] if features_per_stage else None
-                
-                trials_data[trial_name] = {
-                    "dice": dice_score,
-                    "parameters": {
-                        "patch_size": config.get("patch_size", []),
-                        "batch_size": config.get("batch_size"),
-                        "features_base": features_base,
-                        "features_per_stage": features_per_stage,
-                        "n_conv_per_stage": arch.get("n_conv_per_stage", [])[0] if arch.get("n_conv_per_stage") else None,
-                        "batch_dice": config.get("batch_dice"),
-                        "use_mask_for_norm": config.get("use_mask_for_norm", [False])[0] if isinstance(config.get("use_mask_for_norm"), list) else config.get("use_mask_for_norm")
-                    }
-                }
-            else:
-                trials_data[trial_name] = {
-                    "dice": dice_score,
-                    "parameters": {}
-                }
-        else:
-            trials_data[trial_name]["dice"] = dice_score
+        plans_file = Path("hpo") / "preprocessing_output" / "Dataset001_GroundTruth" / trial_name / "Dataset001_GroundTruth" / "nnUNetPlans.json"
+        parameters: Dict[str, Any] = {}
+        if plans_file.exists():
+            with open(plans_file, 'r') as f:
+                plans = json.load(f)
+            
+            config = plans.get("configurations", {}).get("3d_fullres", {})
+            arch = config.get("architecture", {}).get("arch_kwargs", {})
+            
+            features_per_stage = arch.get("features_per_stage", [])
+            features_base = features_per_stage[0] if features_per_stage else None
+            
+            parameters = {
+                "patch_size": config.get("patch_size", []),
+                "batch_size": config.get("batch_size"),
+                "features_base": features_base,
+                "features_per_stage": features_per_stage,
+                "n_conv_per_stage": arch.get("n_conv_per_stage"),
+                "batch_dice": config.get("batch_dice"),
+                "use_mask_for_norm": config.get("use_mask_for_norm", [False])[0] if isinstance(config.get("use_mask_for_norm"), list) else config.get("use_mask_for_norm"),
+                "spacing": config.get("spacing"),
+            }
+        trials_data[trial_name] = {
+            "dice": dice_score,
+            "parameters": parameters,
+        }
     
     return trials_data
 
@@ -202,6 +183,50 @@ def plot_patch_size_vs_dice(trials_data: Dict[str, Dict], output_file: Path):
     plt.close()
 
 
+def plot_spacing_vs_dice(trials_data: Dict[str, Dict], output_file: Path):
+    """Plot Dice vs target spacing."""
+    x_values = []
+    y_values = []
+    labels = []
+    
+    for trial_name, data in sorted(trials_data.items()):
+        dice = data.get("dice")
+        spacing = data.get("parameters", {}).get("spacing")
+        if dice is None or not spacing or len(spacing) != 3:
+            continue
+        iso_spacing = sum(spacing) / 3.0
+        x_values.append(iso_spacing)
+        y_values.append(dice)
+        labels.append(f"{trial_name}\n{spacing}")
+    
+    if not x_values:
+        print("[WARN] No spacing data available")
+        return
+    
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.scatter(x_values, y_values, s=120, alpha=0.7, edgecolors='black', linewidth=1.5)
+    
+    for i, label in enumerate(labels):
+        ax.annotate(label, (x_values[i], y_values[i]), xytext=(5, 5), textcoords='offset points', fontsize=8)
+    
+    z = np.polyfit(x_values, y_values, 1)
+    p = np.poly1d(z)
+    sorted_x = sorted(x_values)
+    ax.plot(sorted_x, p(sorted_x), "r--", alpha=0.5, label='Trend line')
+    ax.legend()
+    
+    ax.set_xlabel('Isotropic Spacing (mm)', fontsize=12, fontweight='bold')
+    ax.set_ylabel('Dice Score', fontsize=12, fontweight='bold')
+    ax.set_title('Dice Score vs Target Spacing', fontsize=14, fontweight='bold')
+    ax.grid(True, alpha=0.3)
+    ax.set_ylim([0, 1.0])
+    
+    plt.tight_layout()
+    plt.savefig(output_file, dpi=300, bbox_inches='tight')
+    print(f"Saved: {output_file}")
+    plt.close()
+
+
 def create_summary_plot(trials_data: Dict[str, Dict], output_file: Path):
     """Create a summary plot showing all trials sorted by Dice score."""
     sorted_trials = sorted(trials_data.items(), key=lambda x: x[1].get("dice", 0), reverse=True)
@@ -283,12 +308,19 @@ def main():
     plot_parameter_vs_dice(
         trials_data,
         "Convolutions per Stage",
-        lambda p: p.get("n_conv_per_stage"),
+        lambda p: (
+            p.get("n_conv_per_stage")[0]
+            if isinstance(p.get("n_conv_per_stage"), list) and p.get("n_conv_per_stage")
+            else p.get("n_conv_per_stage")
+        ),
         OUTPUT_DIR / "dice_vs_n_conv.png"
     )
     
     # Patch size (volume)
     plot_patch_size_vs_dice(trials_data, OUTPUT_DIR / "dice_vs_patch_size.png")
+    
+    # Spacing
+    plot_spacing_vs_dice(trials_data, OUTPUT_DIR / "dice_vs_spacing.png")
     
     # Batch dice (boolean)
     plot_parameter_vs_dice(

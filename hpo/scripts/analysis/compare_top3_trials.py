@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """
-Compare the top 3 trials on a test set.
+Compare a set of trials on a test set.
 
-This script generates predictions and evaluates them for the top 3 performing
-HPO trials, allowing for direct comparison of their performance.
+This script generates predictions and evaluates them for selected HPO trials,
+allowing for direct comparison of their performance.
 
-Usage:
+Examples:
     python hpo/scripts/analysis/compare_top3_trials.py --testset labelsTs
+    python hpo/scripts/analysis/compare_top3_trials.py --trials trial_15 trial_16 trial_17
 """
 import argparse
 import os
@@ -15,7 +16,7 @@ import sys
 from pathlib import Path
 
 # Add project root to Python path
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
@@ -23,7 +24,7 @@ from scripts.nnunet_env import load_env
 
 load_env()
 
-TOP_3_TRIALS = ['trial_8', 'trial_1', 'trial_3']
+DEFAULT_TRIALS = ['trial_8', 'trial_1', 'trial_3']
 DATASET_NAME = "Dataset001_GroundTruth"
 DATASET_ID = 1
 CONFIGURATION = "3d_fullres"
@@ -45,6 +46,12 @@ def parse_args():
         nargs="+",
         default=["0"],
         help="Folds to evaluate. Default: 0",
+    )
+    parser.add_argument(
+        "--trials",
+        nargs="+",
+        default=DEFAULT_TRIALS,
+        help=f"Trials to compare. Default: {', '.join(DEFAULT_TRIALS)}",
     )
     parser.add_argument(
         "--output_dir",
@@ -180,9 +187,9 @@ def main():
     env = os.environ.copy()
     
     print("=" * 80)
-    print("TOP 3 TRIALS COMPARISON")
+    print("TRIAL COMPARISON")
     print("=" * 80)
-    print(f"Trials: {', '.join(TOP_3_TRIALS)}")
+    print(f"Trials: {', '.join(args.trials)}")
     print(f"Test set: {args.testset}")
     print(f"Folds: {', '.join(args.folds)}")
     print(f"Output: {output_dir}")
@@ -190,7 +197,7 @@ def main():
     
     results = {}
     
-    for trial_name in TOP_3_TRIALS:
+    for trial_name in args.trials:
         results[trial_name] = {}
         
         for fold in args.folds:
