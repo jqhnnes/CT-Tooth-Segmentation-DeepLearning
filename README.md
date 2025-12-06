@@ -38,7 +38,7 @@ CT-Tooth-Segmentation-DeepLearning/
 │   ├── training_output/         # Trained models and checkpoints
 │   └── results/                 # Evaluation results
 ├── scripts/                      # Main project scripts
-│   └── nnunet_env.sh            # Environment setup
+│   └── 00_nnunet_env.sh         # Environment setup
 ├── data/                        # Data directory (not in repo)
 ├── notebooks/                   # Jupyter notebooks for exploration
 └── README.md                    # This file
@@ -65,7 +65,7 @@ CT-Tooth-Segmentation-DeepLearning/
    ```bash
    conda env create -f environment.yml
    conda activate <env-name>
-   source scripts/nnunet_env.sh
+   source scripts/00_nnunet_env.sh
    ```
 
 3. **Prepare your data**
@@ -134,7 +134,7 @@ For detailed parameter analysis, see [`hpo/docs/BEST_PARAMETERS_SUMMARY.md`](hpo
 
 ### Environment Variables
 
-Set the following environment variables (via `scripts/nnunet_env.sh`):
+Set the following environment variables (via `scripts/00_nnunet_env.sh`):
 
 - `nnUNet_raw`: Path to raw dataset directory
 - `nnUNet_preprocessed`: Path to preprocessed data

@@ -44,7 +44,7 @@ hpo/
 ```bash
 cd /ssd/geiger/CT-Tooth-Segmentation-DeepLearning
 conda activate /ssd/geiger/myenv
-source scripts/nnunet_env.sh   # exports nnUNet_raw/_preprocessed/_results
+source scripts/00_nnunet_env.sh   # exports nnUNet_raw/_preprocessed/_results
 ```
 
 - Always execute new commands from the project root after the environment has been activated.
@@ -157,7 +157,7 @@ python hpo/scripts/training/nnunet_train_eval_pipeline.py \
 ### Train a specific trial manually (e.g., trial_15 long-run)
 
 ```bash
-source scripts/nnunet_env.sh
+source scripts/00_nnunet_env.sh
 export nnUNet_preprocessed=/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/hpo/preprocessing_output/Dataset001_GroundTruth/trial_15
 export nnUNet_results=/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/hpo/training_output/trial_15/nnUNet_results
 nnUNetv2_train Dataset001_GroundTruth 3d_fullres 0 -tr nnUNetTrainer -p nnUNetPlans --npz

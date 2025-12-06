@@ -105,7 +105,7 @@ def ensure_env_vars():
     if missing:
         raise EnvironmentError(
             f"Missing nnUNet environment variables: {', '.join(missing)}. "
-            "Please set them in scripts/nnunet_env.sh."
+            "Please set them in scripts/00_nnunet_env.sh."
         )
 
 

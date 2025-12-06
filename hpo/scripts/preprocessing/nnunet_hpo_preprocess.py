@@ -48,7 +48,7 @@ if not all([nnunet_raw, nnunet_preprocessed, nnunet_results]):
     raise EnvironmentError(
         "nnUNet requires the environment variables 'nnUNet_raw', "
         "'nnUNet_preprocessed' and 'nnUNet_results'. Please set them "
-        "e.g. in scripts/nnunet_env.sh."
+        "e.g. in scripts/00_nnunet_env.sh."
     )
 
 input_folder = os.path.join(nnunet_raw, dataset_name)
