@@ -17,6 +17,8 @@ hpo/
 │   │   └── nnunet_train_eval_pipeline.py
 │   ├── analysis/               # Analysis & Comparison
 │   │   ├── compare_top3_trials.py
+│   │   ├── update_trial_summary.py
+│   │   ├── plot_hpo_results.py
 │   │   └── prepare_best_model.py
 │   └── utils/                  # Utility scripts
 │       ├── check_trial_labels.py
@@ -27,9 +29,10 @@ hpo/
 │   └── nnUNetPlans_template.json
 ├── docs/                       # Additional Documentation
 │   └── BEST_PARAMETERS_SUMMARY.md
-├── analysis/                   # Analysis Results (JSON)
+├── analysis/                   # Analysis Results / Plots
 │   ├── best_parameters_summary.json
-│   └── top3_analysis.json
+│   ├── top3_analysis.json
+│   └── plots/
 ├── best_model/                 # Best Model (trial_8)
 ├── preprocessing_output/        # Trial-specific preprocessed datasets
 ├── training_output/            # Archived training results
@@ -81,14 +84,13 @@ python hpo/scripts/preprocessing/nnunet_hpo_preprocess.py --n_trials 5
   and `dataset_fingerprint.json`.
 - Some older trials may need their decoder setup fixed:
 
-- `fix_decoder_lengths.py` (repair old plan files):
+- `fix_decoder_lengths.py` (repair old plan files so decoder depth matches stages):
 
 ```bash
-python hpo/scripts/utils/fix_decoder_lengths.py --root hpo/preprocessing_output/Dataset001_GroundTruth
+python hpo/scripts/utils/fix_decoder_lengths.py --dataset Dataset001_GroundTruth
 ```
 
-  - `--root`: directory that contains the `trial_X` folders.
-  - Optional `--dry_run` prints which files would change.
+  - Runs through `hpo/preprocessing_output/Dataset001_GroundTruth/trial_*` and truncates decoder lists.
 
 - Inspect trial labels if needed:
 
@@ -152,13 +154,71 @@ python hpo/scripts/training/nnunet_train_eval_pipeline.py \
   - `--device cuda:1` / `--device cpu`: force a specific device.
   - Automatic CPU fallback occurs if GPU evaluation raises OOM.
 
+### Train a specific trial manually (e.g., trial_15 long-run)
+
+```bash
+source scripts/nnunet_env.sh
+export nnUNet_preprocessed=/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/hpo/preprocessing_output/Dataset001_GroundTruth/trial_15
+export nnUNet_results=/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/hpo/training_output/trial_15/nnUNet_results
+nnUNetv2_train Dataset001_GroundTruth 3d_fullres 0 -tr nnUNetTrainer -p nnUNetPlans --npz
+```
+
+- Repeat per fold by changing the last argument (`0 → 1`, etc.).
+- After the default schedule finishes you can continue fine-tuning:
+
+```bash
+nnUNetv2_train Dataset001_GroundTruth 3d_fullres 0 -tr nnUNetTrainer -p nnUNetPlans --continue_training
+```
+
+- Log GPU constraints while training:
+
+```bash
+nvidia-smi --query-gpu=timestamp,name,memory.used,memory.total,utilization.gpu --format=csv -l 60 > logs/trial15_gpu_usage.csv
+```
+
 ## 6. Monitoring
 
 - Training log: `data/nnUNet_results/.../fold_0/training_log_*.txt`
 - Evaluation log: `hpo/results/<dataset>/<trial>/<config>/<trainer>/evaluation.log`
 - Archived checkpoints: `hpo/training_output/<trial>/nnUNet_results/...`
 
-## 7. Troubleshooting snippets
+## 7. Analysis & spacing-focused evaluation
+
+### Regenerate JSON summaries (includes spacing ranking)
+
+```bash
+python hpo/scripts/analysis/update_trial_summary.py
+```
+
+- Reads every trial under `hpo/results/...` + `hpo/preprocessing_output/...`.
+- Produces `hpo/analysis/best_parameters_summary.json` and `top3_analysis.json`
+  with explicit spacing statistics.
+
+### Produce plots (Dice vs. parameters, incl. spacing)
+
+```bash
+pip install matplotlib  # once
+python hpo/scripts/analysis/plot_hpo_results.py
+```
+
+- Outputs PNGs into `hpo/analysis/plots/`, e.g. `dice_vs_spacing.png`.
+- Use these when reporting how spacing vs Dice behaves or when checking GPU limits:
+  cross-reference the chosen spacing with your `nvidia-smi` logs to justify feasible
+  resolutions.
+
+### Compare arbitrary trial sets (predictions + evaluation)
+
+```bash
+python hpo/scripts/analysis/compare_top3_trials.py \
+    --trials trial_1 trial_3 trial_4 trial_8 trial_15 trial_16 trial_17 trial_18 \
+    --testset labelsVal \
+    --folds 0
+```
+
+- `labelsVal` (or `labelsTr`) must exist under `data/nnUNet_raw/Dataset001_GroundTruth`.
+- The script automatically switches `nnUNet_preprocessed`/`nnUNet_results` for each trial.
+
+## 8. Troubleshooting snippets
 
 Check spacing/shape of a single preprocessed case:
 
