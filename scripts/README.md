@@ -4,38 +4,38 @@ This folder contains helper scripts that orchestrate environment setup, preproce
 
 ## Shell Scripts
 
-### `00_nnunet_env.sh`
+### `nnunet_env.sh`
 
 Sets the nnU-Net environment variables and ensures the conda binary directory is on your `PATH`.
 
 ```bash
-source scripts/00_nnunet_env.sh
+source scripts/nnunet_env.sh
 ```
 
 Run this before any nnU-Net CLI commands.
 
-### `01_run_preprocess.sh`
+### `00_plan.sh`
 
-Convenience wrapper around `nnUNetv2_plan_and_preprocess`.
+Runs fingerprint extraction + planning only (no preprocessing). After this you can edit `nnUNetPlans.json`.
 
 ```bash
-chmod +x scripts/01_run_preprocess.sh        # once
-
-# Default: Dataset001_GroundTruth, 3d_fullres, 8 processes
-bash scripts/01_run_preprocess.sh
-
-# Custom dataset/config/process count
-bash scripts/01_run_preprocess.sh Dataset001_GroundTruth 3d_fullres 12
+chmod +x scripts/00_plan.sh
+bash scripts/00_plan.sh Dataset001_GroundTruth 1   # final number = CPU processes for fingerprint/planning
+# set PLANS_NAME=CustomPlans if you want a different identifier
 ```
 
-Arguments:
-1. Dataset name (default `Dataset001_GroundTruth`, numeric ID auto-extracted).
-2. Configuration (`3d_fullres`, `2d`, etc.).
-3. Number of processes passed to `-np`.
+### `01_preprocess.sh`
+
+Preprocessing only, assumes plans already exist (e.g., edited after running the planner script).
+
+```bash
+chmod +x scripts/01_preprocess.sh
+bash scripts/01_preprocess.sh Dataset001_GroundTruth 3d_fullres 1   # final number = CPU processes for preprocessing
+# use PLANS_NAME=CustomPlans if you created a differently named plans file
+```
 
 ## Python Modules
 
 - `nnunet_env.py`: Python variant of the environment loader (used when importing from scripts).
 
 All other automation scripts (training, analysis, etc.) live under `hpo/scripts/`.
-

@@ -6,7 +6,7 @@ def load_env():
     """
     Loads nnU-Net environment variables from the nnunet_env.sh script into Python.
     """
-    script_path = Path(__file__).parent / "00_nnunet_env.sh"
+    script_path = Path(__file__).parent / "nnunet_env.sh"
 
     if not script_path.exists():
         raise FileNotFoundError(f"Environment script not found: {script_path}")
