@@ -73,8 +73,56 @@ chmod +x scripts/02_training.sh
 bash scripts/02_training.sh Dataset001_GroundTruth 3d_fullres 0
 ```
 
+### `03_predict.sh`
+
+Runs `nnUNetv2_predict` for all trained folds on a common input dataset, producing matching prediction folders (needed before ensembling).
+
+```
+Usage: bash scripts/03_predict.sh <DATASET_NAME> <CONFIG> <INPUT_DIR> <OUTPUT_ROOT>
+  <DATASET_NAME>   Dataset folder (numeric ID auto-extracted)
+  <CONFIG>         nnU-Net configuration (e.g., 3d_fullres)
+  <INPUT_DIR>      Directory with images to predict (default: Dataset002_Karies/imagesTr)
+  <OUTPUT_ROOT>    Root folder to store per-fold predictions
+```
+
+Example:
+```bash
+chmod +x scripts/03_predict.sh
+bash scripts/03_predict.sh Dataset001_GroundTruth 3d_fullres \
+     data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/prediction_data/imagesTr \
+     data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/predictions
+```
+Predictions are written with `--save_probabilities` so ensembles can combine softmax probabilities.
+
+### `04_ensemble.sh`
+
+Runs `nnUNetv2_ensemble` on the validation predictions of each trained fold. The script automatically copies `dataset.json`
+and `nnUNetPlans.json` into the per-fold validation folders if needed.
+
+```
+Usage: bash scripts/04_ensemble.sh <DATASET_NAME> <CONFIG>
+  <DATASET_NAME>   Dataset folder (numeric ID auto-extracted)
+  <CONFIG>         Configuration to ensemble (e.g., 3d_fullres)
+Output:
+  ensemble_predictions/<Dataset>_<Config>/
+```
+
+Example:
+```bash
+chmod +x scripts/04_ensemble.sh
+bash scripts/04_ensemble.sh Dataset001_GroundTruth 3d_fullres \
+     data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/predictions
+```
+
 ## Python Modules
 
 - `nnunet_env.py`: Python variant of the environment loader (used by other scripts).
+- `utils/create_validation_subset.py`: Moves a subset of cases from `imagesTr/labelsTr` into a validation/prediction folder and mirrors them to `imagesTs`. Use for preparing e.g. 50 validation cases:
+  ```bash
+  python scripts/utils/create_validation_subset.py \
+      --dataset Dataset001_GroundTruth \
+      --num_cases 50 \
+      --target prediction_data
+  ```
 
 All additional automation (HPO, analysis, utilities) lives under `hpo/scripts/`.
