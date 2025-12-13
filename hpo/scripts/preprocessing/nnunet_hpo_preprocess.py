@@ -334,12 +334,20 @@ def objective(trial):
     # Optuna requires a static search space per parameter across trials, so we
     # flatten spacing-dependent options into one categorical.
     spacing_candidates = [
-        # High-quality options; may OOM on small GPUs.
+        # 0.08: nur ein moderates Patch zur OOM-Vermeidung
+        {
+            "spacing": (0.08, 0.08, 0.08),
+            "patches": [
+                (64, 96, 64),
+                (96, 128, 96),
+            ],
+            "batch_sizes": [1],
+            "features_base": [16, 24],
+        },
+        # 0.10: kleine Patches performten schlecht -> nur mittlere/große
         {
             "spacing": (0.1, 0.1, 0.1),
             "patches": [
-                (64, 64, 64),
-                (64, 96, 64),
                 (96, 96, 96),
                 (96, 128, 96),
                 (128, 128, 96),
@@ -347,11 +355,10 @@ def objective(trial):
             "batch_sizes": [1],
             "features_base": [16, 24, 32],
         },
+        # 0.12: kleine Patches raus, mittlere/große behalten
         {
             "spacing": (0.12, 0.12, 0.12),
             "patches": [
-                (64, 64, 64),
-                (64, 96, 64),
                 (96, 96, 96),
                 (96, 128, 96),
                 (128, 128, 96),

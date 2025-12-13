@@ -15,16 +15,16 @@ hpo/
 │   │   └── nnunet_hpo_preprocess.py
 │   ├── training/               # Training & Evaluation
 │   │   └── nnunet_train_eval_pipeline.py
+│   ├── postprocessing/         # Inference + PP + Evaluation
+│   │   ├── nnunet_tta_postprocess.py
+│   │   └── evaluate_tta_pp.py
 │   ├── analysis/               # Analysis & Comparison
 │   │   ├── compare_top3_trials.py
 │   │   ├── update_trial_summary.py
 │   │   ├── plot_hpo_results.py
 │   │   └── prepare_best_model.py
 │   └── utils/                  # Utility scripts
-│       ├── check_trial_labels.py
-│       ├── fix_case_spacing_and_reprocess.py
-│       ├── fix_decoder_lengths.py
-│       └── remap_labels.py
+│       └── check_trial_labels.py
 ├── config/                     # Templates & Configuration
 │   └── nnUNetPlans_template.json
 ├── docs/                       # Additional Documentation
@@ -51,67 +51,30 @@ source scripts/nnunet_env.sh   # exports nnUNet_raw/_preprocessed/_results
 
 ## 2. Preprocessing / HPO trial generation
 
-### Prepare raw dataset / labels (optional)
-
-- If labels contain unexpected IDs, remap them first:
-
-- `remap_labels.py` (fix invalid label IDs before preprocessing):
-
-```bash
-python hpo/scripts/utils/remap_labels.py --dataset Dataset001_GroundTruth --max_label 3
-```
-
-  - `--dataset`: name under `nnUNet_raw`; script reads `imagesTr/labelsTr`.
-  - `--max_label`: clamp any label value above this number down to the limit.
-  - Optional `--dry_run` shows stats without writing files.
-
 ### Start new trials (Optuna + nnUNetv2_preprocess)
 
 ```bash
 python hpo/scripts/preprocessing/nnunet_hpo_preprocess.py --n_trials 5
 ```
 
-- Generates `n_trials` new hyperparameter samples, runs `nnUNetv2_preprocess` for each,
-  and stores the outputs in `hpo/preprocessing_output/Dataset001_GroundTruth/trial_X`.
-- Important args:
-  - `--n_trials`: number of Optuna samples to add.
-  - (Inside the script) patch size, batch size, feature configs are randomized.
+- Generiert `n_trials` neue Plan-Varianten und legt sie unter `hpo/preprocessing_output/Dataset001_GroundTruth/trial_X` ab.
+- Aktueller Suchraum (auf Basis deiner bisherigen Ergebnisse, VRAM-sparend):
+  - Spacing 0.08: Patch (64,96,64), features_base {16,24}, batch 1
+  - Spacing 0.10: Patches (96³), (96×128×96), (128×128×96), features_base {16,24,32}, batch 1
+  - Spacing 0.12: Patches (96³), (96×128×96), (128×128×96), features_base {16,24,32}, batch 1
+- Wichtigste Option: `--n_trials` (Anzahl neuer Samples).
 - Before running, make sure `nnUNet_raw` contains the cleaned dataset (e.g. label remap).
 
-### After preprocessing / trial maintenance
+### Nach dem Preprocessing
 
-- Verify that every `trial_X` contains `Dataset001_GroundTruth/nnUNetPlans.json`
-  and `dataset_fingerprint.json`.
-- Some older trials may need their decoder setup fixed:
-
-- `fix_decoder_lengths.py` (repair old plan files so decoder depth matches stages):
-
-```bash
-python hpo/scripts/utils/fix_decoder_lengths.py --dataset Dataset001_GroundTruth
-```
-
-  - Runs through `hpo/preprocessing_output/Dataset001_GroundTruth/trial_*` and truncates decoder lists.
-
-- Inspect trial labels if needed:
+- Prüfe, dass jede Trial-Mappe `Dataset001_GroundTruth/nnUNetPlans.json` und `dataset_fingerprint.json` enthält.
+- Labels prüfen (falls nötig):
 
 ```bash
 python hpo/scripts/utils/check_trial_labels.py --source trials --trial trial_0
 ```
 
-## 3. Fixing a broken case (e.g. AW062 spacing issue)
-
-```bash
-python hpo/scripts/utils/fix_case_spacing_and_reprocess.py \
-    --case_id AW062-C0005656 \
-    --spacing 0.04 0.04 0.04 \
-    --backup
-```
-
-- Rewrites the raw NIfTI headers (backup stored as `.bak` next to the file).
-- Regenerates this case inside every `trial_X` so all trials stay in sync.
-- Repeat later with `--skip_raw_fix` to rebuild trial data only.
-
-## 4. Resetting stale fold data (optional)
+## 3. Resetting stale fold data (optional)
 
 ```bash
 rm -rf data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_0
@@ -176,13 +139,44 @@ nnUNetv2_train Dataset001_GroundTruth 3d_fullres 0 -tr nnUNetTrainer -p nnUNetPl
 nvidia-smi --query-gpu=timestamp,name,memory.used,memory.total,utilization.gpu --format=csv -l 60 > logs/trial15_gpu_usage.csv
 ```
 
-## 6. Monitoring
+## 6. Inferenz + Postprocessing + Bewertung
+
+### TTA-Prediction + Postprocessing (optional Evaluation)
+
+```bash
+python hpo/scripts/postprocessing/nnunet_tta_postprocess.py \
+  --trials trial_12 trial_13 \        # optional, sonst alle gefundenen
+  --folds 0 \                         # Folds, meist 0
+  --input_dir data/nnUNet_raw/Dataset001_GroundTruth/imagesTs \
+  --eval_labels data/nnUNet_raw/Dataset001_GroundTruth/labelsTs
+```
+
+- Schritte: TTA-Predict → find_best_configuration (mit -f Folds) → apply_postprocessing → optional Evaluate.
+- Flags:
+  - `--trials`: spezifische Trials, sonst alle.
+  - `--folds`: Folds (Default 0).
+  - `--input_dir`: Eingabebilder (z. B. imagesTs).
+  - `--eval_labels`: Groundtruth für Eval; weglassen, wenn nur Preds/PP erzeugt werden sollen.
+  - `--pred_subdir` / `--suffix`: Zielordnernamen (Default: labelsTs_tta → labelsTs_tta_pp).
+  - `--skip_predict`, `--skip_find`: falls nur PP angewendet werden soll.
+
+### Nur fertige labelsTs_tta_pp auswerten + Ranking
+
+```bash
+python hpo/scripts/postprocessing/evaluate_tta_pp.py --folds 0
+```
+
+- Sucht pro Trial `labelsTs_tta_pp`, schreibt Summary nach `hpo/analysis/trial_X_labelsTs_tta_pp_summary.json`.
+- `--force` überschreibt vorhandene Summary.
+- Am Ende Ranking mit ΔDice vs. labelsTs / labelsTs_tta (falls vorhanden).
+
+## 7. Monitoring
 
 - Training log: `data/nnUNet_results/.../fold_0/training_log_*.txt`
 - Evaluation log: `hpo/results/<dataset>/<trial>/<config>/<trainer>/evaluation.log`
 - Archived checkpoints: `hpo/training_output/<trial>/nnUNet_results/...`
 
-## 7. Analysis & spacing-focused evaluation
+## 8. Analysis & spacing-focused evaluation
 
 ### Regenerate JSON summaries (includes spacing ranking)
 
@@ -218,7 +212,7 @@ python hpo/scripts/analysis/compare_top3_trials.py \
 - `labelsVal` (or `labelsTr`) must exist under `data/nnUNet_raw/Dataset001_GroundTruth`.
 - The script automatically switches `nnUNet_preprocessed`/`nnUNet_results` for each trial.
 
-## 8. Troubleshooting snippets
+## 9. Troubleshooting snippets
 
 Check spacing/shape of a single preprocessed case:
 
