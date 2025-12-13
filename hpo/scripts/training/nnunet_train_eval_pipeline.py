@@ -20,7 +20,7 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
-from typing import Iterable, List, Tuple
+from typing import Iterable, List, Optional, Tuple
 
 # Add project root to Python path
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
@@ -279,6 +279,41 @@ def run_cmd(cmd: List[str], env: dict, log_prefix: str):
     subprocess.run(cmd, check=True, env=env)
 
 
+def start_gpu_logger(log_file: Path) -> tuple[Optional[subprocess.Popen], Optional[object]]:
+    """
+    Start nvidia-smi logging to CSV. Returns (process, file_handle).
+    """
+    try:
+        fh = log_file.open("w")
+        proc = subprocess.Popen(
+            [
+                "nvidia-smi",
+                "--query-gpu=timestamp,name,memory.used,memory.total,utilization.gpu,utilization.memory",
+                "--format=csv",
+                "-l",
+                "30",
+            ],
+            stdout=fh,
+            stderr=subprocess.STDOUT,
+        )
+        return proc, fh
+    except FileNotFoundError:
+        print("[WARN] nvidia-smi not found; GPU logging disabled.")
+        return None, None
+
+
+def stop_gpu_logger(proc: Optional[subprocess.Popen], fh: Optional[object]) -> None:
+    if proc:
+        if proc.poll() is None:
+            proc.terminate()
+            try:
+                proc.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                proc.kill()
+    if fh:
+        fh.close()
+
+
 def run_eval_cmd(
     cmd: List[str],
     env: dict,
@@ -386,7 +421,16 @@ def train_trial(
         if device:
             train_cmd.extend(["--device", device])
 
-        run_cmd(train_cmd, env, f"{trial_dir.name}/fold{fold}/train")
+        log_dir = TRAINING_OUTPUT_ROOT / trial_dir.name / "logs"
+        log_dir.mkdir(parents=True, exist_ok=True)
+        gpu_log = log_dir / f"gpu_{trial_dir.name}_fold{fold}.csv"
+        print(f"[{trial_dir.name}/fold{fold}] GPU log -> {gpu_log}")
+
+        proc, fh = start_gpu_logger(gpu_log)
+        try:
+            run_cmd(train_cmd, env, f"{trial_dir.name}/fold{fold}/train")
+        finally:
+            stop_gpu_logger(proc, fh)
         print(f"[{trial_dir.name}/fold{fold}] Training completed.")
 
 

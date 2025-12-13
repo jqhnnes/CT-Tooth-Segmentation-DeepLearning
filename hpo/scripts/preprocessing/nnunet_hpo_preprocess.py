@@ -198,6 +198,8 @@ def replace_hpo_parameters(
     batch_dice=None,
     use_mask_for_norm=None,
     spacing=None,
+    original_spacing=None,
+    original_shape=None,
 ):
     """
     Traverses a dict/list and replaces HPO parameters:
@@ -208,6 +210,7 @@ def replace_hpo_parameters(
     - batch_dice: Batch-Dice Loss flag
     - use_mask_for_norm: Mask for normalization
     - spacing: Target voxel spacing
+    - median_image_size_in_voxels: Updated based on new spacing
     
     This function modifies obj in-place.
     
@@ -220,6 +223,8 @@ def replace_hpo_parameters(
         batch_dice: Boolean flag for batch dice
         use_mask_for_norm: Boolean flag for mask normalization
         spacing: Tuple of (sx, sy, sz) target spacing values
+        original_spacing: Original spacing from template (for calculating new shape)
+        original_shape: Original shape from template (for calculating new shape)
     """
     if isinstance(obj, dict):
         for k, v in obj.items():
@@ -267,6 +272,21 @@ def replace_hpo_parameters(
             # spacings (only adjust config spacing field)
             elif k == "spacing" and isinstance(v, list) and spacing is not None and len(v) == 3:
                 obj[k] = [float(spacing[0]), float(spacing[1]), float(spacing[2])]
+            # median_image_size_in_voxels: update based on new spacing
+            elif (
+                "median_image_size_in_voxels" in lk
+                and isinstance(v, list)
+                and len(v) == 3
+                and spacing is not None
+                and original_spacing is not None
+                and original_shape is not None
+            ):
+                # Calculate new shape after resampling: new_dim = old_dim * (old_spacing / new_spacing)
+                new_shape = [
+                    int(original_shape[i] * original_spacing[i] / spacing[i])
+                    for i in range(3)
+                ]
+                obj[k] = [float(new_shape[0]), float(new_shape[1]), float(new_shape[2])]
             else:
                 replace_hpo_parameters(
                     v,
@@ -277,6 +297,8 @@ def replace_hpo_parameters(
                     batch_dice,
                     use_mask_for_norm,
                     spacing,
+                    original_spacing,
+                    original_shape,
                 )
     elif isinstance(obj, list):
         for i in range(len(obj)):
@@ -290,6 +312,8 @@ def replace_hpo_parameters(
                     batch_dice,
                     use_mask_for_norm,
                     spacing,
+                    original_spacing,
+                    original_shape,
                 )
     # Primitive types are not traversed further
 
@@ -306,24 +330,49 @@ def objective(trial):
         Proxy score (placeholder - should be replaced with actual validation metric)
     """
     # ===== PARAMETER SPACE =====
-    # Curated patch options (top-performing setups from analysis)
-    patch = trial.suggest_categorical(
-        "patch",
-        [
-            (160, 160, 64),   # trial_8
-            (128, 128, 160),  # trial_4
-            (128, 128, 128),  # trial_7
-            (128, 64, 128),   # trial_1
-            (64, 128, 64),    # trial_3
-        ],
+    # Spacing-first search with constrained patch/batch/features to avoid OOM.
+    # Optuna requires a static search space per parameter across trials, so we
+    # flatten spacing-dependent options into one categorical.
+    spacing_candidates = [
+        # High-quality options; may OOM on small GPUs.
+        {
+            "spacing": (0.1, 0.1, 0.1),
+            "patches": [
+                (64, 64, 64),
+                (64, 96, 64),
+                (96, 96, 96),
+                (96, 128, 96),
+                (128, 128, 96),
+            ],
+            "batch_sizes": [1],
+            "features_base": [16, 24, 32],
+        },
+        {
+            "spacing": (0.12, 0.12, 0.12),
+            "patches": [
+                (64, 64, 64),
+                (64, 96, 64),
+                (96, 96, 96),
+                (96, 128, 96),
+                (128, 128, 96),
+            ],
+            "batch_sizes": [1],
+            "features_base": [16, 24, 32],
+        },
+    ]
+
+    combo_choices = []
+    for cfg in spacing_candidates:
+        for p in cfg["patches"]:
+            for b in cfg["batch_sizes"]:
+                for f in cfg["features_base"]:
+                    combo_choices.append(
+                        (cfg["spacing"], p, b, f)
+                    )
+
+    spacing, patch, batch_size, features_base = trial.suggest_categorical(
+        "spacing_patch_batch_features", combo_choices
     )
-    
-    # Batch size
-    batch_size = trial.suggest_categorical("batch_size", [2, 4])
-    
-    # Network capacity: Features per stage
-    # Options: smaller (less memory) vs larger (more capacity)
-    features_base = trial.suggest_categorical("features_base", [24, 32, 48])
     features_per_stage = [
         features_base,
         features_base * 2,
@@ -343,19 +392,27 @@ def objective(trial):
     # Masked normalization is detrimental -> hardcode False
     use_mask_for_norm = False
 
-    # Encourage higher-resolution spacings for smoother surfaces
-    spacing = trial.suggest_categorical(
-        "spacing",
-        [
-            (0.1, 0.1, 0.1),
-            (0.08, 0.08, 0.08),
-            (0.05, 0.05, 0.05),
-            (0.06, 0.06, 0.06),  # bias towards finest spacing
-        ],
-    )
-
     trial_idx, trial_name, trial_output_dir = reserve_trial_slot(dataset_output_dir)
+    # Ensure trial directory exists so we can persist params/errors even on failure
+    os.makedirs(trial_output_dir, exist_ok=True)
     trial_plan_path = os.path.join(hpo_dir, "config", f"nnUNetPlans_temp_{trial_name}.json")
+
+    # Persist chosen hyperparameters for debugging (even if preprocess fails)
+    params_out = os.path.join(trial_output_dir, "params.json")
+    with open(params_out, "w") as f:
+        json.dump(
+            {
+                "spacing": spacing,
+                "patch": patch,
+                "batch_size": batch_size,
+                "features_base": features_base,
+                "features_per_stage": features_per_stage,
+                "batch_dice": batch_dice,
+                "trial_name": trial_name,
+            },
+            f,
+            indent=2,
+        )
     
     # Temporary directory for nnUNet (nnUNet expects: nnUNet_preprocessed/DatasetXXX/...)
     # We set nnUNet_preprocessed to dataset_output_dir so nnUNet creates DatasetXXX/ there
@@ -369,6 +426,11 @@ def objective(trial):
         plan = json.load(f)
 
     plan_mod = deepcopy(plan)
+    
+    # Extract original spacing and shape from template for median_image_size_in_voxels calculation
+    original_spacing = tuple(plan.get("original_median_spacing_after_transp", [0.04, 0.04, 0.04]))
+    original_shape = tuple(plan.get("original_median_shape_after_transp", [239, 253, 254]))
+    
     replace_hpo_parameters(
         plan_mod,
         patch,
@@ -378,6 +440,8 @@ def objective(trial):
         batch_dice,
         use_mask_for_norm,
         spacing,
+        original_spacing,
+        original_shape,
     )
 
     # Save the modified plans file in the hpo directory (for traceability)
@@ -415,7 +479,7 @@ def objective(trial):
         "-c",
         "3d_fullres",
         "--num_processes",
-        str(max(1, min(8, os.cpu_count() or 1))),
+        "1",  # force single worker to minimize RAM
     ]
 
     print(f"\n[{trial_name}] ===== HPO-Parameter =====")
@@ -429,7 +493,45 @@ def objective(trial):
     print(f"  Output: {trial_output_dir}")
     print("Command:", " ".join(cmd))
 
-    subprocess.run(cmd, check=True, env=env)
+    # Capture stdout/stderr for detailed error reporting
+    err_path = os.path.join(trial_output_dir, "error.log")
+    log_path = os.path.join(trial_output_dir, "preprocess.log")
+    
+    try:
+        with open(log_path, "w") as log_file:
+            result = subprocess.run(
+                cmd,
+                check=True,
+                env=env,
+                stdout=log_file,
+                stderr=subprocess.STDOUT,
+                text=True
+            )
+    except subprocess.CalledProcessError as e:
+        # Read the log file to get detailed error message
+        error_details = f"preprocess failed: {e}\n"
+        if os.path.exists(log_path):
+            with open(log_path, "r") as log_file:
+                log_content = log_file.read()
+                error_details += f"\n=== Full nnUNetv2_preprocess output ===\n{log_content}\n"
+        
+        with open(err_path, "w") as ef:
+            ef.write(error_details)
+        print(f"[{trial_name}] Preprocess failed: {e}")
+        print(f"[{trial_name}] Full error log saved to: {err_path}")
+        raise optuna.TrialPruned(f"preprocess failed: {e}")
+    except Exception as e:
+        error_details = f"unexpected failure: {e}\n"
+        if os.path.exists(log_path):
+            with open(log_path, "r") as log_file:
+                log_content = log_file.read()
+                error_details += f"\n=== Full nnUNetv2_preprocess output ===\n{log_content}\n"
+        
+        with open(err_path, "w") as ef:
+            ef.write(error_details)
+        print(f"[{trial_name}] Unexpected failure: {e}")
+        print(f"[{trial_name}] Full error log saved to: {err_path}")
+        raise optuna.TrialPruned(f"unexpected failure: {e}")
     
     # 5) Ensure dataset_fingerprint.json exists in the temporary directory
     # (usually created automatically by preprocessing, but check for safety)
@@ -508,8 +610,11 @@ if __name__ == "__main__":
     study.optimize(objective, n_trials=args.n_trials)
 
     if study.trials:
-        print("Best trial parameters:", study.best_trial.params)
-        print("Best trial value:", study.best_value)
+        try:
+            print("Best trial parameters:", study.best_trial.params)
+            print("Best trial value:", study.best_value)
+        except ValueError:
+            print("[WARN] No trials completed successfully; no best trial available.")
     else:
         print("No completed trials found.")
 

@@ -26,21 +26,21 @@
     "3d_fullres": {
       "data_identifier": "nnUNetPlans_3d_fullres",
       "preprocessor_name": "DefaultPreprocessor",
-      "batch_size": 4,
+      "batch_size": 1,
       "patch_size": [
-        160,
-        160,
-        64
+        40,
+        48,
+        48
       ],
       "median_image_size_in_voxels": [
-        239.0,
-        253.0,
-        254.0
+        79.0,
+        84.0,
+        84.0
       ],
       "spacing": [
-        0.2,
-        0.2,
-        0.2
+        0.12,
+        0.12,
+        0.12
       ],
       "normalization_schemes": [
         "CTNormalization"
@@ -74,12 +74,12 @@
         "arch_kwargs": {
           "n_stages": 6,
           "features_per_stage": [
-            24,
-            48,
-            96,
-            192,
-            240,
-            240
+            16,
+            32,
+            64,
+            128,
+            160,
+            160
           ],
           "conv_op": "torch.nn.modules.conv.Conv3d",
           "kernel_sizes": [
