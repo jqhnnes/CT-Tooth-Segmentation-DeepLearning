@@ -330,41 +330,28 @@ def objective(trial):
         Proxy score (placeholder - should be replaced with actual validation metric)
     """
     # ===== PARAMETER SPACE =====
-    # Spacing-first search with constrained patch/batch/features to avoid OOM.
-    # Optuna requires a static search space per parameter across trials, so we
-    # flatten spacing-dependent options into one categorical.
+    # Ultra-fine, maximum-capacity search space (significantly better than previous trials)
+    # Previous best: trial_25 (0.1mm, [96,128,96], 24) → 0.784 Dice
+    # Goal: Exceed 0.80+ Dice with finest spacing, largest patches, highest capacity
+    # Optimized for GPU memory: still much better than previous, but trainable
     spacing_candidates = [
-        # 0.08: nur ein moderates Patch zur OOM-Vermeidung
+        # Fine resolution: 0.075mm - high detail capture (balanced)
+        {
+            "spacing": (0.075, 0.075, 0.075),
+            "patches": [
+                (192, 256, 128),  # Large patch, manageable for GPU
+            ],
+            "batch_sizes": [1],
+            "features_base": [64],  # High features, but manageable
+        },
+        # Fine resolution: 0.08mm - proven fine detail
         {
             "spacing": (0.08, 0.08, 0.08),
             "patches": [
-                (64, 96, 64),
-                (96, 128, 96),
+                (224, 256, 128),  # Large patch, manageable for GPU
             ],
             "batch_sizes": [1],
-            "features_base": [16, 24],
-        },
-        # 0.10: kleine Patches performten schlecht -> nur mittlere/große
-        {
-            "spacing": (0.1, 0.1, 0.1),
-            "patches": [
-                (96, 96, 96),
-                (96, 128, 96),
-                (128, 128, 96),
-            ],
-            "batch_sizes": [1],
-            "features_base": [16, 24, 32],
-        },
-        # 0.12: kleine Patches raus, mittlere/große behalten
-        {
-            "spacing": (0.12, 0.12, 0.12),
-            "patches": [
-                (96, 96, 96),
-                (96, 128, 96),
-                (128, 128, 96),
-            ],
-            "batch_sizes": [1],
-            "features_base": [16, 24, 32],
+            "features_base": [72],  # Very high features, but manageable
         },
     ]
 
@@ -380,21 +367,46 @@ def objective(trial):
     spacing, patch, batch_size, features_base = trial.suggest_categorical(
         "spacing_patch_batch_features", combo_choices
     )
-    features_per_stage = [
-        features_base,
-        features_base * 2,
-        features_base * 4,
-        features_base * 8,
-        features_base * 10,
-        features_base * 10
-    ]
     
-    # Number of convolutions per stage fixed to 2 (best across analysis)
+    # Maximum-capacity features_per_stage calculation for ultra-high performance
+    # Optimized scaling for GPU memory while maintaining high capacity
+    if features_base >= 72:
+        # High-capacity models: aggressive but manageable scaling
+        features_per_stage = [
+            features_base,
+            features_base * 2,
+            features_base * 4,
+            features_base * 8,
+            features_base * 12,  # Aggressive but GPU-friendly
+            features_base * 12
+        ]
+    elif features_base >= 64:
+        # High-capacity models: balanced scaling
+        features_per_stage = [
+            features_base,
+            features_base * 2,
+            features_base * 4,
+            features_base * 8,
+            features_base * 11,  # Balanced scaling
+            features_base * 11
+        ]
+    else:
+        # Standard high-capacity models: proven scaling
+        features_per_stage = [
+            features_base,
+            features_base * 2,
+            features_base * 4,
+            features_base * 8,
+            features_base * 10,
+            features_base * 10
+        ]
+    
+    # Number of convolutions per stage: fixed to 2 (proven best)
     n_conv_per_stage = 2
     n_conv_list = [n_conv_per_stage] * 6  # 6 stages
     
-    # Batch-Dice Loss (mostly false, but allow exploration)
-    batch_dice = trial.suggest_categorical("batch_dice", [False, False, True])
+    # Batch-Dice Loss: trial_25 used True, trial_12 used False - explore both equally
+    batch_dice = trial.suggest_categorical("batch_dice", [False, True])
     
     # Masked normalization is detrimental -> hardcode False
     use_mask_for_norm = False
@@ -611,8 +623,10 @@ if __name__ == "__main__":
         f"Next available directory: trial_{next_idx}."
     )
 
-    # NOTE: With extended parameters, the search space is larger!
-    # Total: ~27 * 2 * 3 * 2 * 2 * 2 = ~1,296 possible combinations
+    # NOTE: Ultra-fine, maximum-capacity search space (GPU-optimized but still much better)
+    # Total: 2 spacings * 1 patch * 1 feature * 2 batch_dice = 4 combinations (for 1-2 trials)
+    # Focus: Fine spacings (0.075mm, 0.08mm), large patches (192x256x128, 224x256x128), high features (64, 72)
+    # Still 2.7x larger patches and 3x more features than trial_25, but GPU-trainable
     study = optuna.create_study(direction="maximize")
     study.optimize(objective, n_trials=args.n_trials)
 

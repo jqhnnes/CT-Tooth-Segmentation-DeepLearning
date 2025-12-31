@@ -1,0 +1,4552 @@
+{
+  "timestamp": "20251227_165715",
+  "dataset": "Dataset001_GroundTruth",
+  "folds": {
+    "0": {
+      "training": {
+        "total_epochs": 99,
+        "best_dice": 0.8774999976158142,
+        "all_dice": [
+          0.19869999587535858,
+          0.20819999277591705,
+          0.23000000417232513,
+          0.273499995470047,
+          0.3190999925136566,
+          0.3625999987125397,
+          0.40290001034736633,
+          0.44200000166893005,
+          0.47699999809265137,
+          0.5044999718666077,
+          0.5335000157356262,
+          0.5593000054359436,
+          0.5845000147819519,
+          0.6068000197410583,
+          0.6294000148773193,
+          0.6482999920845032,
+          0.6632999777793884,
+          0.6766999959945679,
+          0.6909999847412109,
+          0.7023000121116638,
+          0.7143999934196472,
+          0.723800003528595,
+          0.7346000075340271,
+          0.7429999709129333,
+          0.7490000128746033,
+          0.7592999935150146,
+          0.7669000029563904,
+          0.7720000147819519,
+          0.777400016784668,
+          0.7825000286102295,
+          0.7886000275611877,
+          0.7940999865531921,
+          0.7975000143051147,
+          0.8027999997138977,
+          0.8075000047683716,
+          0.8105999827384949,
+          0.8152999877929688,
+          0.8180000185966492,
+          0.8201000094413757,
+          0.8227999806404114,
+          0.8234000205993652,
+          0.8263000249862671,
+          0.8278999924659729,
+          0.8310999870300293,
+          0.8321999907493591,
+          0.8348000049591064,
+          0.8371000289916992,
+          0.8378999829292297,
+          0.8400999903678894,
+          0.8413000106811523,
+          0.8435999751091003,
+          0.8463000059127808,
+          0.8481000065803528,
+          0.8485000133514404,
+          0.8496999740600586,
+          0.8501999974250793,
+          0.8514999747276306,
+          0.8519999980926514,
+          0.8537999987602234,
+          0.8537999987602234,
+          0.8539999723434448,
+          0.8549000024795532,
+          0.8565000295639038,
+          0.8568000197410583,
+          0.8586000204086304,
+          0.8600999712944031,
+          0.8616999983787537,
+          0.863099992275238,
+          0.8636999726295471,
+          0.8641999959945679,
+          0.8651000261306763,
+          0.8652999997138977,
+          0.866599977016449,
+          0.8676000237464905,
+          0.867900013923645,
+          0.868399977684021,
+          0.8695999979972839,
+          0.8704000115394592,
+          0.8709999918937683,
+          0.8723000288009644,
+          0.8743000030517578,
+          0.8751000165939331,
+          0.8758999705314636,
+          0.8766000270843506,
+          0.876800000667572,
+          0.8774999976158142
+        ],
+        "final_val_loss": -0.7694,
+        "converged": true
+      },
+      "validation": null,
+      "test": {
+        "mean_dice": 0.787584839071736,
+        "foreground_dice": 0.787584839071736
+      }
+    },
+    "1": {
+      "training": {
+        "total_epochs": 99,
+        "best_dice": 0.8619999885559082,
+        "all_dice": [
+          0.18299999833106995,
+          0.19920000433921814,
+          0.22290000319480896,
+          0.2639999985694885,
+          0.3034999966621399,
+          0.34290000796318054,
+          0.382099986076355,
+          0.4180000126361847,
+          0.45399999618530273,
+          0.4846000075340271,
+          0.5152000188827515,
+          0.5408999919891357,
+          0.5648999810218811,
+          0.5849999785423279,
+          0.6039999723434448,
+          0.6254000067710876,
+          0.6420999765396118,
+          0.6599000096321106,
+          0.6728000044822693,
+          0.685699999332428,
+          0.6965000033378601,
+          0.707099974155426,
+          0.7172999978065491,
+          0.7269999980926514,
+          0.7347999811172485,
+          0.7425000071525574,
+          0.7480999827384949,
+          0.7542999982833862,
+          0.7595000267028809,
+          0.7649000287055969,
+          0.7698000073432922,
+          0.774399995803833,
+          0.7800999879837036,
+          0.7853000164031982,
+          0.7883999943733215,
+          0.7912999987602234,
+          0.7925999760627747,
+          0.796500027179718,
+          0.7990999817848206,
+          0.8019000291824341,
+          0.8064000010490417,
+          0.8086000084877014,
+          0.8113999962806702,
+          0.8127999901771545,
+          0.8148000240325928,
+          0.8163999915122986,
+          0.8187000155448914,
+          0.8201000094413757,
+          0.8206999897956848,
+          0.8210999965667725,
+          0.822700023651123,
+          0.8253999948501587,
+          0.8278999924659729,
+          0.829200029373169,
+          0.8303999900817871,
+          0.832099974155426,
+          0.8324999809265137,
+          0.8331999778747559,
+          0.833899974822998,
+          0.8352000117301941,
+          0.8360000252723694,
+          0.8381999731063843,
+          0.8395000100135803,
+          0.8396999835968018,
+          0.8403000235557556,
+          0.8428999781608582,
+          0.8446999788284302,
+          0.8461999893188477,
+          0.847000002861023,
+          0.847000002861023,
+          0.8485000133514404,
+          0.8492000102996826,
+          0.850600004196167,
+          0.8511000275611877,
+          0.8514999747276306,
+          0.8526999950408936,
+          0.8529000282287598,
+          0.8535000085830688,
+          0.8540999889373779,
+          0.8553000092506409,
+          0.8557999730110168,
+          0.85589998960495,
+          0.8568000197410583,
+          0.8572999835014343,
+          0.8575000166893005,
+          0.8575999736785889,
+          0.857699990272522,
+          0.8586000204086304,
+          0.8590999841690063,
+          0.8604000210762024,
+          0.8619999885559082
+        ],
+        "final_val_loss": -0.7825,
+        "converged": true
+      },
+      "validation": {
+        "foreground_mean": {
+          "Dice": 0.8660865978906201,
+          "FN": 255280.15740740742,
+          "FP": 275157.18518518517,
+          "IoU": 0.7747649744892463,
+          "TN": 65680087.9074074,
+          "TP": 2544020.527777778,
+          "n_pred": 2819177.712962963,
+          "n_ref": 2799300.685185185
+        },
+        "mean": {
+          "1": {
+            "Dice": 0.7912551048079842,
+            "FN": 77593.83333333333,
+            "FP": 67721.36111111111,
+            "IoU": 0.6735246066469042,
+            "TN": 68283517.80555555,
+            "TP": 325712.77777777775,
+            "n_pred": 393434.1388888889,
+            "n_ref": 403306.6111111111
+          },
+          "2": {
+            "Dice": 0.928703391571982,
+            "FN": 316871.0833333333,
+            "FP": 358002.30555555556,
+            "IoU": 0.8671836269031727,
+            "TN": 63620270.63888889,
+            "TP": 4459401.75,
+            "n_pred": 4817404.055555556,
+            "n_ref": 4776272.833333333
+          },
+          "3": {
+            "Dice": 0.8783012972918944,
+            "FN": 371375.55555555556,
+            "FP": 399747.8888888889,
+            "IoU": 0.7835866899176617,
+            "TN": 65136475.277777776,
+            "TP": 2846947.0555555555,
+            "n_pred": 3246694.9444444445,
+            "n_ref": 3218322.611111111
+          }
+        },
+        "metric_per_case": [
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.25559186890109636,
+                "FN": 1284,
+                "FP": 127180,
+                "IoU": 0.14652068191179793,
+                "TN": 59094026,
+                "TP": 22054,
+                "n_pred": 149234,
+                "n_ref": 23338
+              },
+              "2": {
+                "Dice": 0.9140015477034571,
+                "FN": 294585,
+                "FP": 124710,
+                "IoU": 0.8416232507243755,
+                "TN": 56597091,
+                "TP": 2228158,
+                "n_pred": 2352868,
+                "n_ref": 2522743
+              },
+              "3": {
+                "Dice": 0.8481046189736411,
+                "FN": 98916,
+                "FP": 316232,
+                "IoU": 0.7362687905024544,
+                "TN": 57670411,
+                "TP": 1158985,
+                "n_pred": 1475217,
+                "n_ref": 1257901
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW023-C0005344.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW023-C0005344.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.4629025567851869,
+                "FN": 15067,
+                "FP": 146790,
+                "IoU": 0.30115368341061977,
+                "TN": 54818634,
+                "TP": 69749,
+                "n_pred": 216539,
+                "n_ref": 84816
+              },
+              "2": {
+                "Dice": 0.9005824226026697,
+                "FN": 360368,
+                "FP": 211534,
+                "IoU": 0.8191450101558624,
+                "TN": 51888027,
+                "TP": 2590311,
+                "n_pred": 2801845,
+                "n_ref": 2950679
+              },
+              "3": {
+                "Dice": 0.849389969883332,
+                "FN": 118416,
+                "FP": 366870,
+                "IoU": 0.7382083830758948,
+                "TN": 53196529,
+                "TP": 1368425,
+                "n_pred": 1735295,
+                "n_ref": 1486841
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW025-C0005347.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW025-C0005347.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.7706369135996445,
+                "FN": 101159,
+                "FP": 145546,
+                "IoU": 0.6268586735072003,
+                "TN": 74312027,
+                "TP": 414452,
+                "n_pred": 559998,
+                "n_ref": 515611
+              },
+              "2": {
+                "Dice": 0.9238100156860309,
+                "FN": 354766,
+                "FP": 621820,
+                "IoU": 0.8584079290376647,
+                "TN": 68076004,
+                "TP": 5920594,
+                "n_pred": 6542414,
+                "n_ref": 6275360
+              },
+              "3": {
+                "Dice": 0.8880759962159198,
+                "FN": 661464,
+                "FP": 363104,
+                "IoU": 0.7986840766038283,
+                "TN": 69883830,
+                "TP": 4064786,
+                "n_pred": 4427890,
+                "n_ref": 4726250
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW029-C0005353.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW029-C0005353.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.6168430855191681,
+                "FN": 51974,
+                "FP": 71460,
+                "IoU": 0.4459675392294158,
+                "TN": 67934648,
+                "TP": 99358,
+                "n_pred": 170818,
+                "n_ref": 151332
+              },
+              "2": {
+                "Dice": 0.9259700778087437,
+                "FN": 359377,
+                "FP": 155311,
+                "IoU": 0.8621455125938783,
+                "TN": 64423880,
+                "TP": 3218872,
+                "n_pred": 3374183,
+                "n_ref": 3578249
+              },
+              "3": {
+                "Dice": 0.8608898726381085,
+                "FN": 237024,
+                "FP": 358587,
+                "IoU": 0.7557564909302282,
+                "TN": 65718845,
+                "TP": 1842984,
+                "n_pred": 2201571,
+                "n_ref": 2080008
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW030-C0005354.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW030-C0005354.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.5809097819714332,
+                "FN": 38965,
+                "FP": 317734,
+                "IoU": 0.40935366518024946,
+                "TN": 67553527,
+                "TP": 247214,
+                "n_pred": 564948,
+                "n_ref": 286179
+              },
+              "2": {
+                "Dice": 0.9092608022441745,
+                "FN": 379378,
+                "FP": 719888,
+                "IoU": 0.8336188926876019,
+                "TN": 61550524,
+                "TP": 5507650,
+                "n_pred": 6227538,
+                "n_ref": 5887028
+              },
+              "3": {
+                "Dice": 0.8844286529918663,
+                "FN": 778604,
+                "FP": 287147,
+                "IoU": 0.7928033069008342,
+                "TN": 63013772,
+                "TP": 4077917,
+                "n_pred": 4365064,
+                "n_ref": 4856521
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW034-C0005359.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW034-C0005359.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.7759855399164284,
+                "FN": 9678,
+                "FP": 55512,
+                "IoU": 0.6339676247480334,
+                "TN": 67979341,
+                "TP": 112909,
+                "n_pred": 168421,
+                "n_ref": 122587
+              },
+              "2": {
+                "Dice": 0.9379308500324287,
+                "FN": 239725,
+                "FP": 205859,
+                "IoU": 0.8831165560745898,
+                "TN": 64345232,
+                "TP": 3366624,
+                "n_pred": 3572483,
+                "n_ref": 3606349
+              },
+              "3": {
+                "Dice": 0.8880187178632041,
+                "FN": 323680,
+                "FP": 235716,
+                "IoU": 0.798591426068591,
+                "TN": 65380021,
+                "TP": 2218023,
+                "n_pred": 2453739,
+                "n_ref": 2541703
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW036-C0005361.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW036-C0005361.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.7561060914432768,
+                "FN": 18887,
+                "FP": 170092,
+                "IoU": 0.6078541636405138,
+                "TN": 67151242,
+                "TP": 292931,
+                "n_pred": 463023,
+                "n_ref": 311818
+              },
+              "2": {
+                "Dice": 0.9339406514324909,
+                "FN": 409457,
+                "FP": 204410,
+                "IoU": 0.8760681595142434,
+                "TN": 62679889,
+                "TP": 4339396,
+                "n_pred": 4543806,
+                "n_ref": 4748853
+              },
+              "3": {
+                "Dice": 0.8911129424011104,
+                "FN": 289953,
+                "FP": 392903,
+                "IoU": 0.8036101930260302,
+                "TN": 64156108,
+                "TP": 2794188,
+                "n_pred": 3187091,
+                "n_ref": 3084141
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW040-C0005368.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW040-C0005368.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.8552135342783225,
+                "FN": 80372,
+                "FP": 67317,
+                "IoU": 0.7470507032411435,
+                "TN": 67573572,
+                "TP": 436179,
+                "n_pred": 503496,
+                "n_ref": 516551
+              },
+              "2": {
+                "Dice": 0.9174783361946114,
+                "FN": 580590,
+                "FP": 233635,
+                "IoU": 0.8475380834129449,
+                "TN": 62816926,
+                "TP": 4526289,
+                "n_pred": 4759924,
+                "n_ref": 5106879
+              },
+              "3": {
+                "Dice": 0.8708309783946043,
+                "FN": 354876,
+                "FP": 555867,
+                "IoU": 0.7712140182135891,
+                "TN": 64176676,
+                "TP": 3070021,
+                "n_pred": 3625888,
+                "n_ref": 3424897
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW041-C0005371.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW041-C0005371.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.8496460806598455,
+                "FN": 105454,
+                "FP": 94044,
+                "IoU": 0.7385953717158666,
+                "TN": 77355735,
+                "TP": 563679,
+                "n_pred": 657723,
+                "n_ref": 669133
+              },
+              "2": {
+                "Dice": 0.9301604601620292,
+                "FN": 642720,
+                "FP": 345374,
+                "IoU": 0.8694392247859001,
+                "TN": 70550835,
+                "TP": 6579983,
+                "n_pred": 6925357,
+                "n_ref": 7222703
+              },
+              "3": {
+                "Dice": 0.872512175684052,
+                "FN": 231720,
+                "FP": 920056,
+                "IoU": 0.7738550757418682,
+                "TN": 73025824,
+                "TP": 3941312,
+                "n_pred": 4861368,
+                "n_ref": 4173032
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW046-C0005384.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW046-C0005384.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.8094296163192162,
+                "FN": 128347,
+                "FP": 67324,
+                "IoU": 0.6798670850662121,
+                "TN": 80653422,
+                "TP": 415547,
+                "n_pred": 482871,
+                "n_ref": 543894
+              },
+              "2": {
+                "Dice": 0.94019644288561,
+                "FN": 529212,
+                "FP": 379561,
+                "IoU": 0.8871421845814109,
+                "TN": 73212269,
+                "TP": 7143598,
+                "n_pred": 7523159,
+                "n_ref": 7672810
+              },
+              "3": {
+                "Dice": 0.8977137638345878,
+                "FN": 358790,
+                "FP": 530807,
+                "IoU": 0.8144107531973884,
+                "TN": 76471275,
+                "TP": 3903768,
+                "n_pred": 4434575,
+                "n_ref": 4262558
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW049-C0005387.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW049-C0005387.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.8044408472821899,
+                "FN": 40702,
+                "FP": 80592,
+                "IoU": 0.6728574202735943,
+                "TN": 67786672,
+                "TP": 249474,
+                "n_pred": 330066,
+                "n_ref": 290176
+              },
+              "2": {
+                "Dice": 0.921456256800395,
+                "FN": 500873,
+                "FP": 146209,
+                "IoU": 0.8543522343069789,
+                "TN": 63714653,
+                "TP": 3795705,
+                "n_pred": 3941914,
+                "n_ref": 4296578
+              },
+              "3": {
+                "Dice": 0.8807221703391337,
+                "FN": 330019,
+                "FP": 422767,
+                "IoU": 0.7868664481686255,
+                "TN": 64625448,
+                "TP": 2779206,
+                "n_pred": 3201973,
+                "n_ref": 3109225
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW060-C0005652.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW060-C0005652.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.8794120936314445,
+                "FN": 14803,
+                "FP": 41267,
+                "IoU": 0.7847774267717381,
+                "TN": 67896919,
+                "TP": 204451,
+                "n_pred": 245718,
+                "n_ref": 219254
+              },
+              "2": {
+                "Dice": 0.9370588509072022,
+                "FN": 228495,
+                "FP": 254292,
+                "IoU": 0.881571714207288,
+                "TN": 64080821,
+                "TP": 3593832,
+                "n_pred": 3848124,
+                "n_ref": 3822327
+              },
+              "3": {
+                "Dice": 0.8786642570692057,
+                "FN": 204167,
+                "FP": 367398,
+                "IoU": 0.7835871304455818,
+                "TN": 65516354,
+                "TP": 2069521,
+                "n_pred": 2436919,
+                "n_ref": 2273688
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW068-C0005676.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW068-C0005676.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.8789400043196138,
+                "FN": 24048,
+                "FP": 40411,
+                "IoU": 0.784025839568179,
+                "TN": 67858983,
+                "TP": 233998,
+                "n_pred": 274409,
+                "n_ref": 258046
+              },
+              "2": {
+                "Dice": 0.9457161603186053,
+                "FN": 205603,
+                "FP": 210723,
+                "IoU": 0.897022343247148,
+                "TN": 64114563,
+                "TP": 3626551,
+                "n_pred": 3837274,
+                "n_ref": 3832154
+              },
+              "3": {
+                "Dice": 0.9118065747631405,
+                "FN": 295839,
+                "FP": 219924,
+                "IoU": 0.8379085497274292,
+                "TN": 64975514,
+                "TP": 2666163,
+                "n_pred": 2886087,
+                "n_ref": 2962002
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW073-C0005681.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW073-C0005681.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.9620700097894448,
+                "FN": 11050,
+                "FP": 21264,
+                "IoU": 0.9269122376878989,
+                "TN": 67715314,
+                "TP": 409812,
+                "n_pred": 431076,
+                "n_ref": 420862
+              },
+              "2": {
+                "Dice": 0.9161950132495976,
+                "FN": 88717,
+                "FP": 548663,
+                "IoU": 0.8453504315353322,
+                "TN": 64035993,
+                "TP": 3484067,
+                "n_pred": 4032730,
+                "n_ref": 3572784
+              },
+              "3": {
+                "Dice": 0.8613619652590122,
+                "FN": 681650,
+                "FP": 213773,
+                "IoU": 0.7564844480668967,
+                "TN": 64480373,
+                "TP": 2781644,
+                "n_pred": 2995417,
+                "n_ref": 3463294
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW075-C0005683.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW075-C0005683.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.8630251239019954,
+                "FN": 95263,
+                "FP": 15592,
+                "IoU": 0.7590538208406328,
+                "TN": 67697358,
+                "TP": 349227,
+                "n_pred": 364819,
+                "n_ref": 444490
+              },
+              "2": {
+                "Dice": 0.9401241691855727,
+                "FN": 96440,
+                "FP": 383052,
+                "IoU": 0.887013498989938,
+                "TN": 63913641,
+                "TP": 3764307,
+                "n_pred": 4147359,
+                "n_ref": 3860747
+              },
+              "3": {
+                "Dice": 0.8922133884194218,
+                "FN": 339996,
+                "FP": 315366,
+                "IoU": 0.8054018518480027,
+                "TN": 64789669,
+                "TP": 2712409,
+                "n_pred": 3027775,
+                "n_ref": 3052405
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW076-C0005684.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW076-C0005684.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.8157774204783466,
+                "FN": 138559,
+                "FP": 15891,
+                "IoU": 0.6888716991090188,
+                "TN": 67661021,
+                "TP": 341969,
+                "n_pred": 357860,
+                "n_ref": 480528
+              },
+              "2": {
+                "Dice": 0.9291849643195769,
+                "FN": 147003,
+                "FP": 397917,
+                "IoU": 0.8677361947286714,
+                "TN": 64037492,
+                "TP": 3575028,
+                "n_pred": 3972945,
+                "n_ref": 3722031
+              },
+              "3": {
+                "Dice": 0.9027485038500515,
+                "FN": 282406,
+                "FP": 301272,
+                "IoU": 0.8227361794607964,
+                "TN": 64864732,
+                "TP": 2709030,
+                "n_pred": 3010302,
+                "n_ref": 2991436
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW088-C0005697.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW088-C0005697.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.7520661760792176,
+                "FN": 209917,
+                "FP": 27646,
+                "IoU": 0.6026490841608585,
+                "TN": 67559573,
+                "TP": 360304,
+                "n_pred": 387950,
+                "n_ref": 570221
+              },
+              "2": {
+                "Dice": 0.9162286058527855,
+                "FN": 231472,
+                "FP": 494685,
+                "IoU": 0.8454076300599693,
+                "TN": 63460203,
+                "TP": 3971080,
+                "n_pred": 4465765,
+                "n_ref": 4202552
+              },
+              "3": {
+                "Dice": 0.8982268322176946,
+                "FN": 336578,
+                "FP": 315340,
+                "IoU": 0.8152556791936426,
+                "TN": 64628682,
+                "TP": 2876840,
+                "n_pred": 3192180,
+                "n_ref": 3213418
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW094-C0005703.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW094-C0005703.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.8238306156517413,
+                "FN": 129824,
+                "FP": 17498,
+                "IoU": 0.7004353510767873,
+                "TN": 67665653,
+                "TP": 344465,
+                "n_pred": 361963,
+                "n_ref": 474289
+              },
+              "2": {
+                "Dice": 0.9228407587203808,
+                "FN": 182043,
+                "FP": 464206,
+                "IoU": 0.8567356834111969,
+                "TN": 63646554,
+                "TP": 3864637,
+                "n_pred": 4328843,
+                "n_ref": 4046680
+              },
+              "3": {
+                "Dice": 0.8795272923898477,
+                "FN": 323692,
+                "FP": 329781,
+                "IoU": 0.7849609244528453,
+                "TN": 65118583,
+                "TP": 2385384,
+                "n_pred": 2715165,
+                "n_ref": 2709076
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW099-C0005708.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW099-C0005708.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.8410745771718309,
+                "FN": 61005,
+                "FP": 24532,
+                "IoU": 0.7257365837392066,
+                "TN": 66272697,
+                "TP": 226342,
+                "n_pred": 250874,
+                "n_ref": 287347
+              },
+              "2": {
+                "Dice": 0.9393174873126621,
+                "FN": 276633,
+                "FP": 161315,
+                "IoU": 0.8855783668317617,
+                "TN": 62757083,
+                "TP": 3389545,
+                "n_pred": 3550860,
+                "n_ref": 3666178
+              },
+              "3": {
+                "Dice": 0.8810831503423009,
+                "FN": 145539,
+                "FP": 360803,
+                "IoU": 0.7874429191157889,
+                "TN": 64202430,
+                "TP": 1875804,
+                "n_pred": 2236607,
+                "n_ref": 2021343
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW106-C0005714.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW106-C0005714.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.7820525158606191,
+                "FN": 223374,
+                "FP": 12154,
+                "IoU": 0.6421069266489995,
+                "TN": 67499344,
+                "TP": 422568,
+                "n_pred": 434722,
+                "n_ref": 645942
+              },
+              "2": {
+                "Dice": 0.9018348011508345,
+                "FN": 500427,
+                "FP": 393781,
+                "IoU": 0.821219614404028,
+                "TN": 63155728,
+                "TP": 4107504,
+                "n_pred": 4501285,
+                "n_ref": 4607931
+              },
+              "3": {
+                "Dice": 0.8427390410543344,
+                "FN": 302282,
+                "FP": 496052,
+                "IoU": 0.7282186740509421,
+                "TN": 65220027,
+                "TP": 2139079,
+                "n_pred": 2635131,
+                "n_ref": 2441361
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW113-C0005721.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW113-C0005721.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.8662027043708318,
+                "FN": 17166,
+                "FP": 63042,
+                "IoU": 0.7639837453397325,
+                "TN": 67817599,
+                "TP": 259633,
+                "n_pred": 322675,
+                "n_ref": 276799
+              },
+              "2": {
+                "Dice": 0.9449474191691747,
+                "FN": 482681,
+                "FP": 125275,
+                "IoU": 0.8956401191162001,
+                "TN": 62331868,
+                "TP": 5217616,
+                "n_pred": 5342891,
+                "n_ref": 5700297
+              },
+              "3": {
+                "Dice": 0.8656419920982442,
+                "FN": 335002,
+                "FP": 519087,
+                "IoU": 0.7631118095595226,
+                "TN": 64551988,
+                "TP": 2751363,
+                "n_pred": 3270450,
+                "n_ref": 3086365
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW114-C0005722.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW114-C0005722.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.5767168765604851,
+                "FN": 7664,
+                "FP": 69473,
+                "IoU": 0.4052017951051,
+                "TN": 68027754,
+                "TP": 52549,
+                "n_pred": 122022,
+                "n_ref": 60213
+              },
+              "2": {
+                "Dice": 0.8967322067367965,
+                "FN": 282356,
+                "FP": 369451,
+                "IoU": 0.8127965052659393,
+                "TN": 64675630,
+                "TP": 2830003,
+                "n_pred": 3199454,
+                "n_ref": 3112359
+              },
+              "3": {
+                "Dice": 0.8515804110480313,
+                "FN": 144873,
+                "FP": 403977,
+                "IoU": 0.7415237594694561,
+                "TN": 66034034,
+                "TP": 1574556,
+                "n_pred": 1978533,
+                "n_ref": 1719429
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW120-C0005730.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW120-C0005730.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.9090333090112351,
+                "FN": 74913,
+                "FP": 14101,
+                "IoU": 0.8332365383102212,
+                "TN": 67623666,
+                "TP": 444760,
+                "n_pred": 458861,
+                "n_ref": 519673
+              },
+              "2": {
+                "Dice": 0.9326969316346672,
+                "FN": 95173,
+                "FP": 514332,
+                "IoU": 0.873881992172264,
+                "TN": 63324625,
+                "TP": 4223310,
+                "n_pred": 4737642,
+                "n_ref": 4318483
+              },
+              "3": {
+                "Dice": 0.8938340933600474,
+                "FN": 478028,
+                "FP": 308061,
+                "IoU": 0.8080470461028072,
+                "TN": 64062223,
+                "TP": 3309128,
+                "n_pred": 3617189,
+                "n_ref": 3787156
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW125-C0005735.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW125-C0005735.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.887521550898433,
+                "FN": 29749,
+                "FP": 43646,
+                "IoU": 0.7977876350011021,
+                "TN": 67794480,
+                "TP": 289565,
+                "n_pred": 333211,
+                "n_ref": 319314
+              },
+              "2": {
+                "Dice": 0.9448889413745901,
+                "FN": 236302,
+                "FP": 294775,
+                "IoU": 0.8955350563812532,
+                "TN": 63073658,
+                "TP": 4552705,
+                "n_pred": 4847480,
+                "n_ref": 4789007
+              },
+              "3": {
+                "Dice": 0.859544542675959,
+                "FN": 362845,
+                "FP": 417038,
+                "IoU": 0.7536853255915755,
+                "TN": 64991234,
+                "TP": 2386323,
+                "n_pred": 2803361,
+                "n_ref": 2749168
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW131-C0005741.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW131-C0005741.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.9309548316320622,
+                "FN": 47402,
+                "FP": 15788,
+                "IoU": 0.8708283421301161,
+                "TN": 67668246,
+                "TP": 426004,
+                "n_pred": 441792,
+                "n_ref": 473406
+              },
+              "2": {
+                "Dice": 0.9371479069925891,
+                "FN": 275860,
+                "FP": 351435,
+                "IoU": 0.881729370585202,
+                "TN": 62853545,
+                "TP": 4676600,
+                "n_pred": 5028035,
+                "n_ref": 4952460
+              },
+              "3": {
+                "Dice": 0.8791050771382026,
+                "FN": 653495,
+                "FP": 352351,
+                "IoU": 0.7842885708624031,
+                "TN": 63494516,
+                "TP": 3657078,
+                "n_pred": 4009429,
+                "n_ref": 4310573
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW132-C0005742.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW132-C0005742.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.7556820833527792,
+                "FN": 228075,
+                "FP": 65085,
+                "IoU": 0.6073062785987547,
+                "TN": 77372376,
+                "TP": 453376,
+                "n_pred": 518461,
+                "n_ref": 681451
+              },
+              "2": {
+                "Dice": 0.9296845154511111,
+                "FN": 649815,
+                "FP": 405408,
+                "IoU": 0.8686079281035066,
+                "TN": 70087811,
+                "TP": 6975878,
+                "n_pred": 7381286,
+                "n_ref": 7625693
+              },
+              "3": {
+                "Dice": 0.847555665656806,
+                "FN": 191504,
+                "FP": 835549,
+                "IoU": 0.7354417392661734,
+                "TN": 74236769,
+                "TP": 2855090,
+                "n_pred": 3690639,
+                "n_ref": 3046594
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW137-C0005747.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW137-C0005747.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.9036174135040468,
+                "FN": 87449,
+                "FP": 7236,
+                "IoU": 0.8241807418631252,
+                "TN": 67618904,
+                "TP": 443851,
+                "n_pred": 451087,
+                "n_ref": 531300
+              },
+              "2": {
+                "Dice": 0.9523208343981041,
+                "FN": 179443,
+                "FP": 289615,
+                "IoU": 0.9089813615325566,
+                "TN": 63004012,
+                "TP": 4684370,
+                "n_pred": 4973985,
+                "n_ref": 4863813
+              },
+              "3": {
+                "Dice": 0.9128036764147404,
+                "FN": 405491,
+                "FP": 211000,
+                "IoU": 0.8395941529719098,
+                "TN": 64314120,
+                "TP": 3226829,
+                "n_pred": 3437829,
+                "n_ref": 3632320
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW141-C0005752.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW141-C0005752.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.9659124865208975,
+                "FN": 16774,
+                "FP": 25206,
+                "IoU": 0.9340722849182892,
+                "TN": 67520682,
+                "TP": 594778,
+                "n_pred": 619984,
+                "n_ref": 611552
+              },
+              "2": {
+                "Dice": 0.9381426238427775,
+                "FN": 67999,
+                "FP": 537166,
+                "IoU": 0.883492119476385,
+                "TN": 62963242,
+                "TP": 4589033,
+                "n_pred": 5126199,
+                "n_ref": 4657032
+              },
+              "3": {
+                "Dice": 0.8905998760131346,
+                "FN": 641817,
+                "FP": 234712,
+                "IoU": 0.8027760739854385,
+                "TN": 63713106,
+                "TP": 3567805,
+                "n_pred": 3802517,
+                "n_ref": 4209622
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW142-C0005753.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW142-C0005753.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.8354718901896734,
+                "FN": 64003,
+                "FP": 53655,
+                "IoU": 0.7174338542379638,
+                "TN": 67741049,
+                "TP": 298733,
+                "n_pred": 352388,
+                "n_ref": 362736
+              },
+              "2": {
+                "Dice": 0.9384900626063487,
+                "FN": 237063,
+                "FP": 251017,
+                "IoU": 0.8841085980887227,
+                "TN": 63945911,
+                "TP": 3723449,
+                "n_pred": 3974466,
+                "n_ref": 3960512
+              },
+              "3": {
+                "Dice": 0.9049070676662138,
+                "FN": 313373,
+                "FP": 305176,
+                "IoU": 0.8263290182484683,
+                "TN": 64595826,
+                "TP": 2943065,
+                "n_pred": 3248241,
+                "n_ref": 3256438
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW153-C0005766.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW153-C0005766.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.7309405418760885,
+                "FN": 44955,
+                "FP": 155416,
+                "IoU": 0.5759702882295679,
+                "TN": 67684900,
+                "TP": 272169,
+                "n_pred": 427585,
+                "n_ref": 317124
+              },
+              "2": {
+                "Dice": 0.9295789390205198,
+                "FN": 560198,
+                "FP": 361522,
+                "IoU": 0.868423625904666,
+                "TN": 61152231,
+                "TP": 6083489,
+                "n_pred": 6445011,
+                "n_ref": 6643687
+              },
+              "3": {
+                "Dice": 0.8302771523852961,
+                "FN": 389933,
+                "FP": 696290,
+                "IoU": 0.7098067324908592,
+                "TN": 64414338,
+                "TP": 2656879,
+                "n_pred": 3353169,
+                "n_ref": 3046812
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW157-C0005772.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW157-C0005772.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.820537645483572,
+                "FN": 11621,
+                "FP": 127771,
+                "IoU": 0.6956878634926734,
+                "TN": 67699384,
+                "TP": 318664,
+                "n_pred": 446435,
+                "n_ref": 330285
+              },
+              "2": {
+                "Dice": 0.9365646257800425,
+                "FN": 369912,
+                "FP": 397421,
+                "IoU": 0.8806972651883279,
+                "TN": 61725626,
+                "TP": 5664481,
+                "n_pred": 6061902,
+                "n_ref": 6034393
+              },
+              "3": {
+                "Dice": 0.8858153875000774,
+                "FN": 566470,
+                "FP": 393264,
+                "IoU": 0.7950346626243133,
+                "TN": 63475019,
+                "TP": 3722687,
+                "n_pred": 4115951,
+                "n_ref": 4289157
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW158-C0005773.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW158-C0005773.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.7953057017691534,
+                "FN": 202525,
+                "FP": 71052,
+                "IoU": 0.6601722137616981,
+                "TN": 67352394,
+                "TP": 531469,
+                "n_pred": 602521,
+                "n_ref": 733994
+              },
+              "2": {
+                "Dice": 0.9234324171077959,
+                "FN": 286775,
+                "FP": 580028,
+                "IoU": 0.85775610540584,
+                "TN": 62063660,
+                "TP": 5226977,
+                "n_pred": 5807005,
+                "n_ref": 5513752
+              },
+              "3": {
+                "Dice": 0.866641698672733,
+                "FN": 331268,
+                "FP": 581716,
+                "IoU": 0.7646670057102116,
+                "TN": 64277899,
+                "TP": 2966557,
+                "n_pred": 3548273,
+                "n_ref": 3297825
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW166-C0005782.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW166-C0005782.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.8457807534725692,
+                "FN": 161096,
+                "FP": 31813,
+                "IoU": 0.7327730463836696,
+                "TN": 73202716,
+                "TP": 528983,
+                "n_pred": 560796,
+                "n_ref": 690079
+              },
+              "2": {
+                "Dice": 0.9462362069292692,
+                "FN": 364942,
+                "FP": 317865,
+                "IoU": 0.8979585492986815,
+                "TN": 67233141,
+                "TP": 6008660,
+                "n_pred": 6326525,
+                "n_ref": 6373602
+              },
+              "3": {
+                "Dice": 0.9062546353418245,
+                "FN": 426364,
+                "FP": 459702,
+                "IoU": 0.8285791781390115,
+                "TN": 68755656,
+                "TP": 4282886,
+                "n_pred": 4742588,
+                "n_ref": 4709250
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW172-C0005788.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW172-C0005788.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.763245953474832,
+                "FN": 284307,
+                "FP": 21485,
+                "IoU": 0.617136410929301,
+                "TN": 67358743,
+                "TP": 492905,
+                "n_pred": 514390,
+                "n_ref": 777212
+              },
+              "2": {
+                "Dice": 0.9186666474485555,
+                "FN": 277605,
+                "FP": 568819,
+                "IoU": 0.849568401160409,
+                "TN": 62530803,
+                "TP": 4780213,
+                "n_pred": 5349032,
+                "n_ref": 5057818
+              },
+              "3": {
+                "Dice": 0.883825423469504,
+                "FN": 604693,
+                "FP": 465987,
+                "IoU": 0.7918343976412513,
+                "TN": 63014035,
+                "TP": 4072725,
+                "n_pred": 4538712,
+                "n_ref": 4677418
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW173-C0005791.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW173-C0005791.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.9442069826379695,
+                "FN": 12636,
+                "FP": 21289,
+                "IoU": 0.894310690742333,
+                "TN": 67836452,
+                "TP": 287063,
+                "n_pred": 308352,
+                "n_ref": 299699
+              },
+              "2": {
+                "Dice": 0.9291229974494459,
+                "FN": 156392,
+                "FP": 347698,
+                "IoU": 0.8676281171754677,
+                "TN": 64349305,
+                "TP": 3304045,
+                "n_pred": 3651743,
+                "n_ref": 3460437
+              },
+              "3": {
+                "Dice": 0.8708435139643927,
+                "FN": 490020,
+                "FP": 144516,
+                "IoU": 0.7712336817210038,
+                "TN": 65383710,
+                "TP": 2139194,
+                "n_pred": 2283710,
+                "n_ref": 2629214
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW192-C0005812.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW192-C0005812.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.8180985947727377,
+                "FN": 3311,
+                "FP": 92065,
+                "IoU": 0.6921885287169358,
+                "TN": 67847588,
+                "TP": 214476,
+                "n_pred": 306541,
+                "n_ref": 217787
+              },
+              "2": {
+                "Dice": 0.9313801460797051,
+                "FN": 276959,
+                "FP": 519311,
+                "IoU": 0.8715729383680101,
+                "TN": 61957267,
+                "TP": 5403903,
+                "n_pred": 5923214,
+                "n_ref": 5680862
+              },
+              "3": {
+                "Dice": 0.8894456245184276,
+                "FN": 338733,
+                "FP": 392733,
+                "IoU": 0.8009023638601532,
+                "TN": 64483534,
+                "TP": 2942440,
+                "n_pred": 3335173,
+                "n_ref": 3281173
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_1/validation/AW198-C0005819.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW198-C0005819.nii.gz"
+          }
+        ]
+      },
+      "test": {
+        "mean_dice": 0.7893166355558477,
+        "foreground_dice": 0.7893166355558477
+      }
+    },
+    "2": {
+      "training": {
+        "total_epochs": 99,
+        "best_dice": 0.8589000105857849,
+        "all_dice": [
+          0.13099999725818634,
+          0.1526000052690506,
+          0.19110000133514404,
+          0.24320000410079956,
+          0.26649999618530273,
+          0.3109000027179718,
+          0.3522000014781952,
+          0.3928000032901764,
+          0.4275999963283539,
+          0.4618000090122223,
+          0.4921000003814697,
+          0.5206999778747559,
+          0.5437999963760376,
+          0.5687999725341797,
+          0.5927000045776367,
+          0.6115000247955322,
+          0.6312000155448914,
+          0.647599995136261,
+          0.6578999757766724,
+          0.6711000204086304,
+          0.6858999729156494,
+          0.6976000070571899,
+          0.7039999961853027,
+          0.7132999897003174,
+          0.7214999794960022,
+          0.7275000214576721,
+          0.7322999835014343,
+          0.739799976348877,
+          0.7477999925613403,
+          0.7530999779701233,
+          0.758400022983551,
+          0.7635999917984009,
+          0.7699999809265137,
+          0.7768999934196472,
+          0.7803000211715698,
+          0.7833999991416931,
+          0.7876999974250793,
+          0.7904000282287598,
+          0.7914999723434448,
+          0.7964000105857849,
+          0.7998999953269958,
+          0.8026999831199646,
+          0.8037999868392944,
+          0.805400013923645,
+          0.8094000220298767,
+          0.8105999827384949,
+          0.8120999932289124,
+          0.8136000037193298,
+          0.8169000148773193,
+          0.8174999952316284,
+          0.8202000260353088,
+          0.8220999836921692,
+          0.8234999775886536,
+          0.8252999782562256,
+          0.8277999758720398,
+          0.8294000029563904,
+          0.829800009727478,
+          0.8321999907493591,
+          0.8335999846458435,
+          0.8342000246047974,
+          0.8363000154495239,
+          0.8364999890327454,
+          0.8396000266075134,
+          0.8407999873161316,
+          0.8424000144004822,
+          0.8432999849319458,
+          0.8442999720573425,
+          0.8453999757766724,
+          0.8467000126838684,
+          0.8483999967575073,
+          0.8493000268936157,
+          0.8503000140190125,
+          0.8521999716758728,
+          0.8533999919891357,
+          0.8543000221252441,
+          0.8561999797821045,
+          0.8561999797821045,
+          0.8568999767303467,
+          0.8579000234603882,
+          0.8579000234603882,
+          0.8586000204086304,
+          0.8589000105857849
+        ],
+        "final_val_loss": -0.7535,
+        "converged": true
+      },
+      "validation": {
+        "foreground_mean": {
+          "Dice": 0.8584667044395822,
+          "FN": 213103.37037037036,
+          "FP": 254799.99074074076,
+          "IoU": 0.7680656478740411,
+          "TN": 65128250.2962963,
+          "TP": 2255451.675925926,
+          "n_pred": 2510251.6666666665,
+          "n_ref": 2468555.046296296
+        },
+        "mean": {
+          "1": {
+            "Dice": 0.7686468826777272,
+            "FN": 61326.083333333336,
+            "FP": 51027.0,
+            "IoU": 0.6535180798607377,
+            "TN": 67494454.30555555,
+            "TP": 244797.94444444444,
+            "n_pred": 295824.94444444444,
+            "n_ref": 306124.02777777775
+          },
+          "2": {
+            "Dice": 0.9275460629789014,
+            "FN": 260672.02777777778,
+            "FP": 332261.9166666667,
+            "IoU": 0.8653778369506644,
+            "TN": 63357513.36111111,
+            "TP": 3901158.027777778,
+            "n_pred": 4233419.944444444,
+            "n_ref": 4161830.0555555555
+          },
+          "3": {
+            "Dice": 0.8792071676621181,
+            "FN": 317312.0,
+            "FP": 381111.05555555556,
+            "IoU": 0.7853010268107212,
+            "TN": 64532783.222222224,
+            "TP": 2620399.0555555555,
+            "n_pred": 3001510.111111111,
+            "n_ref": 2937711.0555555555
+          }
+        },
+        "metric_per_case": [
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.6249232356481368,
+                "FN": 46792,
+                "FP": 29553,
+                "IoU": 0.45446425381399835,
+                "TN": 64347479,
+                "TP": 63600,
+                "n_pred": 93153,
+                "n_ref": 110392
+              },
+              "2": {
+                "Dice": 0.9074791024370181,
+                "FN": 302245,
+                "FP": 273643,
+                "IoU": 0.8306285989231649,
+                "TN": 61087275,
+                "TP": 2824261,
+                "n_pred": 3097904,
+                "n_ref": 3126506
+              },
+              "3": {
+                "Dice": 0.8004450675225467,
+                "FN": 260947,
+                "FP": 386858,
+                "IoU": 0.6672850453537624,
+                "TN": 62540397,
+                "TP": 1299222,
+                "n_pred": 1686080,
+                "n_ref": 1560169
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW021-C0005342.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW021-C0005342.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.4983892997964075,
+                "FN": 15275,
+                "FP": 62581,
+                "IoU": 0.331903135565586,
+                "TN": 73808074,
+                "TP": 38678,
+                "n_pred": 101259,
+                "n_ref": 53953
+              },
+              "2": {
+                "Dice": 0.8909561613885403,
+                "FN": 363092,
+                "FP": 209068,
+                "IoU": 0.8033552239955019,
+                "TN": 71014996,
+                "TP": 2337452,
+                "n_pred": 2546520,
+                "n_ref": 2700544
+              },
+              "3": {
+                "Dice": 0.8485983135425764,
+                "FN": 129352,
+                "FP": 344624,
+                "IoU": 0.7370132626377351,
+                "TN": 72122327,
+                "TP": 1328305,
+                "n_pred": 1672929,
+                "n_ref": 1457657
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW024-C0005345.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW024-C0005345.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.6060645221505468,
+                "FN": 24616,
+                "FP": 85123,
+                "IoU": 0.4347866395405732,
+                "TN": 63244693,
+                "TP": 84416,
+                "n_pred": 169539,
+                "n_ref": 109032
+              },
+              "2": {
+                "Dice": 0.9049159779463426,
+                "FN": 182595,
+                "FP": 277406,
+                "IoU": 0.8263438783896374,
+                "TN": 60789929,
+                "TP": 2188918,
+                "n_pred": 2466324,
+                "n_ref": 2371513
+              },
+              "3": {
+                "Dice": 0.8751054441442276,
+                "FN": 255282,
+                "FP": 170532,
+                "IoU": 0.7779444211804228,
+                "TN": 61521247,
+                "TP": 1491787,
+                "n_pred": 1662319,
+                "n_ref": 1747069
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW027-C0005351.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW027-C0005351.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.7606218239769071,
+                "FN": 4386,
+                "FP": 83185,
+                "IoU": 0.6137124557232277,
+                "TN": 61114997,
+                "TP": 139128,
+                "n_pred": 222313,
+                "n_ref": 143514
+              },
+              "2": {
+                "Dice": 0.947929747622529,
+                "FN": 139249,
+                "FP": 237085,
+                "IoU": 0.9010137350432589,
+                "TN": 57539815,
+                "TP": 3425547,
+                "n_pred": 3662632,
+                "n_ref": 3564796
+              },
+              "3": {
+                "Dice": 0.9037446845273109,
+                "FN": 318395,
+                "FP": 258746,
+                "IoU": 0.824392522227023,
+                "TN": 58055156,
+                "TP": 2709399,
+                "n_pred": 2968145,
+                "n_ref": 3027794
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW042-C0005373.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW042-C0005373.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.7082907240083117,
+                "FN": 64829,
+                "FP": 122584,
+                "IoU": 0.5483360204752987,
+                "TN": 67742501,
+                "TP": 227526,
+                "n_pred": 350110,
+                "n_ref": 292355
+              },
+              "2": {
+                "Dice": 0.9255391365291877,
+                "FN": 560601,
+                "FP": 169711,
+                "IoU": 0.8613986493090449,
+                "TN": 62888285,
+                "TP": 4538843,
+                "n_pred": 4708554,
+                "n_ref": 5099444
+              },
+              "3": {
+                "Dice": 0.8938252496580733,
+                "FN": 193420,
+                "FP": 578996,
+                "IoU": 0.80803259103662,
+                "TN": 64133757,
+                "TP": 3251267,
+                "n_pred": 3830263,
+                "n_ref": 3444687
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW047-C0005385.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW047-C0005385.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.5238462603604138,
+                "FN": 69032,
+                "FP": 195749,
+                "IoU": 0.3548724271012007,
+                "TN": 67747008,
+                "TP": 145651,
+                "n_pred": 341400,
+                "n_ref": 214683
+              },
+              "2": {
+                "Dice": 0.9130271982731721,
+                "FN": 263446,
+                "FP": 684234,
+                "IoU": 0.8399724416495834,
+                "TN": 62235460,
+                "TP": 4974300,
+                "n_pred": 5658534,
+                "n_ref": 5237746
+              },
+              "3": {
+                "Dice": 0.862037792294163,
+                "FN": 714920,
+                "FP": 237666,
+                "IoU": 0.7575276107209702,
+                "TN": 64228803,
+                "TP": 2976051,
+                "n_pred": 3213717,
+                "n_ref": 3690971
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW051-C0005394.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW051-C0005394.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.875536349615966,
+                "FN": 29522,
+                "FP": 68290,
+                "IoU": 0.7786257468766975,
+                "TN": 67715600,
+                "TP": 344028,
+                "n_pred": 412318,
+                "n_ref": 373550
+              },
+              "2": {
+                "Dice": 0.9181821440131279,
+                "FN": 473481,
+                "FP": 268420,
+                "IoU": 0.8487400526177579,
+                "TN": 63252632,
+                "TP": 4162907,
+                "n_pred": 4431327,
+                "n_ref": 4636388
+              },
+              "3": {
+                "Dice": 0.8845643910609438,
+                "FN": 240351,
+                "FP": 644506,
+                "IoU": 0.7930214742761306,
+                "TN": 63882325,
+                "TP": 3390258,
+                "n_pred": 4034764,
+                "n_ref": 3630609
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW053-C0005638.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW053-C0005638.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.7697241800340346,
+                "FN": 113317,
+                "FP": 25114,
+                "IoU": 0.6256517177223953,
+                "TN": 67787648,
+                "TP": 231361,
+                "n_pred": 256475,
+                "n_ref": 344678
+              },
+              "2": {
+                "Dice": 0.9337612789734697,
+                "FN": 116601,
+                "FP": 394410,
+                "IoU": 0.8757525501179353,
+                "TN": 64044591,
+                "TP": 3601838,
+                "n_pred": 3996248,
+                "n_ref": 3718439
+              },
+              "3": {
+                "Dice": 0.8984124557802332,
+                "FN": 291605,
+                "FP": 266647,
+                "IoU": 0.8155615597637875,
+                "TN": 65130674,
+                "TP": 2468514,
+                "n_pred": 2735161,
+                "n_ref": 2760119
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW058-C0005648.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW058-C0005648.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.8291653617040123,
+                "FN": 34903,
+                "FP": 127100,
+                "IoU": 0.7081831495101351,
+                "TN": 67602287,
+                "TP": 393150,
+                "n_pred": 520250,
+                "n_ref": 428053
+              },
+              "2": {
+                "Dice": 0.9136012865686055,
+                "FN": 330588,
+                "FP": 583786,
+                "IoU": 0.8409447427298513,
+                "TN": 62408658,
+                "TP": 4834408,
+                "n_pred": 5418194,
+                "n_ref": 5164996
+              },
+              "3": {
+                "Dice": 0.8618230718373493,
+                "FN": 579322,
+                "FP": 626170,
+                "IoU": 0.7571960479190022,
+                "TN": 63192562,
+                "TP": 3759386,
+                "n_pred": 4385556,
+                "n_ref": 4338708
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW065-C0005662.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW065-C0005662.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.9047269482108414,
+                "FN": 60692,
+                "FP": 5498,
+                "IoU": 0.8260286754366367,
+                "TN": 67776975,
+                "TP": 314275,
+                "n_pred": 319773,
+                "n_ref": 374967
+              },
+              "2": {
+                "Dice": 0.935726384627109,
+                "FN": 167035,
+                "FP": 391710,
+                "IoU": 0.8792159939991159,
+                "TN": 63531455,
+                "TP": 4067240,
+                "n_pred": 4458950,
+                "n_ref": 4234275
+              },
+              "3": {
+                "Dice": 0.8895496633002484,
+                "FN": 340963,
+                "FP": 453496,
+                "IoU": 0.801071091521285,
+                "TN": 64163757,
+                "TP": 3199224,
+                "n_pred": 3652720,
+                "n_ref": 3540187
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW066-C0005664.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW066-C0005664.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.9126001168065302,
+                "FN": 4912,
+                "FP": 45819,
+                "IoU": 0.8392497837377095,
+                "TN": 67841851,
+                "TP": 264858,
+                "n_pred": 310677,
+                "n_ref": 269770
+              },
+              "2": {
+                "Dice": 0.9303256568405106,
+                "FN": 77726,
+                "FP": 479043,
+                "IoU": 0.8697279342913043,
+                "TN": 63883546,
+                "TP": 3717125,
+                "n_pred": 4196168,
+                "n_ref": 3794851
+              },
+              "3": {
+                "Dice": 0.8876861194571521,
+                "FN": 523694,
+                "FP": 204188,
+                "IoU": 0.7980536204618164,
+                "TN": 64553107,
+                "TP": 2876451,
+                "n_pred": 3080639,
+                "n_ref": 3400145
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW070-C0005678.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW070-C0005678.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.957066357153195,
+                "FN": 16175,
+                "FP": 14083,
+                "IoU": 0.9176675464613208,
+                "TN": 67789930,
+                "TP": 337252,
+                "n_pred": 351335,
+                "n_ref": 353427
+              },
+              "2": {
+                "Dice": 0.9501896388653825,
+                "FN": 284094,
+                "FP": 248132,
+                "IoU": 0.905105982987664,
+                "TN": 62548804,
+                "TP": 5076410,
+                "n_pred": 5324542,
+                "n_ref": 5360504
+              },
+              "3": {
+                "Dice": 0.9052538093632079,
+                "FN": 310556,
+                "FP": 452440,
+                "IoU": 0.826907476002853,
+                "TN": 63749416,
+                "TP": 3645028,
+                "n_pred": 4097468,
+                "n_ref": 3955584
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW079-C0005687.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW079-C0005687.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.9687507458851708,
+                "FN": 12021,
+                "FP": 10236,
+                "IoU": 0.9393953421248253,
+                "TN": 67790191,
+                "TP": 344992,
+                "n_pred": 355228,
+                "n_ref": 357013
+              },
+              "2": {
+                "Dice": 0.9578266095372029,
+                "FN": 97757,
+                "FP": 291859,
+                "IoU": 0.919066460823627,
+                "TN": 63343416,
+                "TP": 4424408,
+                "n_pred": 4716267,
+                "n_ref": 4522165
+              },
+              "3": {
+                "Dice": 0.8991168670666083,
+                "FN": 348974,
+                "FP": 258347,
+                "IoU": 0.8167232653213962,
+                "TN": 64843757,
+                "TP": 2706362,
+                "n_pred": 2964709,
+                "n_ref": 3055336
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW081-C0005689.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW081-C0005689.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.7149518789279765,
+                "FN": 255026,
+                "FP": 23411,
+                "IoU": 0.5563619503459089,
+                "TN": 67529818,
+                "TP": 349185,
+                "n_pred": 372596,
+                "n_ref": 604211
+              },
+              "2": {
+                "Dice": 0.9138255246542719,
+                "FN": 135327,
+                "FP": 731445,
+                "IoU": 0.8413248013063485,
+                "TN": 62694885,
+                "TP": 4595783,
+                "n_pred": 5327228,
+                "n_ref": 4731110
+              },
+              "3": {
+                "Dice": 0.8818220156128187,
+                "FN": 381799,
+                "FP": 484673,
+                "IoU": 0.7886240186495017,
+                "TN": 64058242,
+                "TP": 3232726,
+                "n_pred": 3717399,
+                "n_ref": 3614525
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW084-C0005691.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW084-C0005691.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.8485744743000098,
+                "FN": 137142,
+                "FP": 3345,
+                "IoU": 0.73697729932132,
+                "TN": 67623315,
+                "TP": 393638,
+                "n_pred": 396983,
+                "n_ref": 530780
+              },
+              "2": {
+                "Dice": 0.9297327082614282,
+                "FN": 232736,
+                "FP": 421188,
+                "IoU": 0.8686920692037076,
+                "TN": 63177360,
+                "TP": 4326156,
+                "n_pred": 4747344,
+                "n_ref": 4558892
+              },
+              "3": {
+                "Dice": 0.8845552129698283,
+                "FN": 196507,
+                "FP": 549456,
+                "IoU": 0.7930067209556128,
+                "TN": 64553637,
+                "TP": 2857840,
+                "n_pred": 3407296,
+                "n_ref": 3054347
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW086-C0005694.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW086-C0005694.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.7098831320843972,
+                "FN": 174382,
+                "FP": 16964,
+                "IoU": 0.5502471518191455,
+                "TN": 67731993,
+                "TP": 234101,
+                "n_pred": 251065,
+                "n_ref": 408483
+              },
+              "2": {
+                "Dice": 0.9151762608960167,
+                "FN": 434753,
+                "FP": 271293,
+                "IoU": 0.843617472504715,
+                "TN": 63642575,
+                "TP": 3808819,
+                "n_pred": 4080112,
+                "n_ref": 4243572
+              },
+              "3": {
+                "Dice": 0.8701206685780785,
+                "FN": 232390,
+                "FP": 510569,
+                "IoU": 0.7701005270032296,
+                "TN": 64925771,
+                "TP": 2488710,
+                "n_pred": 2999279,
+                "n_ref": 2721100
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW087-C0005695.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW087-C0005695.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.7519723783630511,
+                "FN": 78503,
+                "FP": 10717,
+                "IoU": 0.6025286342434812,
+                "TN": 67932971,
+                "TP": 135249,
+                "n_pred": 145966,
+                "n_ref": 213752
+              },
+              "2": {
+                "Dice": 0.8985810054698672,
+                "FN": 200449,
+                "FP": 459699,
+                "IoU": 0.8158393943925066,
+                "TN": 64572808,
+                "TP": 2924484,
+                "n_pred": 3384183,
+                "n_ref": 3124933
+              },
+              "3": {
+                "Dice": 0.8396124137367134,
+                "FN": 303290,
+                "FP": 446023,
+                "IoU": 0.7235620439895064,
+                "TN": 65446839,
+                "TP": 1961288,
+                "n_pred": 2407311,
+                "n_ref": 2264578
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW090-C0005699.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW090-C0005699.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.7672894928415434,
+                "FN": 28803,
+                "FP": 20106,
+                "IoU": 0.6224409448818897,
+                "TN": 68027900,
+                "TP": 80631,
+                "n_pred": 100737,
+                "n_ref": 109434
+              },
+              "2": {
+                "Dice": 0.9252436477381789,
+                "FN": 137624,
+                "FP": 327548,
+                "IoU": 0.8608868845399301,
+                "TN": 64813600,
+                "TP": 2878668,
+                "n_pred": 3206216,
+                "n_ref": 3016292
+              },
+              "3": {
+                "Dice": 0.8548246150752687,
+                "FN": 323147,
+                "FP": 248673,
+                "IoU": 0.7464573779076238,
+                "TN": 65902119,
+                "TP": 1683501,
+                "n_pred": 1932174,
+                "n_ref": 2006648
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW092-C0005701.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW092-C0005701.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.66251795117281,
+                "FN": 71065,
+                "FP": 127040,
+                "IoU": 0.49534717251252686,
+                "TN": 67764883,
+                "TP": 194452,
+                "n_pred": 321492,
+                "n_ref": 265517
+              },
+              "2": {
+                "Dice": 0.9260425567321755,
+                "FN": 281174,
+                "FP": 319686,
+                "IoU": 0.8622711845214505,
+                "TN": 63794809,
+                "TP": 3761771,
+                "n_pred": 4081457,
+                "n_ref": 4042945
+              },
+              "3": {
+                "Dice": 0.9151420286531363,
+                "FN": 346698,
+                "FP": 277889,
+                "IoU": 0.8435592979207932,
+                "TN": 64164956,
+                "TP": 3367897,
+                "n_pred": 3645786,
+                "n_ref": 3714595
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW105-C0005713.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW105-C0005713.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.8469502777674963,
+                "FN": 131231,
+                "FP": 5224,
+                "IoU": 0.7345305769881754,
+                "TN": 67643426,
+                "TP": 377559,
+                "n_pred": 382783,
+                "n_ref": 508790
+              },
+              "2": {
+                "Dice": 0.9241921025620594,
+                "FN": 412263,
+                "FP": 310795,
+                "IoU": 0.8590679662819382,
+                "TN": 63026896,
+                "TP": 4407486,
+                "n_pred": 4718281,
+                "n_ref": 4819749
+              },
+              "3": {
+                "Dice": 0.8868307858310256,
+                "FN": 251763,
+                "FP": 534431,
+                "IoU": 0.7966720374072512,
+                "TN": 64290810,
+                "TP": 3080436,
+                "n_pred": 3614867,
+                "n_ref": 3332199
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW107-C0005715.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW107-C0005715.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.9588796004309781,
+                "FN": 3120,
+                "FP": 19817,
+                "IoU": 0.9210074078155726,
+                "TN": 67342783,
+                "TP": 267432,
+                "n_pred": 287249,
+                "n_ref": 270552
+              },
+              "2": {
+                "Dice": 0.9494209205917997,
+                "FN": 285454,
+                "FP": 101436,
+                "IoU": 0.9037119996017969,
+                "TN": 63615102,
+                "TP": 3631160,
+                "n_pred": 3732596,
+                "n_ref": 3916614
+              },
+              "3": {
+                "Dice": 0.8909558986044571,
+                "FN": 149078,
+                "FP": 376357,
+                "IoU": 0.8033547966968501,
+                "TN": 64961157,
+                "TP": 2146560,
+                "n_pred": 2522917,
+                "n_ref": 2295638
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW111-C0005719.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW111-C0005719.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.5212203894332135,
+                "FN": 4925,
+                "FP": 110887,
+                "IoU": 0.3524665783249744,
+                "TN": 67454301,
+                "TP": 63039,
+                "n_pred": 173926,
+                "n_ref": 67964
+              },
+              "2": {
+                "Dice": 0.8886514346472261,
+                "FN": 353996,
+                "FP": 341995,
+                "IoU": 0.7996154063195668,
+                "TN": 64159876,
+                "TP": 2777285,
+                "n_pred": 3119280,
+                "n_ref": 3131281
+              },
+              "3": {
+                "Dice": 0.8438720926692873,
+                "FN": 235377,
+                "FP": 390339,
+                "IoU": 0.729912397511131,
+                "TN": 65316437,
+                "TP": 1690999,
+                "n_pred": 2081338,
+                "n_ref": 1926376
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW116-C0005724.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW116-C0005724.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.7870215365403384,
+                "FN": 107548,
+                "FP": 65730,
+                "IoU": 0.6488338913253188,
+                "TN": 67664004,
+                "TP": 320158,
+                "n_pred": 385888,
+                "n_ref": 427706
+              },
+              "2": {
+                "Dice": 0.9366780529196828,
+                "FN": 219194,
+                "FP": 392582,
+                "IoU": 0.8808978837421959,
+                "TN": 63020873,
+                "TP": 4524791,
+                "n_pred": 4917373,
+                "n_ref": 4743985
+              },
+              "3": {
+                "Dice": 0.8928596029592075,
+                "FN": 350305,
+                "FP": 310740,
+                "IoU": 0.8064556268976159,
+                "TN": 64741970,
+                "TP": 2754425,
+                "n_pred": 3065165,
+                "n_ref": 3104730
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW124-C0005734.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW124-C0005734.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.8714956267222688,
+                "FN": 57377,
+                "FP": 73896,
+                "IoU": 0.7722571993150696,
+                "TN": 67581031,
+                "TP": 445136,
+                "n_pred": 519032,
+                "n_ref": 502513
+              },
+              "2": {
+                "Dice": 0.9432709650443737,
+                "FN": 208723,
+                "FP": 357452,
+                "IoU": 0.8926327694629713,
+                "TN": 62884183,
+                "TP": 4707082,
+                "n_pred": 5064534,
+                "n_ref": 4915805
+              },
+              "3": {
+                "Dice": 0.9140942846814649,
+                "FN": 384077,
+                "FP": 295113,
+                "IoU": 0.8417805264182888,
+                "TN": 63864732,
+                "TP": 3613518,
+                "n_pred": 3908631,
+                "n_ref": 3997595
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW130-C0005740.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW130-C0005740.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.8157161555988377,
+                "FN": 98485,
+                "FP": 30761,
+                "IoU": 0.6887843311003771,
+                "TN": 67742146,
+                "TP": 286048,
+                "n_pred": 316809,
+                "n_ref": 384533
+              },
+              "2": {
+                "Dice": 0.9408544093331708,
+                "FN": 219115,
+                "FP": 328434,
+                "IoU": 0.8883145222186277,
+                "TN": 63254842,
+                "TP": 4355049,
+                "n_pred": 4683483,
+                "n_ref": 4574164
+              },
+              "3": {
+                "Dice": 0.9093882875036873,
+                "FN": 352993,
+                "FP": 357516,
+                "IoU": 0.83383323054745,
+                "TN": 63881561,
+                "TP": 3565370,
+                "n_pred": 3922886,
+                "n_ref": 3918363
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW133-C0005743.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW133-C0005743.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.9314559776182784,
+                "FN": 18031,
+                "FP": 6665,
+                "IoU": 0.8717057585911322,
+                "TN": 67964945,
+                "TP": 167799,
+                "n_pred": 174464,
+                "n_ref": 185830
+              },
+              "2": {
+                "Dice": 0.9458190206364333,
+                "FN": 188520,
+                "FP": 190647,
+                "IoU": 0.8972074426987346,
+                "TN": 64468778,
+                "TP": 3309495,
+                "n_pred": 3500142,
+                "n_ref": 3498015
+              },
+              "3": {
+                "Dice": 0.8854525569781854,
+                "FN": 222315,
+                "FP": 291632,
+                "IoU": 0.7944503058366935,
+                "TN": 65657086,
+                "TP": 1986407,
+                "n_pred": 2278039,
+                "n_ref": 2208722
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW138-C0005748.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW138-C0005748.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.9743297481260231,
+                "FN": 12454,
+                "FP": 16148,
+                "IoU": 0.9499444352079524,
+                "TN": 67586035,
+                "TP": 542803,
+                "n_pred": 558951,
+                "n_ref": 555257
+              },
+              "2": {
+                "Dice": 0.9520264212496214,
+                "FN": 264244,
+                "FP": 193419,
+                "IoU": 0.9084450605947851,
+                "TN": 63158660,
+                "TP": 4541117,
+                "n_pred": 4734536,
+                "n_ref": 4805361
+              },
+              "3": {
+                "Dice": 0.8889439942228515,
+                "FN": 262754,
+                "FP": 476652,
+                "IoU": 0.8000892750685987,
+                "TN": 64458759,
+                "TP": 2959275,
+                "n_pred": 3435927,
+                "n_ref": 3222029
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW148-C0005759.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW148-C0005759.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.931490909090909,
+                "FN": 22694,
+                "FP": 15457,
+                "IoU": 0.871766947998911,
+                "TN": 67859927,
+                "TP": 259362,
+                "n_pred": 274819,
+                "n_ref": 282056
+              },
+              "2": {
+                "Dice": 0.9435892800605651,
+                "FN": 178396,
+                "FP": 273448,
+                "IoU": 0.8932030528000151,
+                "TN": 63926570,
+                "TP": 3779026,
+                "n_pred": 4052474,
+                "n_ref": 3957422
+              },
+              "3": {
+                "Dice": 0.8883178039711139,
+                "FN": 228999,
+                "FP": 253299,
+                "IoU": 0.7990753176981094,
+                "TN": 65757048,
+                "TP": 1918094,
+                "n_pred": 2171393,
+                "n_ref": 2147093
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW155-C0005768.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW155-C0005768.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.8423192905141087,
+                "FN": 89268,
+                "FP": 11703,
+                "IoU": 0.7275920585116858,
+                "TN": 67786779,
+                "TP": 269690,
+                "n_pred": 281393,
+                "n_ref": 358958
+              },
+              "2": {
+                "Dice": 0.9494145174270848,
+                "FN": 166240,
+                "FP": 273370,
+                "IoU": 0.903700396755855,
+                "TN": 63592416,
+                "TP": 4125414,
+                "n_pred": 4398784,
+                "n_ref": 4291654
+              },
+              "3": {
+                "Dice": 0.9076548213762065,
+                "FN": 261929,
+                "FP": 250428,
+                "IoU": 0.8309230810353629,
+                "TN": 65127121,
+                "TP": 2517962,
+                "n_pred": 2768390,
+                "n_ref": 2779891
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW161-C0005777.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW161-C0005777.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.8256099988864631,
+                "FN": 45297,
+                "FP": 58065,
+                "IoU": 0.7030117747116661,
+                "TN": 67809406,
+                "TP": 244672,
+                "n_pred": 302737,
+                "n_ref": 289969
+              },
+              "2": {
+                "Dice": 0.9352941575248512,
+                "FN": 147506,
+                "FP": 549259,
+                "IoU": 0.8784531090301421,
+                "TN": 62424961,
+                "TP": 5035714,
+                "n_pred": 5584973,
+                "n_ref": 5183220
+              },
+              "3": {
+                "Dice": 0.8901171145429578,
+                "FN": 505351,
+                "FP": 362616,
+                "IoU": 0.8019919274423388,
+                "TN": 63773947,
+                "TP": 3515526,
+                "n_pred": 3878142,
+                "n_ref": 4020877
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW165-C0005781.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW165-C0005781.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.9040034398703621,
+                "FN": 18934,
+                "FP": 43801,
+                "IoU": 0.8248232455797433,
+                "TN": 67275028,
+                "TP": 295389,
+                "n_pred": 339190,
+                "n_ref": 314323
+              },
+              "2": {
+                "Dice": 0.9290211161404451,
+                "FN": 810969,
+                "FP": 143774,
+                "IoU": 0.8674504513034585,
+                "TN": 60430238,
+                "TP": 6248171,
+                "n_pred": 6391945,
+                "n_ref": 7059140
+              },
+              "3": {
+                "Dice": 0.8293397840802328,
+                "FN": 141748,
+                "FP": 984285,
+                "IoU": 0.7084376600503461,
+                "TN": 63771086,
+                "TP": 2736033,
+                "n_pred": 3720318,
+                "n_ref": 2877781
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW170-C0005786.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW170-C0005786.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.6394946248109801,
+                "FN": 38382,
+                "FP": 48874,
+                "IoU": 0.4700419685751942,
+                "TN": 67992793,
+                "TP": 77391,
+                "n_pred": 126265,
+                "n_ref": 115773
+              },
+              "2": {
+                "Dice": 0.9230273113840533,
+                "FN": 289737,
+                "FP": 112699,
+                "IoU": 0.8570573062259046,
+                "TN": 65342074,
+                "TP": 2412930,
+                "n_pred": 2525629,
+                "n_ref": 2702667
+              },
+              "3": {
+                "Dice": 0.8675147208923595,
+                "FN": 347425,
+                "FP": 206176,
+                "IoU": 0.7660273708598944,
+                "TN": 65791347,
+                "TP": 1812492,
+                "n_pred": 2018668,
+                "n_ref": 2159917
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW177-C0005795.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW177-C0005795.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.7715874079582881,
+                "FN": 195436,
+                "FP": 28158,
+                "IoU": 0.6281174688024429,
+                "TN": 67556191,
+                "TP": 377655,
+                "n_pred": 405813,
+                "n_ref": 573091
+              },
+              "2": {
+                "Dice": 0.9389547621130392,
+                "FN": 317681,
+                "FP": 304799,
+                "IoU": 0.884933769631669,
+                "TN": 62747686,
+                "TP": 4787274,
+                "n_pred": 5092073,
+                "n_ref": 5104955
+              },
+              "3": {
+                "Dice": 0.8957474109250797,
+                "FN": 238320,
+                "FP": 366249,
+                "IoU": 0.8111798150054469,
+                "TN": 64955616,
+                "TP": 2597255,
+                "n_pred": 2963504,
+                "n_ref": 2835575
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW178-C0005796.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW178-C0005796.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.7531427363586247,
+                "FN": 54572,
+                "FP": 31851,
+                "IoU": 0.6040328418660484,
+                "TN": 67939182,
+                "TP": 131835,
+                "n_pred": 163686,
+                "n_ref": 186407
+              },
+              "2": {
+                "Dice": 0.9074222821819586,
+                "FN": 109827,
+                "FP": 372518,
+                "IoU": 0.830533395824828,
+                "TN": 65311186,
+                "TP": 2363909,
+                "n_pred": 2736427,
+                "n_ref": 2473736
+              },
+              "3": {
+                "Dice": 0.8658085267162261,
+                "FN": 454159,
+                "FP": 210705,
+                "IoU": 0.7633706892624482,
+                "TN": 65347712,
+                "TP": 2144864,
+                "n_pred": 2355569,
+                "n_ref": 2599023
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW179-C0005797.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW179-C0005797.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.0,
+                "FN": 0,
+                "FP": 181206,
+                "IoU": 0.0,
+                "TN": 67976234,
+                "TP": 0,
+                "n_pred": 181206,
+                "n_ref": 0
+              },
+              "2": {
+                "Dice": 0.9101271132710191,
+                "FN": 330037,
+                "FP": 166800,
+                "IoU": 0.8350763876717494,
+                "TN": 65144912,
+                "TP": 2515691,
+                "n_pred": 2682491,
+                "n_ref": 2845728
+              },
+              "3": {
+                "Dice": 0.8733524884376945,
+                "FN": 192520,
+                "FP": 315037,
+                "IoU": 0.7751781098123846,
+                "TN": 65899844,
+                "TP": 1750039,
+                "n_pred": 2065076,
+                "n_ref": 1942559
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW184-C0005802.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW184-C0005802.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.9016748236307431,
+                "FN": 68592,
+                "FP": 12231,
+                "IoU": 0.820954343058417,
+                "TN": 67706030,
+                "TP": 370587,
+                "n_pred": 382818,
+                "n_ref": 439179
+              },
+              "2": {
+                "Dice": 0.9358323727789326,
+                "FN": 101718,
+                "FP": 508636,
+                "IoU": 0.879403158713571,
+                "TN": 63096329,
+                "TP": 4450757,
+                "n_pred": 4959393,
+                "n_ref": 4552475
+              },
+              "3": {
+                "Dice": 0.8649679772637283,
+                "FN": 552507,
+                "FP": 337924,
+                "IoU": 0.762064822786684,
+                "TN": 64415114,
+                "TP": 2851895,
+                "n_pred": 3189819,
+                "n_ref": 3404402
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_2/validation/AW187-C0005805.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW187-C0005805.nii.gz"
+          }
+        ]
+      },
+      "test": {
+        "mean_dice": 0.7887368969688442,
+        "foreground_dice": 0.7887368969688442
+      }
+    },
+    "3": {
+      "training": {
+        "total_epochs": 99,
+        "best_dice": 0.8567000031471252,
+        "all_dice": [
+          0.16449999809265137,
+          0.16899999976158142,
+          0.1891999989748001,
+          0.23669999837875366,
+          0.2809000015258789,
+          0.325300008058548,
+          0.36570000648498535,
+          0.40389999747276306,
+          0.4390000104904175,
+          0.47279998660087585,
+          0.5005999803543091,
+          0.5296000242233276,
+          0.5555999875068665,
+          0.5784000158309937,
+          0.6000000238418579,
+          0.616599977016449,
+          0.6340000033378601,
+          0.6499999761581421,
+          0.6640999913215637,
+          0.675599992275238,
+          0.6890000104904175,
+          0.6992999911308289,
+          0.7095000147819519,
+          0.7200999855995178,
+          0.7275000214576721,
+          0.7357000112533569,
+          0.7412999868392944,
+          0.7494000196456909,
+          0.7531999945640564,
+          0.7592999935150146,
+          0.7644000053405762,
+          0.7702000141143799,
+          0.7766000032424927,
+          0.7795000076293945,
+          0.7831000089645386,
+          0.785099983215332,
+          0.7851999998092651,
+          0.7886000275611877,
+          0.7921000123023987,
+          0.795799970626831,
+          0.7978000044822693,
+          0.7979999780654907,
+          0.8019999861717224,
+          0.8047999739646912,
+          0.8052999973297119,
+          0.8075000047683716,
+          0.8093000054359436,
+          0.8123000264167786,
+          0.8131999969482422,
+          0.8151000142097473,
+          0.8158000111579895,
+          0.8172000050544739,
+          0.8181999921798706,
+          0.8187999725341797,
+          0.8192999958992004,
+          0.8213000297546387,
+          0.823199987411499,
+          0.8260999917984009,
+          0.8277999758720398,
+          0.828499972820282,
+          0.8307999968528748,
+          0.8313999772071838,
+          0.8314999938011169,
+          0.8324000239372253,
+          0.8338000178337097,
+          0.8363999724388123,
+          0.838100016117096,
+          0.8385000228881836,
+          0.8396000266075134,
+          0.8410000205039978,
+          0.8416000008583069,
+          0.8424000144004822,
+          0.8429999947547913,
+          0.8438000082969666,
+          0.8445000052452087,
+          0.8454999923706055,
+          0.8463000059127808,
+          0.8463000059127808,
+          0.8475000262260437,
+          0.847599983215332,
+          0.8486999869346619,
+          0.8496000170707703,
+          0.8507000207901001,
+          0.8508999943733215,
+          0.8525999784469604,
+          0.8529000282287598,
+          0.8533999919891357,
+          0.8540999889373779,
+          0.8551999926567078,
+          0.8554999828338623,
+          0.8560000061988831,
+          0.8567000031471252
+        ],
+        "final_val_loss": -0.7645,
+        "converged": true
+      },
+      "validation": null,
+      "test": {
+        "mean_dice": 0.7902263478797847,
+        "foreground_dice": 0.7902263478797847
+      }
+    },
+    "4": {
+      "training": {
+        "total_epochs": 99,
+        "best_dice": 0.8414000272750854,
+        "all_dice": [
+          0.1665000021457672,
+          0.16869999468326569,
+          0.1818999946117401,
+          0.2071000039577484,
+          0.2468000054359436,
+          0.2892000079154968,
+          0.328900009393692,
+          0.366100013256073,
+          0.3986999988555908,
+          0.43529999256134033,
+          0.4616999924182892,
+          0.4909000098705292,
+          0.5167999863624573,
+          0.5400999784469604,
+          0.5566999912261963,
+          0.578000009059906,
+          0.5974000096321106,
+          0.6136000156402588,
+          0.6284000277519226,
+          0.6402000188827515,
+          0.6539000272750854,
+          0.667900025844574,
+          0.6783000230789185,
+          0.6868000030517578,
+          0.6991000175476074,
+          0.7099999785423279,
+          0.7152000069618225,
+          0.7211999893188477,
+          0.727400004863739,
+          0.7357000112533569,
+          0.7411999702453613,
+          0.7459999918937683,
+          0.7493000030517578,
+          0.7529000043869019,
+          0.7592999935150146,
+          0.7610999941825867,
+          0.7657999992370605,
+          0.7684999704360962,
+          0.7698000073432922,
+          0.7742999792098999,
+          0.7774999737739563,
+          0.779699981212616,
+          0.7817000150680542,
+          0.7842000126838684,
+          0.7871000170707703,
+          0.7875000238418579,
+          0.7893000245094299,
+          0.7896000146865845,
+          0.7930999994277954,
+          0.7942000031471252,
+          0.7946000099182129,
+          0.7965999841690063,
+          0.7991999983787537,
+          0.8003000020980835,
+          0.8022000193595886,
+          0.804099977016449,
+          0.805400013923645,
+          0.8062999844551086,
+          0.8079000115394592,
+          0.8095999956130981,
+          0.8105999827384949,
+          0.8112999796867371,
+          0.8137999773025513,
+          0.8144000172615051,
+          0.8152999877929688,
+          0.8166000247001648,
+          0.8181999921798706,
+          0.8183000087738037,
+          0.8184999823570251,
+          0.8202999830245972,
+          0.8227999806404114,
+          0.8234999775886536,
+          0.8251000046730042,
+          0.8269000053405762,
+          0.8278999924659729,
+          0.8295999765396118,
+          0.8299999833106995,
+          0.8317000269889832,
+          0.8328999876976013,
+          0.8343999981880188,
+          0.8357999920845032,
+          0.8370000123977661,
+          0.8374000191688538,
+          0.8385000228881836,
+          0.8388000130653381,
+          0.839900016784668,
+          0.8414000272750854
+        ],
+        "final_val_loss": -0.7602,
+        "converged": true
+      },
+      "validation": {
+        "foreground_mean": {
+          "Dice": 0.8428700389064806,
+          "FN": 251346.2037037037,
+          "FP": 290374.93518518517,
+          "IoU": 0.7449935879161323,
+          "TN": 65040045.85185185,
+          "TP": 2284401.898148148,
+          "n_pred": 2574776.8333333335,
+          "n_ref": 2535748.101851852
+        },
+        "mean": {
+          "1": {
+            "Dice": 0.7444026766521012,
+            "FN": 65427.805555555555,
+            "FP": 80770.27777777778,
+            "IoU": 0.6202928955497694,
+            "TN": 67464904.69444445,
+            "TP": 255066.11111111112,
+            "n_pred": 335836.3888888889,
+            "n_ref": 320493.9166666667
+          },
+          "2": {
+            "Dice": 0.9193299242666472,
+            "FN": 371714.1111111111,
+            "FP": 337430.8888888889,
+            "IoU": 0.8512818629493519,
+            "TN": 63098570.277777776,
+            "TP": 4058453.611111111,
+            "n_pred": 4395884.5,
+            "n_ref": 4430167.722222222
+          },
+          "3": {
+            "Dice": 0.864877515800693,
+            "FN": 316896.69444444444,
+            "FP": 452923.6388888889,
+            "IoU": 0.7634060052492759,
+            "TN": 64556662.583333336,
+            "TP": 2539685.972222222,
+            "n_pred": 2992609.611111111,
+            "n_ref": 2856582.6666666665
+          }
+        },
+        "metric_per_case": [
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.7324286111714513,
+                "FN": 27957,
+                "FP": 42254,
+                "IoU": 0.5778204033528556,
+                "TN": 63272542,
+                "TP": 96095,
+                "n_pred": 138349,
+                "n_ref": 124052
+              },
+              "2": {
+                "Dice": 0.9231389013637346,
+                "FN": 299829,
+                "FP": 129065,
+                "IoU": 0.8572497442175186,
+                "TN": 60434342,
+                "TP": 2575612,
+                "n_pred": 2704677,
+                "n_ref": 2875441
+              },
+              "3": {
+                "Dice": 0.8462502832112379,
+                "FN": 150511,
+                "FP": 368618,
+                "IoU": 0.733478215333054,
+                "TN": 61491056,
+                "TP": 1428663,
+                "n_pred": 1797281,
+                "n_ref": 1579174
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW022-C0005343.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW022-C0005343.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.5751588086953746,
+                "FN": 44182,
+                "FP": 88908,
+                "IoU": 0.403665202975177,
+                "TN": 67934260,
+                "TP": 90090,
+                "n_pred": 178998,
+                "n_ref": 134272
+              },
+              "2": {
+                "Dice": 0.8982134100374005,
+                "FN": 549036,
+                "FP": 118500,
+                "IoU": 0.8152335653929957,
+                "TN": 64544576,
+                "TP": 2945328,
+                "n_pred": 3063828,
+                "n_ref": 3494364
+              },
+              "3": {
+                "Dice": 0.8048984472024148,
+                "FN": 123489,
+                "FP": 635609,
+                "IoU": 0.6734979511308029,
+                "TN": 65832499,
+                "TP": 1565843,
+                "n_pred": 2201452,
+                "n_ref": 1689332
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW028-C0005352.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW028-C0005352.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.7245369725158665,
+                "FN": 47204,
+                "FP": 180099,
+                "IoU": 0.5680579969025246,
+                "TN": 67631205,
+                "TP": 298932,
+                "n_pred": 479031,
+                "n_ref": 346136
+              },
+              "2": {
+                "Dice": 0.9232055851797315,
+                "FN": 395838,
+                "FP": 369348,
+                "IoU": 0.8573647601374558,
+                "TN": 62792805,
+                "TP": 4599449,
+                "n_pred": 4968797,
+                "n_ref": 4995287
+              },
+              "3": {
+                "Dice": 0.8779098306684328,
+                "FN": 200637,
+                "FP": 551242,
+                "IoU": 0.7823879530032836,
+                "TN": 64702305,
+                "TP": 2703256,
+                "n_pred": 3254498,
+                "n_ref": 2903893
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW032-C0005357.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW032-C0005357.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.6300061614294516,
+                "FN": 91025,
+                "FP": 153979,
+                "IoU": 0.4598605801664043,
+                "TN": 67703846,
+                "TP": 208590,
+                "n_pred": 362569,
+                "n_ref": 299615
+              },
+              "2": {
+                "Dice": 0.9040964407724018,
+                "FN": 661717,
+                "FP": 270517,
+                "IoU": 0.8249781042864908,
+                "TN": 62831055,
+                "TP": 4394151,
+                "n_pred": 4664668,
+                "n_ref": 5055868
+              },
+              "3": {
+                "Dice": 0.8659369194488032,
+                "FN": 309212,
+                "FP": 642194,
+                "IoU": 0.7635703289343709,
+                "TN": 64133385,
+                "TP": 3072649,
+                "n_pred": 3714843,
+                "n_ref": 3381861
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW044-C0005380.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW044-C0005380.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.7387789170603956,
+                "FN": 120657,
+                "FP": 49906,
+                "IoU": 0.5857648013134056,
+                "TN": 71415702,
+                "TP": 241191,
+                "n_pred": 291097,
+                "n_ref": 361848
+              },
+              "2": {
+                "Dice": 0.9263072796943767,
+                "FN": 303176,
+                "FP": 331266,
+                "IoU": 0.8627303344579873,
+                "TN": 67205590,
+                "TP": 3987424,
+                "n_pred": 4318690,
+                "n_ref": 4290600
+              },
+              "3": {
+                "Dice": 0.8605348634819527,
+                "FN": 237781,
+                "FP": 459003,
+                "IoU": 0.75520947144689,
+                "TN": 68981006,
+                "TP": 2149666,
+                "n_pred": 2608669,
+                "n_ref": 2387447
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW050-C0005388.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW050-C0005388.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.7900775798751377,
+                "FN": 168693,
+                "FP": 14225,
+                "IoU": 0.6529985449758033,
+                "TN": 67630301,
+                "TP": 344221,
+                "n_pred": 358446,
+                "n_ref": 512914
+              },
+              "2": {
+                "Dice": 0.9257173922855665,
+                "FN": 140451,
+                "FP": 448727,
+                "IoU": 0.8617075112619168,
+                "TN": 63897064,
+                "TP": 3671198,
+                "n_pred": 4119925,
+                "n_ref": 3811649
+              },
+              "3": {
+                "Dice": 0.9089902888399152,
+                "FN": 276974,
+                "FP": 324921,
+                "IoU": 0.8331642510068714,
+                "TN": 64549730,
+                "TP": 3005815,
+                "n_pred": 3330736,
+                "n_ref": 3282789
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW052-C0005636.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW052-C0005636.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.9690544170010207,
+                "FN": 10138,
+                "FP": 9599,
+                "IoU": 0.9399666024874759,
+                "TN": 59964353,
+                "TP": 309030,
+                "n_pred": 318629,
+                "n_ref": 319168
+              },
+              "2": {
+                "Dice": 0.9590216477282968,
+                "FN": 154564,
+                "FP": 175105,
+                "IoU": 0.9212695399817353,
+                "TN": 56105808,
+                "TP": 3857643,
+                "n_pred": 4032748,
+                "n_ref": 4012207
+              },
+              "3": {
+                "Dice": 0.877147543690003,
+                "FN": 262929,
+                "FP": 420204,
+                "IoU": 0.7811779176870236,
+                "TN": 57171255,
+                "TP": 2438732,
+                "n_pred": 2858936,
+                "n_ref": 2701661
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW055-C0005642.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW055-C0005642.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.7772746205494744,
+                "FN": 51926,
+                "FP": 14915,
+                "IoU": 0.6356902650526235,
+                "TN": 67973967,
+                "TP": 116632,
+                "n_pred": 131547,
+                "n_ref": 168558
+              },
+              "2": {
+                "Dice": 0.9117658790811067,
+                "FN": 186093,
+                "FP": 280640,
+                "IoU": 0.837839819166138,
+                "TN": 65279218,
+                "TP": 2411489,
+                "n_pred": 2692129,
+                "n_ref": 2597582
+              },
+              "3": {
+                "Dice": 0.8473962797791685,
+                "FN": 150933,
+                "FP": 404167,
+                "IoU": 0.7352017566079111,
+                "TN": 66061127,
+                "TP": 1541213,
+                "n_pred": 1945380,
+                "n_ref": 1692146
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW057-C0005646.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW057-C0005646.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.6892247533667982,
+                "FN": 86419,
+                "FP": 163453,
+                "IoU": 0.525814593414935,
+                "TN": 67630490,
+                "TP": 277078,
+                "n_pred": 440531,
+                "n_ref": 363497
+              },
+              "2": {
+                "Dice": 0.8807490373694785,
+                "FN": 212509,
+                "FP": 750010,
+                "IoU": 0.7869093409573636,
+                "TN": 63640494,
+                "TP": 3554427,
+                "n_pred": 4304437,
+                "n_ref": 3766936
+              },
+              "3": {
+                "Dice": 0.8829144290135861,
+                "FN": 409097,
+                "FP": 348397,
+                "IoU": 0.7903731387685465,
+                "TN": 64543905,
+                "TP": 2856041,
+                "n_pred": 3204438,
+                "n_ref": 3265138
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW064-C0005660.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW064-C0005660.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.9184162498999603,
+                "FN": 7177,
+                "FP": 44812,
+                "IoU": 0.8491402074180687,
+                "TN": 67812822,
+                "TP": 292629,
+                "n_pred": 337441,
+                "n_ref": 299806
+              },
+              "2": {
+                "Dice": 0.9316854595745278,
+                "FN": 135266,
+                "FP": 483741,
+                "IoU": 0.8721078149918937,
+                "TN": 63317371,
+                "TP": 4221062,
+                "n_pred": 4704803,
+                "n_ref": 4356328
+              },
+              "3": {
+                "Dice": 0.8862544800312949,
+                "FN": 411942,
+                "FP": 306262,
+                "IoU": 0.7957423523968002,
+                "TN": 64641273,
+                "TP": 2797963,
+                "n_pred": 3104225,
+                "n_ref": 3209905
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW080-C0005688.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW080-C0005688.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.8537122215317885,
+                "FN": 100502,
+                "FP": 30627,
+                "IoU": 0.7447625609972107,
+                "TN": 67643687,
+                "TP": 382624,
+                "n_pred": 413251,
+                "n_ref": 483126
+              },
+              "2": {
+                "Dice": 0.9203679247827303,
+                "FN": 271598,
+                "FP": 448856,
+                "IoU": 0.8524829392434564,
+                "TN": 63273571,
+                "TP": 4163415,
+                "n_pred": 4612271,
+                "n_ref": 4435013
+              },
+              "3": {
+                "Dice": 0.876124131209951,
+                "FN": 330111,
+                "FP": 495595,
+                "IoU": 0.7795559594612309,
+                "TN": 64411791,
+                "TP": 2919943,
+                "n_pred": 3415538,
+                "n_ref": 3250054
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW085-C0005692.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW085-C0005692.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.7587088840265445,
+                "FN": 114709,
+                "FP": 32841,
+                "IoU": 0.6112255813830937,
+                "TN": 67777914,
+                "TP": 231976,
+                "n_pred": 264817,
+                "n_ref": 346685
+              },
+              "2": {
+                "Dice": 0.9155019306031789,
+                "FN": 582633,
+                "FP": 239040,
+                "IoU": 0.8441711022246127,
+                "TN": 62884522,
+                "TP": 4451245,
+                "n_pred": 4690285,
+                "n_ref": 5033878
+              },
+              "3": {
+                "Dice": 0.8638371167458281,
+                "FN": 271989,
+                "FP": 501382,
+                "IoU": 0.7603109813547555,
+                "TN": 64930880,
+                "TP": 2453189,
+                "n_pred": 2954571,
+                "n_ref": 2725178
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW098-C0005707.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW098-C0005707.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.1262113638682036,
+                "FN": 0,
+                "FP": 137052,
+                "IoU": 0.067356243620279,
+                "TN": 68010490,
+                "TP": 9898,
+                "n_pred": 146950,
+                "n_ref": 9898
+              },
+              "2": {
+                "Dice": 0.9072506141121238,
+                "FN": 476993,
+                "FP": 33111,
+                "IoU": 0.8302458238171129,
+                "TN": 65152483,
+                "TP": 2494853,
+                "n_pred": 2527964,
+                "n_ref": 2971846
+              },
+              "3": {
+                "Dice": 0.8535025788181336,
+                "FN": 191119,
+                "FP": 384857,
+                "IoU": 0.7444435225491401,
+                "TN": 65903629,
+                "TP": 1677835,
+                "n_pred": 2062692,
+                "n_ref": 1868954
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW102-C0005710.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW102-C0005710.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.5883232151514088,
+                "FN": 73727,
+                "FP": 243020,
+                "IoU": 0.41675489847664327,
+                "TN": 67614363,
+                "TP": 226330,
+                "n_pred": 469350,
+                "n_ref": 300057
+              },
+              "2": {
+                "Dice": 0.9233028898051097,
+                "FN": 562013,
+                "FP": 215358,
+                "IoU": 0.8575326162415211,
+                "TN": 62700956,
+                "TP": 4679113,
+                "n_pred": 4894471,
+                "n_ref": 5241126
+              },
+              "3": {
+                "Dice": 0.8917548122152142,
+                "FN": 244880,
+                "FP": 469648,
+                "IoU": 0.8046548020638798,
+                "TN": 64499669,
+                "TP": 2943243,
+                "n_pred": 3412891,
+                "n_ref": 3188123
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW108-C0005716.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW108-C0005716.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.9608578552465392,
+                "FN": 11367,
+                "FP": 29355,
+                "IoU": 0.9246645034058408,
+                "TN": 67616898,
+                "TP": 499820,
+                "n_pred": 529175,
+                "n_ref": 511187
+              },
+              "2": {
+                "Dice": 0.9401609065277401,
+                "FN": 102207,
+                "FP": 455438,
+                "IoU": 0.8870789087875327,
+                "TN": 63219080,
+                "TP": 4380715,
+                "n_pred": 4836153,
+                "n_ref": 4482922
+              },
+              "3": {
+                "Dice": 0.8843336235196921,
+                "FN": 453907,
+                "FP": 314714,
+                "IoU": 0.7926506007195254,
+                "TN": 64450552,
+                "TP": 2938267,
+                "n_pred": 3252981,
+                "n_ref": 3392174
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW112-C0005720.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW112-C0005720.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.8916664409228408,
+                "FN": 9383,
+                "FP": 50604,
+                "IoU": 0.8045109106551607,
+                "TN": 67850584,
+                "TP": 246869,
+                "n_pred": 297473,
+                "n_ref": 256252
+              },
+              "2": {
+                "Dice": 0.9211449443096537,
+                "FN": 217648,
+                "FP": 562409,
+                "IoU": 0.8538171457334686,
+                "TN": 62821267,
+                "TP": 4556116,
+                "n_pred": 5118525,
+                "n_ref": 4773764
+              },
+              "3": {
+                "Dice": 0.88165851987103,
+                "FN": 327059,
+                "FP": 439679,
+                "IoU": 0.7883625310664101,
+                "TN": 64534556,
+                "TP": 2856146,
+                "n_pred": 3295825,
+                "n_ref": 3183205
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW118-C0005726.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW118-C0005726.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.7955490610451633,
+                "FN": 145481,
+                "FP": 65229,
+                "IoU": 0.6605076515075838,
+                "TN": 67536778,
+                "TP": 409952,
+                "n_pred": 475181,
+                "n_ref": 555433
+              },
+              "2": {
+                "Dice": 0.9443032328782605,
+                "FN": 498881,
+                "FP": 242367,
+                "IoU": 0.8944833992935458,
+                "TN": 61132498,
+                "TP": 6283694,
+                "n_pred": 6526061,
+                "n_ref": 6782575
+              },
+              "3": {
+                "Dice": 0.9104139030578086,
+                "FN": 265823,
+                "FP": 486844,
+                "IoU": 0.8355593978417946,
+                "TN": 63580304,
+                "TP": 3824469,
+                "n_pred": 4311313,
+                "n_ref": 4090292
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW122-C0005732.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW122-C0005732.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.8092919659047102,
+                "FN": 94349,
+                "FP": 39221,
+                "IoU": 0.6796728859897357,
+                "TN": 67740460,
+                "TP": 283410,
+                "n_pred": 322631,
+                "n_ref": 377759
+              },
+              "2": {
+                "Dice": 0.9217629029120599,
+                "FN": 111622,
+                "FP": 558041,
+                "IoU": 0.8548796043110746,
+                "TN": 63542906,
+                "TP": 3944871,
+                "n_pred": 4502912,
+                "n_ref": 4056493
+              },
+              "3": {
+                "Dice": 0.8864802168568986,
+                "FN": 480783,
+                "FP": 351128,
+                "IoU": 0.7961063918906366,
+                "TN": 64077317,
+                "TP": 3248212,
+                "n_pred": 3599340,
+                "n_ref": 3728995
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW126-C0005736.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW126-C0005736.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.9081942773125464,
+                "FN": 72072,
+                "FP": 17342,
+                "IoU": 0.8318277312900029,
+                "TN": 67625759,
+                "TP": 442267,
+                "n_pred": 459609,
+                "n_ref": 514339
+              },
+              "2": {
+                "Dice": 0.9455972076748259,
+                "FN": 287042,
+                "FP": 312036,
+                "IoU": 0.8968083303246859,
+                "TN": 62351952,
+                "TP": 5206410,
+                "n_pred": 5518446,
+                "n_ref": 5493452
+              },
+              "3": {
+                "Dice": 0.9028876627327159,
+                "FN": 363309,
+                "FP": 344463,
+                "IoU": 0.8229673772347251,
+                "TN": 64159465,
+                "TP": 3290203,
+                "n_pred": 3634666,
+                "n_ref": 3653512
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW134-C0005744.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW134-C0005744.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.8928625389055087,
+                "FN": 14177,
+                "FP": 70915,
+                "IoU": 0.806460417320578,
+                "TN": 67717778,
+                "TP": 354570,
+                "n_pred": 425485,
+                "n_ref": 368747
+              },
+              "2": {
+                "Dice": 0.9005610775925063,
+                "FN": 216169,
+                "FP": 605090,
+                "IoU": 0.8191096924424913,
+                "TN": 63617346,
+                "TP": 3718835,
+                "n_pred": 4323925,
+                "n_ref": 3935004
+              },
+              "3": {
+                "Dice": 0.819125713650882,
+                "FN": 600584,
+                "FP": 443025,
+                "IoU": 0.6936603863086512,
+                "TN": 64750734,
+                "TP": 2363097,
+                "n_pred": 2806122,
+                "n_ref": 2963681
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW135-C0005745.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW135-C0005745.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.20905573363845192,
+                "FN": 724,
+                "FP": 180388,
+                "IoU": 0.11672933522558243,
+                "TN": 67952393,
+                "TP": 23935,
+                "n_pred": 204323,
+                "n_ref": 24659
+              },
+              "2": {
+                "Dice": 0.8988339884673129,
+                "FN": 534061,
+                "FP": 172515,
+                "IoU": 0.8162565671785011,
+                "TN": 64311991,
+                "TP": 3138873,
+                "n_pred": 3311388,
+                "n_ref": 3672934
+              },
+              "3": {
+                "Dice": 0.8296802942144649,
+                "FN": 161025,
+                "FP": 535920,
+                "IoU": 0.7089347381855556,
+                "TN": 65762977,
+                "TP": 1697518,
+                "n_pred": 2233438,
+                "n_ref": 1858543
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW139-C0005749.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW139-C0005749.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.8182796672400439,
+                "FN": 37728,
+                "FP": 52597,
+                "IoU": 0.6924478191290135,
+                "TN": 67863750,
+                "TP": 203365,
+                "n_pred": 255962,
+                "n_ref": 241093
+              },
+              "2": {
+                "Dice": 0.9193341650250259,
+                "FN": 708645,
+                "FP": 101998,
+                "IoU": 0.8507108629434146,
+                "TN": 62727420,
+                "TP": 4619377,
+                "n_pred": 4721375,
+                "n_ref": 5328022
+              },
+              "3": {
+                "Dice": 0.8185564161507101,
+                "FN": 227771,
+                "FP": 678351,
+                "IoU": 0.6928442689440587,
+                "TN": 65207399,
+                "TP": 2043919,
+                "n_pred": 2722270,
+                "n_ref": 2271690
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW140-C0005751.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW140-C0005751.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.6903937850926882,
+                "FN": 71641,
+                "FP": 27833,
+                "IoU": 0.5271766254878009,
+                "TN": 67947057,
+                "TP": 110909,
+                "n_pred": 138742,
+                "n_ref": 182550
+              },
+              "2": {
+                "Dice": 0.9026242440341988,
+                "FN": 181488,
+                "FP": 383391,
+                "IoU": 0.8225297844673072,
+                "TN": 64974489,
+                "TP": 2618072,
+                "n_pred": 3001463,
+                "n_ref": 2799560
+              },
+              "3": {
+                "Dice": 0.8443796311929214,
+                "FN": 511520,
+                "FP": 223097,
+                "IoU": 0.7306721601528673,
+                "TN": 65429846,
+                "TP": 1992977,
+                "n_pred": 2216074,
+                "n_ref": 2504497
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW145-C0005756.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW145-C0005756.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.8248729715677057,
+                "FN": 57714,
+                "FP": 73981,
+                "IoU": 0.7019436636294093,
+                "TN": 67715594,
+                "TP": 310151,
+                "n_pred": 384132,
+                "n_ref": 367865
+              },
+              "2": {
+                "Dice": 0.9007214023386293,
+                "FN": 121714,
+                "FP": 867587,
+                "IoU": 0.8193750012552266,
+                "TN": 62680341,
+                "TP": 4487798,
+                "n_pred": 5355385,
+                "n_ref": 4609512
+              },
+              "3": {
+                "Dice": 0.8589384648923443,
+                "FN": 979297,
+                "FP": 230066,
+                "IoU": 0.7527538510982285,
+                "TN": 63266108,
+                "TP": 3681969,
+                "n_pred": 3912035,
+                "n_ref": 4661266
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW147-C0005758.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW147-C0005758.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.7829549085486885,
+                "FN": 71154,
+                "FP": 40927,
+                "IoU": 0.6433244865356832,
+                "TN": 67843202,
+                "TP": 202157,
+                "n_pred": 243084,
+                "n_ref": 273311
+              },
+              "2": {
+                "Dice": 0.919685542785227,
+                "FN": 189174,
+                "FP": 408784,
+                "IoU": 0.8513128160446232,
+                "TN": 64135856,
+                "TP": 3423626,
+                "n_pred": 3832410,
+                "n_ref": 3612800
+              },
+              "3": {
+                "Dice": 0.8739704554865922,
+                "FN": 338579,
+                "FP": 290807,
+                "IoU": 0.7761523307670065,
+                "TN": 65345769,
+                "TP": 2182285,
+                "n_pred": 2473092,
+                "n_ref": 2520864
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW150-C0005761.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW150-C0005761.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.6412276072981624,
+                "FN": 72887,
+                "FP": 20260,
+                "IoU": 0.4719168646215424,
+                "TN": 67981053,
+                "TP": 83240,
+                "n_pred": 103500,
+                "n_ref": 156127
+              },
+              "2": {
+                "Dice": 0.9220858290001974,
+                "FN": 158130,
+                "FP": 201730,
+                "IoU": 0.8554352969911613,
+                "TN": 65668174,
+                "TP": 2129406,
+                "n_pred": 2331136,
+                "n_ref": 2287536
+              },
+              "3": {
+                "Dice": 0.8667706113339138,
+                "FN": 232589,
+                "FP": 213198,
+                "IoU": 0.7648677487566584,
+                "TN": 66261541,
+                "TP": 1450112,
+                "n_pred": 1663310,
+                "n_ref": 1682701
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW152-C0005765.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW152-C0005765.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.7854359220329249,
+                "FN": 99746,
+                "FP": 36246,
+                "IoU": 0.646681337181962,
+                "TN": 67772541,
+                "TP": 248907,
+                "n_pred": 285153,
+                "n_ref": 348653
+              },
+              "2": {
+                "Dice": 0.9304541404841955,
+                "FN": 94750,
+                "FP": 405689,
+                "IoU": 0.8699525431339826,
+                "TN": 64309314,
+                "TP": 3347687,
+                "n_pred": 3753376,
+                "n_ref": 3442437
+              },
+              "3": {
+                "Dice": 0.9109042766563095,
+                "FN": 299133,
+                "FP": 250582,
+                "IoU": 0.8363858723636284,
+                "TN": 64797614,
+                "TP": 2810111,
+                "n_pred": 3060693,
+                "n_ref": 3109244
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW154-C0005767.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW154-C0005767.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.6951843727149274,
+                "FN": 26028,
+                "FP": 38168,
+                "IoU": 0.5327836041950205,
+                "TN": 68020039,
+                "TP": 73205,
+                "n_pred": 111373,
+                "n_ref": 99233
+              },
+              "2": {
+                "Dice": 0.9175605033754219,
+                "FN": 447743,
+                "FP": 52303,
+                "IoU": 0.8476783286610421,
+                "TN": 64874611,
+                "TP": 2782783,
+                "n_pred": 2835086,
+                "n_ref": 3230526
+              },
+              "3": {
+                "Dice": 0.8561472406545008,
+                "FN": 175621,
+                "FP": 301596,
+                "IoU": 0.7484767892192516,
+                "TN": 66260132,
+                "TP": 1420091,
+                "n_pred": 1721687,
+                "n_ref": 1595712
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW159-C0005774.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW159-C0005774.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.7400803903851021,
+                "FN": 74029,
+                "FP": 196074,
+                "IoU": 0.5874028666093325,
+                "TN": 67502799,
+                "TP": 384538,
+                "n_pred": 580612,
+                "n_ref": 458567
+              },
+              "2": {
+                "Dice": 0.8862695355946909,
+                "FN": 190753,
+                "FP": 876773,
+                "IoU": 0.7957666274918017,
+                "TN": 62930449,
+                "TP": 4159465,
+                "n_pred": 5036238,
+                "n_ref": 4350218
+              },
+              "3": {
+                "Dice": 0.8596933310934468,
+                "FN": 818418,
+                "FP": 286553,
+                "IoU": 0.7539141483034664,
+                "TN": 63667255,
+                "TP": 3385214,
+                "n_pred": 3671767,
+                "n_ref": 4203632
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW163-C0005779.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW163-C0005779.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.8711973404104913,
+                "FN": 27550,
+                "FP": 36222,
+                "IoU": 0.7717888800220438,
+                "TN": 67877997,
+                "TP": 215671,
+                "n_pred": 251893,
+                "n_ref": 243221
+              },
+              "2": {
+                "Dice": 0.9077221391368953,
+                "FN": 878895,
+                "FP": 165168,
+                "IoU": 0.8310359219581949,
+                "TN": 61978239,
+                "TP": 5135138,
+                "n_pred": 5300306,
+                "n_ref": 6014033
+              },
+              "3": {
+                "Dice": 0.7904651573057802,
+                "FN": 89416,
+                "FP": 1012806,
+                "IoU": 0.6535282237467682,
+                "TN": 64976165,
+                "TP": 2079053,
+                "n_pred": 3091859,
+                "n_ref": 2168469
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW164-C0005780.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW164-C0005780.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.8208474503668559,
+                "FN": 145188,
+                "FP": 118299,
+                "IoU": 0.6961333803859701,
+                "TN": 67290326,
+                "TP": 603627,
+                "n_pred": 721926,
+                "n_ref": 748815
+              },
+              "2": {
+                "Dice": 0.9316720757075,
+                "FN": 622107,
+                "FP": 244902,
+                "IoU": 0.8720843614796455,
+                "TN": 61379465,
+                "TP": 5910966,
+                "n_pred": 6155868,
+                "n_ref": 6533073
+              },
+              "3": {
+                "Dice": 0.8861342545934449,
+                "FN": 221576,
+                "FP": 587380,
+                "IoU": 0.7955485284000815,
+                "TN": 64200726,
+                "TP": 3147758,
+                "n_pred": 3735138,
+                "n_ref": 3369334
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW185-C0005803.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW185-C0005803.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.46268070120824173,
+                "FN": 137621,
+                "FP": 414711,
+                "IoU": 0.30096590966618403,
+                "TN": 67367304,
+                "TP": 237804,
+                "n_pred": 652515,
+                "n_ref": 375425
+              },
+              "2": {
+                "Dice": 0.8733217340349883,
+                "FN": 1562094,
+                "FP": 264222,
+                "IoU": 0.7751296536167572,
+                "TN": 60035800,
+                "TP": 6295324,
+                "n_pred": 6559546,
+                "n_ref": 7857418
+              },
+              "3": {
+                "Dice": 0.764219445755945,
+                "FN": 155280,
+                "FP": 1350371,
+                "IoU": 0.6184103181842259,
+                "TN": 64211707,
+                "TP": 2440082,
+                "n_pred": 3790453,
+                "n_ref": 2595362
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW186-C0005804.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW186-C0005804.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.6692402953257045,
+                "FN": 68426,
+                "FP": 113728,
+                "IoU": 0.5029009316821037,
+                "TN": 67791006,
+                "TP": 184280,
+                "n_pred": 298008,
+                "n_ref": 252706
+              },
+              "2": {
+                "Dice": 0.9243050261678583,
+                "FN": 647304,
+                "FP": 149048,
+                "IoU": 0.8592631263071169,
+                "TN": 62498994,
+                "TP": 4862094,
+                "n_pred": 5011142,
+                "n_ref": 5509398
+              },
+              "3": {
+                "Dice": 0.8677037794734592,
+                "FN": 147085,
+                "FP": 625048,
+                "IoU": 0.7663222430169018,
+                "TN": 64853176,
+                "TP": 2532131,
+                "n_pred": 3157179,
+                "n_ref": 2679216
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW190-C0005810.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW190-C0005810.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.8420969734334464,
+                "FN": 140144,
+                "FP": 210,
+                "IoU": 0.7272603612847061,
+                "TN": 67642832,
+                "TP": 374254,
+                "n_pred": 374464,
+                "n_ref": 514398
+              },
+              "2": {
+                "Dice": 0.9449341756726608,
+                "FN": 227194,
+                "FP": 303221,
+                "IoU": 0.8956163244839314,
+                "TN": 63076042,
+                "TP": 4550983,
+                "n_pred": 4854204,
+                "n_ref": 4778177
+              },
+              "3": {
+                "Dice": 0.8948133176518768,
+                "FN": 317009,
+                "FP": 382650,
+                "IoU": 0.8096490230507674,
+                "TN": 64481814,
+                "TP": 2975967,
+                "n_pred": 3358617,
+                "n_ref": 3292976
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW191-C0005811.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW191-C0005811.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.871723158495881,
+                "FN": 29460,
+                "FP": 47135,
+                "IoU": 0.7726145981457677,
+                "TN": 67820589,
+                "TP": 260256,
+                "n_pred": 307391,
+                "n_ref": 289716
+              },
+              "2": {
+                "Dice": 0.9429870508045234,
+                "FN": 262820,
+                "FP": 277168,
+                "IoU": 0.8921244072953489,
+                "TN": 63151785,
+                "TP": 4465667,
+                "n_pred": 4742835,
+                "n_ref": 4728487
+              },
+              "3": {
+                "Dice": 0.8785531582397675,
+                "FN": 316347,
+                "FP": 379664,
+                "IoU": 0.7834104350954193,
+                "TN": 64943938,
+                "TP": 2517491,
+                "n_pred": 2897155,
+                "n_ref": 2833838
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW193-C0005814.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW193-C0005814.nii.gz"
+          },
+          {
+            "metrics": {
+              "1": {
+                "Dice": 0.9428901662361437,
+                "FN": 4216,
+                "FP": 32595,
+                "IoU": 0.8919509932841779,
+                "TN": 66243888,
+                "TP": 303877,
+                "n_pred": 336472,
+                "n_ref": 308093
+              },
+              "2": {
+                "Dice": 0.9495110566851692,
+                "FN": 189551,
+                "FP": 244348,
+                "IoU": 0.9038753455976181,
+                "TN": 62070656,
+                "TP": 4080021,
+                "n_pred": 4324369,
+                "n_ref": 4269572
+              },
+              "3": {
+                "Dice": 0.9063090900845062,
+                "FN": 354546,
+                "FP": 265210,
+                "IoU": 0.8286702228827466,
+                "TN": 62967248,
+                "TP": 2997572,
+                "n_pred": 3262782,
+                "n_ref": 3352118
+              }
+            },
+            "prediction_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_4/validation/AW200-C0005822.nii.gz",
+            "reference_file": "/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_preprocessed/Dataset001_GroundTruth/gt_segmentations/AW200-C0005822.nii.gz"
+          }
+        ]
+      },
+      "test": {
+        "mean_dice": 0.7839141390687878,
+        "foreground_dice": 0.7839141390687878
+      }
+    }
+  },
+  "ensemble": {
+    "mean_dice": 0.7963679621982255,
+    "foreground_dice": 0.7963679621982255
+  },
+  "summary": {
+    "average_fold_dice": 0.7879557717090001,
+    "ensemble_dice": 0.7963679621982255,
+    "improvement": 0.008412190489225368,
+    "improvement_percent": 1.067596785410955
+  }
+}

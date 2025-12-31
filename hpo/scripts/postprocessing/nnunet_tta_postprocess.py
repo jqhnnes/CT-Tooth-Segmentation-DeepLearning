@@ -77,6 +77,18 @@ def main():
     args = parse_args()
     dataset_id = extract_dataset_id(args.dataset_name)
 
+    # Ensure all required nnUNet environment variables are set
+    # Get from current environment or use defaults
+    default_nnunet_raw = os.environ.get("nnUNet_raw") or str(PROJECT_ROOT / "data" / "nnUNet_raw")
+    default_nnunet_preprocessed = os.environ.get("nnUNet_preprocessed") or str(PROJECT_ROOT / "data" / "nnUNet_preprocessed")
+    default_nnunet_results = os.environ.get("nnUNet_results") or str(PROJECT_ROOT / "data" / "nnUNet_results")
+    
+    # Fix: Redirect cache to local directory to avoid "Key has expired" errors
+    # when home directory (/rzhome) is not accessible
+    local_cache_dir = PROJECT_ROOT / ".cache"
+    local_cache_dir.mkdir(parents=True, exist_ok=True)
+    default_home = str(PROJECT_ROOT)
+    
     trial_root = Path("hpo") / "training_output"
     trials = list_trial_dirs(trial_root)
     if args.trials:
@@ -98,6 +110,7 @@ def main():
             print(f"[WARN] model dir missing: {model_root}, skipping.")
             continue
 
+        # Set up environment variables for this trial
         env = os.environ.copy()
         env["nnUNet_results"] = str(trial_dir / "nnUNet_results")
         env["nnUNet_preprocessed"] = str(
@@ -106,6 +119,11 @@ def main():
             / args.dataset_name
             / trial_dir.name
         )
+        # Always set nnUNet_raw (required by find_best_configuration)
+        env["nnUNet_raw"] = default_nnunet_raw
+        # Fix cache and home directory issues
+        env["XDG_CACHE_HOME"] = str(local_cache_dir)
+        env["HOME"] = default_home
 
         log_file = model_root / "tta_postprocess.log"
 
@@ -151,6 +169,13 @@ def main():
         pp_pkl = find_pp_candidate()
 
         if (not args.skip_find) and pp_pkl is None:
+            # Ensure validation predictions exist (required by find_best_configuration)
+            validation_dir = model_root / f"fold_{args.folds[0]}" / "validation"
+            if not validation_dir.exists() or not any(validation_dir.iterdir()):
+                print(f"[WARN] validation predictions missing for {trial_dir.name}, cannot find best PP config.")
+                print(f"[WARN] Skipping postprocessing for {trial_dir.name}.")
+                continue
+            
             cmd_find = [
                 "nnUNetv2_find_best_configuration",
                 str(dataset_id),
@@ -161,14 +186,19 @@ def main():
                 "-p",
                 args.plans_name,
                 "-f",
-                *args.folds,
+                *[str(f) for f in args.folds],
             ]
             print(f"[{trial_dir.name}] find PP -> {' '.join(cmd_find)}")
             try:
                 run_cmd(cmd_find, env, log_file, mode="a")
+                # Re-check for postprocessing.pkl after running find_best_configuration
+                pp_pkl = find_pp_candidate()
+                if pp_pkl is None:
+                    print(f"[WARN] find_best_configuration completed but postprocessing.pkl not found for {trial_dir.name}")
             except subprocess.CalledProcessError as e:
                 print(f"[WARN] find_best_configuration failed for {trial_dir.name}: {e}")
-            pp_pkl = find_pp_candidate()
+                # Try to find postprocessing.pkl anyway (might have been created before failure)
+                pp_pkl = find_pp_candidate()
 
         if pp_pkl is None:
             print(f"[WARN] postprocessing.pkl missing for {trial_dir.name}, skip apply.")

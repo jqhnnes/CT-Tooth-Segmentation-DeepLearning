@@ -6,37 +6,28 @@ for nnU-Net on the CT Tooth Segmentation task. The goal: generate many plan vari
 impact downstream Dice. All scripts, trial outputs, and logs live here so the entire
 workflow can be reproduced from a single README.
 
-## 0. How this folder is organized
+## 0. How this folder is organized (current files)
 
 ```
 hpo/
-├── scripts/                    # All Python scripts
-│   ├── preprocessing/          # Preprocessing scripts
+├── scripts/
+│   ├── preprocessing/          # HPO + nnUNetv2_preprocess
 │   │   └── nnunet_hpo_preprocess.py
-│   ├── training/               # Training & Evaluation
+│   ├── training/               # Training & optional eval
 │   │   └── nnunet_train_eval_pipeline.py
-│   ├── postprocessing/         # Inference + PP + Evaluation
+│   ├── postprocessing/         # Inference + PP + eval helpers
 │   │   ├── nnunet_tta_postprocess.py
 │   │   └── evaluate_tta_pp.py
-│   ├── analysis/               # Analysis & Comparison
-│   │   ├── compare_top3_trials.py
-│   │   ├── update_trial_summary.py
-│   │   ├── plot_hpo_results.py
-│   │   └── prepare_best_model.py
-│   └── utils/                  # Utility scripts
+│   ├── analysis/               # Summaries/plots
+│   │   ├── summarize_trials.py
+│   │   └── plot_trials_summary.py
+│   └── utils/
 │       └── check_trial_labels.py
-├── config/                     # Templates & Configuration
-│   └── nnUNetPlans_template.json
-├── docs/                       # Additional Documentation
-│   └── BEST_PARAMETERS_SUMMARY.md
-├── analysis/                   # Analysis Results / Plots
-│   ├── best_parameters_summary.json
-│   ├── top3_analysis.json
-│   └── plots/
-├── best_model/                 # Best Model (trial_8)
-├── preprocessing_output/        # Trial-specific preprocessed datasets
-├── training_output/            # Archived training results
-└── results/                    # Evaluation logs per trial
+├── config/                     # nnUNetPlans_template.json
+├── preprocessing_output/       # Trial-specific preprocessed data
+├── training_output/            # Archived training runs
+├── analysis/                   # trials_summary.json, plots/
+└── results/                    # Evaluation logs (if generated)
 ```
 
 ## 1. Environment
@@ -49,7 +40,7 @@ source scripts/nnunet_env.sh   # exports nnUNet_raw/_preprocessed/_results
 
 - Always execute new commands from the project root after the environment has been activated.
 
-## 2. Preprocessing / HPO trial generation
+## 2. Preprocessing / HPO trial generation (Optuna)
 
 ### Start new trials (Optuna + nnUNetv2_preprocess)
 
@@ -58,10 +49,10 @@ python hpo/scripts/preprocessing/nnunet_hpo_preprocess.py --n_trials 5
 ```
 
 - Generiert `n_trials` neue Plan-Varianten und legt sie unter `hpo/preprocessing_output/Dataset001_GroundTruth/trial_X` ab.
-- Aktueller Suchraum (auf Basis deiner bisherigen Ergebnisse, VRAM-sparend):
-  - Spacing 0.08: Patch (64,96,64), features_base {16,24}, batch 1
-  - Spacing 0.10: Patches (96³), (96×128×96), (128×128×96), features_base {16,24,32}, batch 1
-  - Spacing 0.12: Patches (96³), (96×128×96), (128×128×96), features_base {16,24,32}, batch 1
+- Aktueller, fokussierter High-End-Suchraum (VRAM-hungrig, nahe OOM):
+  - Spacing 0.095: Patches (128×128×96), (128×160×96), (160×160×96); features_base {32,40,48}; batch 1
+  - Spacing 0.10:  Patches (128×128×96), (128×160×96), (160×160×96); features_base {32,40,48}; batch 1
+  - Spacing 0.105: Patches (128×128×96), (128×160×96); features_base {32,40,48}; batch 1
 - Wichtigste Option: `--n_trials` (Anzahl neuer Samples).
 - Before running, make sure `nnUNet_raw` contains the cleaned dataset (e.g. label remap).
 
@@ -117,13 +108,13 @@ python hpo/scripts/training/nnunet_train_eval_pipeline.py \
   - `--device cuda:1` / `--device cpu`: force a specific device.
   - Automatic CPU fallback occurs if GPU evaluation raises OOM.
 
-### Train a specific trial manually (e.g., trial_15 long-run)
+### Train a specific trial manually (e.g., trial_43)
 
 ```bash
 source scripts/nnunet_env.sh
-export nnUNet_preprocessed=/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/hpo/preprocessing_output/Dataset001_GroundTruth/trial_15
-export nnUNet_results=/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/hpo/training_output/trial_15/nnUNet_results
-nnUNetv2_train Dataset001_GroundTruth 3d_fullres 0 -tr nnUNetTrainer -p nnUNetPlans --npz
+export nnUNet_preprocessed=/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/hpo/preprocessing_output/Dataset001_GroundTruth/trial_43
+export nnUNet_results=/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/hpo/training_output/trial_43/nnUNet_results
+nnUNetv2_train Dataset001_GroundTruth 3d_fullres 0 -tr nnUNetTrainer -p nnUNetPlans
 ```
 
 - Repeat per fold by changing the last argument (`0 → 1`, etc.).
@@ -139,14 +130,14 @@ nnUNetv2_train Dataset001_GroundTruth 3d_fullres 0 -tr nnUNetTrainer -p nnUNetPl
 nvidia-smi --query-gpu=timestamp,name,memory.used,memory.total,utilization.gpu --format=csv -l 60 > logs/trial15_gpu_usage.csv
 ```
 
-## 6. Inferenz + Postprocessing + Bewertung
+## 6. Inference + Postprocessing + Evaluation
 
 ### TTA-Prediction + Postprocessing (optional Evaluation)
 
 ```bash
-python hpo/scripts/postprocessing/nnunet_tta_postprocess.py \
-  --trials trial_12 trial_13 \        # optional, sonst alle gefundenen
-  --folds 0 \                         # Folds, meist 0
+/ssd/geiger/myenv/bin/python hpo/scripts/postprocessing/nnunet_tta_postprocess.py \
+  --trials trial_43 \
+  --folds 0 \
   --input_dir data/nnUNet_raw/Dataset001_GroundTruth/imagesTs \
   --eval_labels data/nnUNet_raw/Dataset001_GroundTruth/labelsTs
 ```
@@ -160,7 +151,7 @@ python hpo/scripts/postprocessing/nnunet_tta_postprocess.py \
   - `--pred_subdir` / `--suffix`: Zielordnernamen (Default: labelsTs_tta → labelsTs_tta_pp).
   - `--skip_predict`, `--skip_find`: falls nur PP angewendet werden soll.
 
-### Nur fertige labelsTs_tta_pp auswerten + Ranking
+### Evaluate existing labelsTs_tta_pp + ranking
 
 ```bash
 python hpo/scripts/postprocessing/evaluate_tta_pp.py --folds 0
@@ -176,41 +167,23 @@ python hpo/scripts/postprocessing/evaluate_tta_pp.py --folds 0
 - Evaluation log: `hpo/results/<dataset>/<trial>/<config>/<trainer>/evaluation.log`
 - Archived checkpoints: `hpo/training_output/<trial>/nnUNet_results/...`
 
-## 8. Analysis & spacing-focused evaluation
+## 8. Analysis (quick)
 
-### Regenerate JSON summaries (includes spacing ranking)
-
-```bash
-python hpo/scripts/analysis/update_trial_summary.py
-```
-
-- Reads every trial under `hpo/results/...` + `hpo/preprocessing_output/...`.
-- Produces `hpo/analysis/best_parameters_summary.json` and `top3_analysis.json`
-  with explicit spacing statistics.
-
-### Produce plots (Dice vs. parameters, incl. spacing)
+### Trial parameters + scores overview
 
 ```bash
-pip install matplotlib  # once
-python hpo/scripts/analysis/plot_hpo_results.py
+/ssd/geiger/myenv/bin/python hpo/scripts/analysis/summarize_trials.py
 ```
 
-- Outputs PNGs into `hpo/analysis/plots/`, e.g. `dice_vs_spacing.png`.
-- Use these when reporting how spacing vs Dice behaves or when checking GPU limits:
-  cross-reference the chosen spacing with your `nvidia-smi` logs to justify feasible
-  resolutions.
+- Reads all trials in `hpo/training_output`, pulls spacing/patch/batch/features_base from plans and Dice from `hpo/analysis/trial_*_labelsTs[_tta_pp]_summary.json`. Writes `hpo/analysis/trials_summary.json`.
 
-### Compare arbitrary trial sets (predictions + evaluation)
+### Quick plot Dice vs. spacing
 
 ```bash
-python hpo/scripts/analysis/compare_top3_trials.py \
-    --trials trial_1 trial_3 trial_4 trial_8 trial_15 trial_16 trial_17 trial_18 \
-    --testset labelsVal \
-    --folds 0
+/ssd/geiger/myenv/bin/python hpo/scripts/analysis/plot_trials_summary.py
 ```
 
-- `labelsVal` (or `labelsTr`) must exist under `data/nnUNet_raw/Dataset001_GroundTruth`.
-- The script automatically switches `nnUNet_preprocessed`/`nnUNet_results` for each trial.
+- Uses `trials_summary.json`, plots Dice (tta_pp if available, else labelsTs) vs spacing, colors by `features_base`. Output: `hpo/analysis/plots/trials_dice_vs_spacing.png`.
 
 ## 9. Troubleshooting snippets
 
