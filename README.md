@@ -185,6 +185,15 @@ The system computes the following metrics:
 - **[Best Parameters Summary](hpo/docs/BEST_PARAMETERS_SUMMARY.md)**: Analysis of top-performing configurations
 - **[Best Model Documentation](hpo/best_model/README.md)**: Instructions for using the best model
 
+## 🎓 Hinweise für Bachelorarbeiten
+
+Wenn du dieses Projekt als Grundlage deiner Bachelorarbeit verwendest, empfehlen wir:
+
+- **Zitiere das Projekt** mit dem untenstehenden BibTeX-Eintrag und verlinke das Repository.
+- **Dokumentiere die Reproduzierbarkeit** (Commit-Hash, `environment.yml`, verwendete Datensätze und Befehle).
+- **Speichere Experimente** unter `hpo/results/` und referenziere die Auswertung in deiner Arbeit.
+- **Beachte die Lizenz** und führe die ursprünglichen Autor:innen in den Danksagungen auf.
+
 ## 🎓 Citation
 
 If you use this project in your research, please cite:
