@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
 """
-Summarize all trials: parameters + metrics (labelsTs and labelsTs_tta_pp).
+Summarize all trials: parameters + metrics (validation, labelsTs, labelsTs_tta_pp).
 
 Outputs:
   hpo/analysis/trials_summary.json
 
+Validation-Dice: Aus fold_0/validation/summary.json (foreground_mean.Dice).
+Reicht für vergleichbare Dice-Kurve über Trials – jeder Trial braucht nur den validation-Ordner.
+
 Each entry:
 {
   "trial": "trial_XX",
-  "spacing": [sx, sy, sz],
-  "patch_size": [px, py, pz],
-  "batch_size": int,
-  "features_base": int,
+  "spacing": [...],
+  "dice_validation": float | null,   # aus validation/summary.json, einheitlich für alle
   "dice_labelsTs": float | null,
   "dice_labelsTs_tta_pp": float | null,
-  "summary_labelsTs": "path or null",
-  "summary_labelsTs_tta_pp": "path or null"
+  ...
 }
 
 Usage:
@@ -59,9 +59,17 @@ def main():
         features_base = features_per_stage[0] if features_per_stage else None
 
         tname = trial_dir.name
+        # Validation-Dice: aus fold_0/validation/summary.json – reicht für alle Trials (einheitlich)
+        model_base = trial_dir / "nnUNet_results" / "Dataset001_GroundTruth" / "nnUNetTrainer__nnUNetPlans__3d_fullres"
+        val_summary = model_base / "fold_0" / "validation" / "summary.json"
+        dice_validation = None
+        if val_summary.exists():
+            d = load_json(val_summary)
+            if d:
+                dice_validation = d.get("foreground_mean", {}).get("Dice")
+
         lbl_summary_path = analysis_root / f"{tname}_labelsTs_summary.json"
         tta_pp_summary_path = analysis_root / f"{tname}_labelsTs_tta_pp_summary.json"
-
         dice_lbl = None
         dice_tta_pp = None
         if lbl_summary_path.exists():
@@ -80,6 +88,7 @@ def main():
                 "patch_size": patch,
                 "batch_size": batch_size,
                 "features_base": features_base,
+                "dice_validation": dice_validation,
                 "dice_labelsTs": dice_lbl,
                 "dice_labelsTs_tta_pp": dice_tta_pp,
                 "summary_labelsTs": str(lbl_summary_path) if lbl_summary_path.exists() else None,

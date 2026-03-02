@@ -12,7 +12,93 @@ from typing import Dict, List, Optional, Tuple
 from datetime import datetime
 import argparse
 
-PROJECT_ROOT = Path(__file__).parent.parent
+try:
+    import matplotlib.pyplot as plt
+    import matplotlib
+    matplotlib.use('Agg')
+    HAS_MATPLOTLIB = True
+except ImportError:
+    HAS_MATPLOTLIB = False
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+
+
+def create_training_visualization(
+    folds: Dict,
+    ensemble_analysis: Dict,
+    output_dir: Path,
+    dataset_name: str,
+    timestamp: str,
+) -> None:
+    """Create bar chart(s): Dice per fold + ensemble; optional training Dice."""
+    if not HAS_MATPLOTLIB:
+        return
+    fold_nums = sorted(folds.keys(), key=lambda x: int(x))
+    test_dice = []
+    val_dice = []
+    train_dice = []
+    for fn in fold_nums:
+        fd = folds[fn]
+        ti = fd.get('training', {})
+        vs = fd.get('validation')
+        train_dice.append(ti.get('best_dice'))
+        val_dice.append(vs.get('mean', {}).get('Dice', {}).get('mean') if vs else None)
+        fold_test = None
+        if ensemble_analysis and 'folds' in ensemble_analysis:
+            fm = ensemble_analysis['folds'].get(fn, {})
+            fold_test = fm.get('mean_dice') or fm.get('foreground_dice')
+        test_dice.append(fold_test)
+    ensemble_dice = None
+    if ensemble_analysis and ensemble_analysis.get('ensemble'):
+        ensemble_dice = (
+            ensemble_analysis['ensemble'].get('mean_dice')
+            or ensemble_analysis['ensemble'].get('foreground_dice')
+        )
+    has_test = any(x is not None for x in test_dice) or (ensemble_dice is not None)
+    has_val = any(x is not None for x in val_dice)
+    has_train = any(x is not None for x in train_dice)
+    if not (has_test or has_val or has_train):
+        return
+    x_labels = [f'Fold {f}' for f in fold_nums]
+    if ensemble_dice is not None:
+        x_labels.append('Ensemble')
+    x_pos = list(range(len(x_labels)))
+    n_series = sum([has_test, has_val, has_train])
+    width = 0.25 if n_series >= 2 else 0.55
+    fig, ax = plt.subplots(figsize=(max(7, len(x_labels) * 1.2), 5))
+    offset = (n_series - 1) * width / 2
+    if has_test:
+        vals = [(x if x is not None else 0) for x in test_dice]
+        if ensemble_dice is not None:
+            vals.append(ensemble_dice)
+        colors = ['#2E86AB'] * len(fold_nums)
+        if ensemble_dice is not None:
+            colors.append('#6A994E')
+        ax.bar([p - offset for p in x_pos], vals, width=width, label='Test Dice', color=colors, alpha=0.9)
+        offset -= width
+    if has_val:
+        vals = [(x if x is not None else 0) for x in val_dice]
+        if ensemble_dice is not None:
+            vals.append(0)
+        ax.bar([p - offset for p in x_pos], vals, width=width, label='Validation Dice', color='#A23B72', alpha=0.9)
+        offset -= width
+    if has_train:
+        vals = [(x if x is not None else 0) for x in train_dice]
+        if ensemble_dice is not None:
+            vals.append(0)
+        ax.bar([p - offset for p in x_pos], vals, width=width, label='Training Dice (best)', color='#F18F01', alpha=0.9)
+    ax.set_xticks(x_pos)
+    ax.set_xticklabels(x_labels)
+    ax.set_ylabel('Dice', fontsize=12)
+    ax.set_title(f'Training & Ensemble Analysis — {dataset_name}', fontsize=13, fontweight='bold')
+    ax.set_ylim(0, 1.05)
+    ax.legend(loc='lower right', fontsize=10)
+    ax.grid(True, alpha=0.3, axis='y')
+    plt.tight_layout()
+    out_path = output_dir / f'training_analysis_{dataset_name}_{timestamp}.png'
+    plt.savefig(out_path, dpi=150, bbox_inches='tight')
+    plt.close()
+    print(f"[INFO] Visualization saved to: {out_path}")
 
 
 def parse_training_log(log_file: Path) -> Dict:
@@ -372,6 +458,8 @@ def save_analysis_results(folds: Dict, ensemble_analysis: Dict, output_dir: Path
         json.dump(json_data, f, indent=2)
     print(f"[INFO] JSON results saved to: {json_file}")
 
+    create_training_visualization(folds, ensemble_analysis, output_dir, dataset_name, timestamp)
+
 
 def main():
     parser = argparse.ArgumentParser(description='Analyze training convergence and ensemble performance')
@@ -384,7 +472,7 @@ def main():
     parser.add_argument('--plans', type=str, default='nnUNetPlans',
                        help='Plans name')
     parser.add_argument('--output-dir', type=str, default=None,
-                       help='Output directory for CSV/JSON files (default: analysis_results/)')
+                       help='Output directory for CSV/JSON files (default: analysis_results/training/)')
     
     args = parser.parse_args()
     
@@ -404,7 +492,7 @@ def main():
     print_analysis(folds, ensemble_analysis)
     
     # Save results to CSV and JSON
-    output_dir = Path(args.output_dir) if args.output_dir else PROJECT_ROOT / 'analysis_results'
+    output_dir = Path(args.output_dir) if args.output_dir else PROJECT_ROOT / 'analysis_results' / 'training'
     save_analysis_results(folds, ensemble_analysis, output_dir, args.dataset)
 
 

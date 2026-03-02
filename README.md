@@ -25,7 +25,7 @@ CT-Tooth-Segmentation-DeepLearning/
 │   └── results/              # Evaluation logs (if produced)
 ├── scripts/                  # Runner scripts and env helpers
 │   ├── 00_plan.sh, 01_preprocess.sh, 02_training.sh, 03_predict.sh, 04_ensemble.sh
-│   ├── analyze_training_and_ensemble.py
+│   ├── analysis/             # analyze_grayscale_statistics, analyze_trial_parameters, etc.
 │   ├── nnunet_env.sh / nnunet_env.py
 │   └── utils/create_validation_subset.py
 ├── data/                     # nnUNet_raw / nnUNet_preprocessed / nnUNet_results (not in repo)
@@ -120,7 +120,7 @@ Primary: Dice. Additional: Hausdorff Distance (HD95), IoU, volume similarity, pr
 - `hpo/scripts/analysis/summarize_trials.py` — aggregate trial params + scores
 - `hpo/scripts/analysis/plot_trials_summary.py` — plot Dice vs spacing
 - `scripts/00_plan.sh` … `04_ensemble.sh` — shell helpers for nnU-Net stages
-- `scripts/analyze_training_and_ensemble.py` — training/ensemble analysis
+- `scripts/analysis/analyze_training_and_ensemble.py` — training/ensemble analysis
 - `scripts/utils/create_validation_subset.py` — build a smaller validation subset
 
 ## License

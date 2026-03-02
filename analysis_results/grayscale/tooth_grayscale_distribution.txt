@@ -1,0 +1,119 @@
+================================================================================
+GRAUWERT-STATISTIKEN ANALYSE
+Dataset: Dataset002_Karies
+Generated: 2026-02-12 19:11:48
+================================================================================
+
+Tissues analyzed: background, pulp, dentin, enamel, enamel_caries, dentin_caries
+Files processed: 127
+
+================================================================================
+GRAUWERT-STATISTIKEN
+================================================================================
+
+Hintergrund (background):
+  Anzahl Voxel: 1,000,000
+  Mittelwert (μ):          10.40
+  Median:                  11.00
+  Standardabw. (σ):         9.15
+  Minimum:                  0.00
+  Maximum:                207.00
+  5. Perzentil:             0.00
+  25. Perzentil:            0.00
+  75. Perzentil:           16.00
+  95. Perzentil:           22.00
+
+Pulpa (pulp):
+  Anzahl Voxel: 1,000,000
+  Mittelwert (μ):          33.87
+  Median:                  31.00
+  Standardabw. (σ):        16.22
+  Minimum:                  0.00
+  Maximum:                128.00
+  5. Perzentil:            12.00
+  25. Perzentil:           24.00
+  75. Perzentil:           40.00
+  95. Perzentil:           68.00
+
+Dentin (dentin):
+  Anzahl Voxel: 1,000,000
+  Mittelwert (μ):         117.25
+  Median:                 120.00
+  Standardabw. (σ):        17.88
+  Minimum:                 15.00
+  Maximum:                204.00
+  5. Perzentil:            68.00
+  25. Perzentil:          112.00
+  75. Perzentil:          127.00
+  95. Perzentil:          138.00
+
+Schmelz (enamel):
+  Anzahl Voxel: 1,000,000
+  Mittelwert (μ):         192.37
+  Median:                 199.00
+  Standardabw. (σ):        29.04
+  Minimum:                 31.00
+  Maximum:                254.00
+  5. Perzentil:           108.00
+  25. Perzentil:          185.00
+  75. Perzentil:          210.00
+  95. Perzentil:          223.00
+
+Schmelz-Karies (enamel_caries):
+  Anzahl Voxel: 1,000,000
+  Mittelwert (μ):         134.45
+  Median:                 140.00
+  Standardabw. (σ):        29.73
+  Minimum:                 12.00
+  Maximum:                195.00
+  5. Perzentil:            76.00
+  25. Perzentil:          119.00
+  75. Perzentil:          155.00
+  95. Perzentil:          176.00
+
+Dentin-Karies (dentin_caries):
+  Anzahl Voxel: 1,000,000
+  Mittelwert (μ):          73.68
+  Median:                  77.00
+  Standardabw. (σ):        20.64
+  Minimum:                  1.00
+  Maximum:                168.00
+  5. Perzentil:            38.00
+  25. Perzentil:           58.00
+  75. Perzentil:           90.00
+  95. Perzentil:          103.00
+
+================================================================================
+BEWERTUNG DER ERGEBNISSE
+================================================================================
+
+Reihenfolge nach mittlerem Grauwert (niedrig → hoch):
+  1. Hintergrund         : μ =    10.40
+  2. Pulpa               : μ =    33.87
+  3. Dentin              : μ =   117.25
+  4. Schmelz             : μ =   192.37
+
+✅ Die Reihenfolge ist plausibel!
+   (Hintergrund < Pulpa < Dentin < Schmelz)
+
+Überlappungsbereiche (5%-95% Perzentile):
+  Hintergrund         : [    0.00,    22.00]
+  Pulpa               : [   12.00,    68.00]
+  Dentin              : [   68.00,   138.00]
+  Schmelz             : [  108.00,   223.00]
+
+Trennung zwischen Geweben (Abstand der Mittelwerte):
+  Hintergrund          → Pulpa               : Δμ =    23.48 (1.85 × σ)
+    ⚠️  Moderate Trennung (1-2σ)
+  Pulpa                → Dentin              : Δμ =    83.38 (4.89 × σ)
+    ✅ Gute Trennung (>2σ)
+  Dentin               → Schmelz             : Δμ =    75.12 (3.20 × σ)
+    ✅ Gute Trennung (>2σ)
+
+================================================================================
+Typische Erwartungen für µCT-Grauwerte:
+  - Hintergrund (Luft): sehr niedrig (oft < 0)
+  - Pulpa (weiches Gewebe): niedrig-mittel
+  - Dentin (mineralisiert): mittel-hoch
+  - Schmelz (stark mineralisiert): sehr hoch
+================================================================================

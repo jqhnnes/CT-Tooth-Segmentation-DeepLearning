@@ -125,4 +125,24 @@ bash scripts/04_ensemble.sh Dataset001_GroundTruth 3d_fullres \
       --target prediction_data
   ```
 
+### Analysis scripts (`scripts/analysis/`)
+
+Skripte für Auswertungen und Visualisierungen; Ausgaben landen in `analysis_results/` (siehe `analysis_results/README.md`).
+
+| Skript | Zweck |
+|--------|--------|
+| `analyze_grayscale_statistics.py` | Grauwert-Statistiken + Histogramme (tooth_grayscale_distribution) |
+| `create_grauwert_histogram.py` | Grauwert-Histogramm (alternativ/legacy) |
+| `create_label_histogram.py` | Label-Verteilung pro Dataset |
+| `analyze_dataset_metadata.py` | Dataset-Metadaten (Spacing, Dimensionen, Labels) |
+| `analyze_trial_parameters.py` | HPO-Trial-Parameter (Spacing, Patch, Features, Batch) |
+| `analyze_training_and_ensemble.py` | Training/Ensemble-Analyse (Folds, Metriken) |
+
+Beispiele:
+```bash
+python scripts/analysis/analyze_grayscale_statistics.py --dataset Dataset002_Karies
+python scripts/analysis/analyze_trial_parameters.py
+python scripts/analysis/analyze_dataset_metadata.py --dataset Dataset002_Karies
+```
+
 All additional automation (HPO, analysis, utilities) lives under `hpo/scripts/`.
