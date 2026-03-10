@@ -172,41 +172,38 @@ def analyze_training_convergence(results_dir: Path) -> Dict:
     return folds
 
 
-def analyze_ensemble_performance(ensemble_dir: Path, individual_folds: Dict, results_dir: Path) -> Dict:
+def analyze_ensemble_performance(
+    ensemble_dir: Path,
+    individual_folds: Dict,
+    dataset_name: str,
+    config: str,
+) -> Dict:
     """Compare ensemble predictions with individual fold predictions."""
     ensemble_summary = read_summary_json(ensemble_dir / 'summary.json')
-    
+
     if not ensemble_summary:
         return {}
-    
-    # Extract metrics
+
     ensemble_metrics = {}
     fold_metrics = {}
-    
-    if ensemble_summary:
-        # Try different possible structures
-        mean_dice = None
-        mean_hd95 = None
-        
-        # Check foreground_mean first (for test set)
-        if 'foreground_mean' in ensemble_summary:
-            mean_dice = ensemble_summary['foreground_mean'].get('Dice')
-        
-        # Check mean structure
-        if mean_dice is None and 'mean' in ensemble_summary:
-            dice_dict = ensemble_summary['mean'].get('Dice', {})
-            if isinstance(dice_dict, dict):
-                mean_dice = dice_dict.get('mean')
-            elif isinstance(dice_dict, (int, float)):
-                mean_dice = dice_dict
-        
-        ensemble_metrics = {
-            'mean_dice': mean_dice,
-            'foreground_dice': ensemble_summary.get('foreground_mean', {}).get('Dice'),
-        }
-    
-    # Get test set results for each fold
-    predictions_dir = results_dir / 'predictions_imagesTs'
+
+    mean_dice = None
+    if 'foreground_mean' in ensemble_summary:
+        mean_dice = ensemble_summary['foreground_mean'].get('Dice')
+    if mean_dice is None and 'mean' in ensemble_summary:
+        dice_dict = ensemble_summary['mean'].get('Dice', {})
+        if isinstance(dice_dict, dict):
+            mean_dice = dice_dict.get('mean')
+        elif isinstance(dice_dict, (int, float)):
+            mean_dice = dice_dict
+
+    ensemble_metrics = {
+        'mean_dice': mean_dice,
+        'foreground_dice': ensemble_summary.get('foreground_mean', {}).get('Dice'),
+    }
+
+    # Per-fold summaries live under predictions/<Dataset>_<config>/fold_N/
+    predictions_dir = PROJECT_ROOT / 'predictions' / f'{dataset_name}_{config}'
     for fold_num in individual_folds.keys():
         fold_pred_dir = predictions_dir / f'fold_{fold_num}'
         fold_summary = read_summary_json(fold_pred_dir / 'summary.json')
@@ -486,7 +483,7 @@ def main():
     folds = analyze_training_convergence(results_dir)
     
     # Analyze ensemble performance
-    ensemble_analysis = analyze_ensemble_performance(ensemble_dir, folds, results_dir)
+    ensemble_analysis = analyze_ensemble_performance(ensemble_dir, folds, args.dataset, args.config)
     
     # Print results
     print_analysis(folds, ensemble_analysis)

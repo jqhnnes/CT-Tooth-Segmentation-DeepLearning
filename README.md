@@ -25,14 +25,17 @@ CT-Tooth-Segmentation-DeepLearning/
 │   └── results/              # Evaluation logs (if produced)
 ├── scripts/                  # Runner scripts and env helpers
 │   ├── 00_plan.sh, 01_preprocess.sh, 02_training.sh, 03_predict.sh, 04_ensemble.sh
-│   ├── analysis/             # analyze_grayscale_statistics, analyze_trial_parameters, etc.
+│   ├── analysis/
+│   │   ├── dataset/          # analyze_grayscale_statistics, analyze_dataset_metadata, etc.
+│   │   ├── training/         # analyze_trial_parameters, analyze_training_and_ensemble
+│   │   └── evaluation/       # evaluate_folds, evaluate_ensemble
 │   ├── nnunet_env.sh / nnunet_env.py
-│   └── utils/create_validation_subset.py
+│   └── utils/                # create_validation_subset.py, split_dataset_test_set.py
 ├── data/                     # nnUNet_raw / nnUNet_preprocessed / nnUNet_results (not in repo)
-├── logs/                     # Training/eval logs
-├── notebooks/                # Exploration notebooks
-├── ensemble_predictions/     # (if generated)
-├── analysis_results/         # (auxiliary analyses)
+├── logs/                     # Training/eval logs (not in repo)
+├── predictions/              # Per-fold predictions (not in repo)
+├── ensemble_predictions/     # Ensemble outputs (not in repo)
+├── analysis_results/         # Generated analysis outputs (partially in repo)
 └── README.md                 # This file
 ```
 
@@ -120,7 +123,9 @@ Primary: Dice. Additional: Hausdorff Distance (HD95), IoU, volume similarity, pr
 - `hpo/scripts/analysis/summarize_trials.py` — aggregate trial params + scores
 - `hpo/scripts/analysis/plot_trials_summary.py` — plot Dice vs spacing
 - `scripts/00_plan.sh` … `04_ensemble.sh` — shell helpers for nnU-Net stages
-- `scripts/analysis/analyze_training_and_ensemble.py` — training/ensemble analysis
+- `scripts/analysis/training/analyze_training_and_ensemble.py` — training/ensemble analysis
+- `scripts/analysis/evaluation/evaluate_folds.py` — per-fold Dice/IoU from validation summaries
+- `scripts/analysis/evaluation/evaluate_ensemble.py` — ensemble evaluation on test set
 - `scripts/utils/create_validation_subset.py` — build a smaller validation subset
 
 ## License

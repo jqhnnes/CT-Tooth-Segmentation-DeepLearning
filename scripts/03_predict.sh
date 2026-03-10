@@ -23,7 +23,7 @@ echo "Dataset name : ${DATASET_NAME}"
 echo "Dataset ID   : ${DATASET_ID}"
 echo "Configuration: ${CONFIG}"
 echo "Input dir    : ${INPUT_DIR}"
-echo "Output root  : ${OUTPUT_ROOT}"
+echo "Output root  : ${OUTPUT_ROOT}/${DATASET_NAME}"
 echo
 
 if [[ ! -f "${SCRIPT_DIR}/nnunet_env.sh" ]]; then
@@ -39,11 +39,12 @@ if [[ ! -d "${INPUT_DIR}" ]]; then
   exit 1
 fi
 
-mkdir -p "${OUTPUT_ROOT}"
+PRED_BASE="${OUTPUT_ROOT}/${DATASET_NAME}"
+mkdir -p "${PRED_BASE}"
 
 FOLDS=(0 1 2 3 4)
 for FOLD in "${FOLDS[@]}"; do
-  OUT_DIR="${OUTPUT_ROOT}/fold_${FOLD}"
+  OUT_DIR="${PRED_BASE}/fold_${FOLD}"
   mkdir -p "${OUT_DIR}"
   echo "[INFO] Predicting fold ${FOLD}..."
   nnUNetv2_predict \
@@ -59,5 +60,5 @@ for FOLD in "${FOLDS[@]}"; do
 done
 
 echo
-echo "[DONE] Predictions written to ${OUTPUT_ROOT}/fold_<n>/"
+echo "[DONE] Predictions written to ${PRED_BASE}/fold_<n>/"
 

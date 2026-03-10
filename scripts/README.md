@@ -82,15 +82,16 @@ Usage: bash scripts/03_predict.sh <DATASET_NAME> <CONFIG> <INPUT_DIR> <OUTPUT_RO
   <DATASET_NAME>   Dataset folder (numeric ID auto-extracted)
   <CONFIG>         nnU-Net configuration (e.g., 3d_fullres)
   <INPUT_DIR>      Directory with images to predict (default: Dataset002_Karies/imagesTr)
-  <OUTPUT_ROOT>    Root folder to store per-fold predictions
+  <OUTPUT_ROOT>    Root folder for predictions (default: predictions); output: <OUTPUT_ROOT>/<DATASET_NAME>/fold_<n>/
 ```
 
 Example:
 ```bash
 chmod +x scripts/03_predict.sh
 bash scripts/03_predict.sh Dataset001_GroundTruth 3d_fullres \
-     data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/prediction_data/imagesTr \
-     data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/predictions
+     data/nnUNet_raw/Dataset001_GroundTruth/imagesTs \
+     predictions
+# → predictions/Dataset001_GroundTruth/fold_0, fold_1, ...
 ```
 Predictions are written with `--save_probabilities` so ensembles can combine softmax probabilities.
 
@@ -100,9 +101,10 @@ Runs `nnUNetv2_ensemble` on the validation predictions of each trained fold. The
 and `nnUNetPlans.json` into the per-fold validation folders if needed.
 
 ```
-Usage: bash scripts/04_ensemble.sh <DATASET_NAME> <CONFIG>
+Usage: bash scripts/04_ensemble.sh <DATASET_NAME> <CONFIG> [PREDICTIONS_ROOT]
   <DATASET_NAME>   Dataset folder (numeric ID auto-extracted)
   <CONFIG>         Configuration to ensemble (e.g., 3d_fullres)
+  <PREDICTIONS_ROOT>  Optional; default: predictions/<DATASET_NAME> (must contain fold_0, fold_1, ...)
 Output:
   ensemble_predictions/<Dataset>_<Config>/
 ```
@@ -110,8 +112,8 @@ Output:
 Example:
 ```bash
 chmod +x scripts/04_ensemble.sh
-bash scripts/04_ensemble.sh Dataset001_GroundTruth 3d_fullres \
-     data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/predictions
+bash scripts/04_ensemble.sh Dataset001_GroundTruth 3d_fullres
+# Uses predictions/Dataset001_GroundTruth/ by default
 ```
 
 ## Python Modules
@@ -131,18 +133,22 @@ Skripte für Auswertungen und Visualisierungen; Ausgaben landen in `analysis_res
 
 | Skript | Zweck |
 |--------|--------|
-| `analyze_grayscale_statistics.py` | Grauwert-Statistiken + Histogramme (tooth_grayscale_distribution) |
-| `create_grauwert_histogram.py` | Grauwert-Histogramm (alternativ/legacy) |
-| `create_label_histogram.py` | Label-Verteilung pro Dataset |
-| `analyze_dataset_metadata.py` | Dataset-Metadaten (Spacing, Dimensionen, Labels) |
-| `analyze_trial_parameters.py` | HPO-Trial-Parameter (Spacing, Patch, Features, Batch) |
-| `analyze_training_and_ensemble.py` | Training/Ensemble-Analyse (Folds, Metriken) |
+| `dataset/analyze_grayscale_statistics.py` | Grauwert-Statistiken + Histogramme |
+| `dataset/create_grauwert_histogram.py` | Grauwert-Histogramm (alternativ) |
+| `dataset/create_label_histogram.py` | Label-Verteilung pro Dataset |
+| `dataset/analyze_dataset_metadata.py` | Dataset-Metadaten (Spacing, Dimensionen, Labels) |
+| `training/analyze_trial_parameters.py` | HPO-Trial-Parameter (Spacing, Patch, Features, Batch) |
+| `training/analyze_training_and_ensemble.py` | Training/Ensemble-Analyse (Folds, Metriken) |
+| `evaluation/evaluate_folds.py` | Dice/IoU pro Label und Fold (Validation) |
+| `evaluation/evaluate_ensemble.py` | Ensemble-Evaluation (Test-Set via `nnUNetv2_evaluate_folder`) |
 
 Beispiele:
 ```bash
-python scripts/analysis/analyze_grayscale_statistics.py --dataset Dataset002_Karies
-python scripts/analysis/analyze_trial_parameters.py
-python scripts/analysis/analyze_dataset_metadata.py --dataset Dataset002_Karies
+python scripts/analysis/dataset/analyze_grayscale_statistics.py --dataset Dataset002_Karies
+python scripts/analysis/training/analyze_trial_parameters.py
+python scripts/analysis/dataset/analyze_dataset_metadata.py --dataset Dataset002_Karies
+python scripts/analysis/evaluation/evaluate_folds.py --dataset Dataset001_GroundTruth
+python scripts/analysis/evaluation/evaluate_ensemble.py --dataset Dataset001_GroundTruth
 ```
 
 All additional automation (HPO, analysis, utilities) lives under `hpo/scripts/`.

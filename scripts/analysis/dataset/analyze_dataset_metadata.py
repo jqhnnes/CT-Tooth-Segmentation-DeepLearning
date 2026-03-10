@@ -6,8 +6,8 @@ This script analyzes the dataset structure, image properties, and provides
 statistics suitable for documentation in academic papers.
 
 Example:
-    python scripts/analysis/analyze_dataset_metadata.py --dataset Dataset002_Karies
-    python scripts/analysis/analyze_dataset_metadata.py --dataset Dataset001_GroundTruth --output dataset_metadata.json
+    python scripts/analysis/dataset/analyze_dataset_metadata.py --dataset Dataset002_Karies
+    python scripts/analysis/dataset/analyze_dataset_metadata.py --dataset Dataset001_GroundTruth --output dataset_metadata.json
 """
 import argparse
 import json

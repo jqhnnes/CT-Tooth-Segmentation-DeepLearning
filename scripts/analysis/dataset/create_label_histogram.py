@@ -6,8 +6,8 @@ This script loads all label files from a specified dataset and creates
 a histogram showing the distribution of label values (voxel counts per class).
 
 Example:
-    python scripts/analysis/create_label_histogram.py --dataset Dataset002_Karies
-    python scripts/analysis/create_label_histogram.py --dataset Dataset002_Karies --output plots/label_histogram.png
+    python scripts/analysis/dataset/create_label_histogram.py --dataset Dataset002_Karies
+    python scripts/analysis/dataset/create_label_histogram.py --dataset Dataset002_Karies --output plots/label_histogram.png
 """
 import argparse
 import json

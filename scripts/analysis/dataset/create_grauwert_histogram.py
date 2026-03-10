@@ -7,8 +7,8 @@ for each tissue type (enamel, dentin, pulp, background), and creates a histogram
 showing the characteristic peaks and overlap regions.
 
 Example:
-    python scripts/analysis/create_grauwert_histogram.py --dataset Dataset002_Karies
-    python scripts/analysis/create_grauwert_histogram.py --dataset Dataset002_Karies --output images/grauwert_histogramm.png
+    python scripts/analysis/dataset/create_grauwert_histogram.py --dataset Dataset002_Karies
+    python scripts/analysis/dataset/create_grauwert_histogram.py --dataset Dataset002_Karies --output images/grauwert_histogramm.png
 """
 import argparse
 import json

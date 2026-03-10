@@ -41,9 +41,12 @@ fi
 source "${SCRIPT_DIR}/nnunet_env.sh"
 cd "${PROJECT_ROOT}"
 
-DEFAULT_PRED_DIR="${PROJECT_ROOT}/predictions/${DATASET_NAME}_${CONFIG}"
+DEFAULT_PRED_DIR="${PROJECT_ROOT}/predictions/${DATASET_NAME}"
 if [[ ! -d "${DEFAULT_PRED_DIR}" ]]; then
-  DEFAULT_PRED_DIR="${PROJECT_ROOT}/data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/predictions"
+  DEFAULT_PRED_DIR="${PROJECT_ROOT}/predictions/${DATASET_NAME}_${CONFIG}"
+fi
+if [[ ! -d "${DEFAULT_PRED_DIR}" ]]; then
+  DEFAULT_PRED_DIR="${PROJECT_ROOT}/data/nnUNet_results/${DATASET_NAME}/nnUNetTrainer__nnUNetPlans__${CONFIG}/predictions"
 fi
 PRED_ROOT="${PRED_ROOT_ARG:-${DEFAULT_PRED_DIR}}"
 

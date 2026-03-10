@@ -7,8 +7,8 @@ key parameters (spacing, patch_size, batch_size, features_base, etc.),
 then creates visualizations showing how these parameters changed over time.
 
 Example:
-    python scripts/analysis/analyze_trial_parameters.py
-    python scripts/analysis/analyze_trial_parameters.py --config_dir hpo/config --output_dir analysis_results/trials
+    python scripts/analysis/training/analyze_trial_parameters.py
+    python scripts/analysis/training/analyze_trial_parameters.py --config_dir hpo/config --output_dir analysis_results/trials
 """
 import argparse
 import json

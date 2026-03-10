@@ -55,7 +55,7 @@ python hpo/scripts/preprocessing/nnunet_hpo_preprocess.py --n_trials 5
 After preprocessing:
 
 ```bash
-python hpo/scripts/utils/check_trial_labels.py --source trials --trial trial_0
+python hpo/scripts/utils/check_trial_labels.py --dataset Dataset001_GroundTruth
 ```
 
 Use it if you need to re-check labels; each trial should contain `nnUNetPlans.json` and `dataset_fingerprint.json`.
