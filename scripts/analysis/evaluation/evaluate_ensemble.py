@@ -203,28 +203,60 @@ def plot_per_case_ranked(per_case: dict, label_names: list[str],
     print(f"[INFO] Saved: {out_path}")
 
 
+def _text_color_for_bg(cmap, value: float) -> str:
+    """Return 'black' or 'white' for maximum contrast against the colormap color at `value`."""
+    r, g, b, _ = cmap(value)
+    luminance = 0.299 * r + 0.587 * g + 0.114 * b
+    return "black" if luminance > 0.45 else "white"
+
+
 def plot_per_case_heatmap(per_case: dict, label_names: list[str],
                           out_path: Path, name: str):
     """Heatmap: cases × labels Dice scores."""
     sorted_cases = sorted(per_case.keys())
-    matrix = np.array([[per_case[c].get(lbl, {}).get("Dice") or 0 for lbl in label_names]
-                       for c in sorted_cases])
-    fig, ax = plt.subplots(figsize=(max(6, len(label_names) * 2), max(8, len(sorted_cases) * 0.35)))
-    im = ax.imshow(matrix, vmin=0, vmax=1, cmap="RdYlGn", aspect="auto")
-    ax.set_xticks(range(len(label_names)))
-    ax.set_xticklabels(label_names)
-    ax.set_yticks(range(len(sorted_cases)))
-    ax.set_yticklabels(sorted_cases, fontsize=7)
+    n_cases, n_labels = len(sorted_cases), len(label_names)
+
+    # Build matrix; keep NaN for missing values so they render distinctly
+    matrix = np.full((n_cases, n_labels), np.nan)
     for i, case in enumerate(sorted_cases):
         for j, lbl in enumerate(label_names):
             v = per_case[case].get(lbl, {}).get("Dice")
             if v is not None:
+                matrix[i, j] = v
+
+    cell_w = 1.8
+    cell_h = 0.38
+    fig_w = max(7, n_labels * cell_w + 2.5)
+    fig_h = max(5, n_cases * cell_h + 1.5)
+    fig, ax = plt.subplots(figsize=(fig_w, fig_h))
+
+    cmap = plt.cm.RdYlGn.copy()
+    cmap.set_bad(color="#e0e0e0")  # light grey for NaN cells
+    im = ax.imshow(matrix, vmin=0, vmax=1, cmap=cmap, aspect="auto")
+
+    ax.set_xticks(range(n_labels))
+    ax.set_xticklabels(label_names, fontsize=9)
+    ax.set_yticks(range(n_cases))
+    ax.set_yticklabels(sorted_cases, fontsize=8)
+
+    # Dynamically scale font size to cell size (pixels ≈ dpi * inches / n_cells)
+    fontsize = max(7, min(10, int(fig_h * 72 / n_cases * 0.45)))
+
+    for i, case in enumerate(sorted_cases):
+        for j, lbl in enumerate(label_names):
+            v = per_case[case].get(lbl, {}).get("Dice")
+            if v is not None:
+                color = _text_color_for_bg(plt.cm.RdYlGn, v)
                 ax.text(j, i, f"{v:.2f}", ha="center", va="center",
-                        fontsize=6, color="black" if 0.3 < v < 0.85 else "white")
-    plt.colorbar(im, ax=ax, label="Dice")
-    ax.set_title(f"{name} – Dice Heatmap (cases × labels)")
+                        fontsize=fontsize, color=color)
+            else:
+                ax.text(j, i, "—", ha="center", va="center",
+                        fontsize=fontsize, color="#888888")
+
+    plt.colorbar(im, ax=ax, label="Dice", fraction=0.03, pad=0.02)
+    ax.set_title(f"{name} – Dice Heatmap (cases × labels)", fontsize=11, pad=10)
     plt.tight_layout()
-    plt.savefig(out_path, dpi=150)
+    plt.savefig(out_path, dpi=150, bbox_inches="tight")
     plt.close()
     print(f"[INFO] Saved: {out_path}")
 
