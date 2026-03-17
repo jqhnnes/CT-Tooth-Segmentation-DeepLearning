@@ -171,6 +171,10 @@ python hpo/scripts/analysis/summarize_trials.py
 python hpo/scripts/analysis/plot_trials_summary.py
 ```
 
+*HPO overview: evolution of key plan parameters across trials.*
+
+![HPO — Trial parameter evolution](docs/images/hpo_trial_parameters_evolution.png)
+
 ---
 
 ## Analysis
@@ -219,6 +223,10 @@ python scripts/analysis/evaluation/evaluate_ensemble.py \
 | Dentin | 0.938 | 0.884 |
 | Enamel | 0.896 | 0.813 |
 
+*Example results: IoU per case, 3D renderings and ensemble vs. ground truth (2D slices).*
+
+![Dataset001 — Ensemble overview: IoU scores and segmentation comparison (3 cases)](docs/images/ensemble_uebersicht.png)
+
 ### Dataset002_Karies — Cross-validation (mean over 5 folds)
 
 | Label           | Dice  | IoU   |
@@ -228,6 +236,14 @@ python scripts/analysis/evaluation/evaluate_ensemble.py \
 | Enamel          | 0.879 | 0.785 |
 | Enamel caries   | 0.082 | 0.046 |
 | Dentin caries   | 0.037 | 0.021 |
+
+*Example results: IoU per case including caries labels, 3D/2D prediction vs. ground truth.*
+
+![Dataset002 Karies — Overview: IoU scores and segmentation comparison including caries](docs/images/karies_uebersicht.png)
+
+*Stability across folds: per-label performance comparison (Dice/IoU) for Dataset002_Karies.*
+
+![Dataset002 Karies — Fold comparison (Dice/IoU)](docs/images/fold_comparison_karies.png)
 
 **Best HPO result:** trial_43, fold 0, validation Dice ≈ 0.783 (foreground_mean).
 
