@@ -16,7 +16,8 @@ Includes hyperparameter optimization (HPO) with Optuna, 5-fold cross-validation,
 7. [Results](#results)
 8. [Project Structure](#project-structure)
 9. [Notebooks](#notebooks)
-10. [License](#license)
+10. [Contributors and Organisation](#contributors-and-organisation)
+11. [License](#license)
 
 ---
 
@@ -310,6 +311,20 @@ Key environment variables configured in `scripts/nnunet_env.sh`:
 | `nnUNet_results`     | Path to training results and checkpoints     |
 
 For HPO trials, `nnUNet_preprocessed` and `nnUNet_results` are overridden per trial to point to trial-specific directories under `hpo/preprocessing_output/` and `hpo/training_output/`.
+
+---
+
+## Contributors and Organisation
+
+This project was developed as part of a Bachelor's thesis at the **Technische Hochschule Augsburg (THA)** in collaboration with the **Poliklinik für Zahnerhaltung und Parodontologie, LMU Klinikum München**.
+
+| Role | Name | Institution |
+|------|------|-------------|
+| Author | Johannes Geiger | Technische Hochschule Augsburg (THA) |
+| Supervisor | Dr. med. Elias Walter | LMU Klinikum München |
+| Supervisor | Prof. Dr. Peter Rösch | Technische Hochschule Augsburg (THA) |
+
+The µCT datasets used in this work were provided by the **Poliklinik für Zahnerhaltung und Parodontologie, LMU Klinikum München**.
 
 ---
 
