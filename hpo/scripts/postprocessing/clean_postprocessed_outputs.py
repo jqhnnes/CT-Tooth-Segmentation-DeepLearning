@@ -1,28 +1,29 @@
 #!/usr/bin/env python3
 """
-Einheitliche Trial-Struktur: Nur Validation behalten, Rest löschen.
+Standardize trial output structure: keep only validation, remove test-set outputs.
 
-Dice kommt dann nur aus validation/summary.json (dice_validation) – reicht für alle Trials.
-Es werden alle Test-Set-Ausgaben und zugehörigen Summaries entfernt.
+After running this script, Dice scores are read exclusively from
+`fold_0/validation/summary.json` (dice_validation), which is consistent
+across all trials.
 
-Gelöscht:
-  - In jedem fold: labelsTs/, labelsTs_tta/, labelsTs_tta_pp/
-  - In jedem fold: labelsTs_tta_pp_summary.json (falls vorhanden)
-  - crossval_results_folds_0/ (pro Config, pro Trial)
-  - TTA-Logs: tta_postprocess.log (pro Config)
+Removes per trial:
+  - Per fold: labelsTs/, labelsTs_tta/, labelsTs_tta_pp/
+  - Per fold: labelsTs_tta_pp_summary.json (if present)
+  - Per config: crossval_results_folds_0/
+  - Per config: tta_postprocess.log
   - hpo/analysis/trial_*_labelsTs_summary.json
   - hpo/analysis/trial_*_labelsTs_tta_pp_summary.json
 
-Einheitliche Struktur danach (pro Trial gleich):
+Resulting uniform structure per trial:
   fold_0/
-    validation/           # bleibt – hierher kommt der Dice (foreground_mean in summary.json)
+    validation/           # retained — Dice from validation/summary.json
     checkpoint_best.pth, training_log_*.txt, ...
-  (keine labelsTs*, kein crossval_results_folds_0, keine Test-Set-Summaries in hpo/analysis)
+    (no labelsTs*, no crossval_results_folds_0, no test-set summaries)
 
-Anschließend: python hpo/scripts/analysis/summarize_trials.py
-  → liest dice_validation aus fold_0/validation/summary.json, schreibt trials_summary.json.
+After cleaning, re-run:
+  python hpo/scripts/analysis/summarize_trials.py
 
-Beispiel:
+Example:
   python hpo/scripts/postprocessing/clean_postprocessed_outputs.py --dry_run
   python hpo/scripts/postprocessing/clean_postprocessed_outputs.py
   python hpo/scripts/postprocessing/clean_postprocessed_outputs.py --show_structure
@@ -35,39 +36,43 @@ import shutil
 from pathlib import Path
 
 
-# Ordner/Dateien pro fold, die gelöscht werden (einheitliche Struktur = nur validation)
+# Directories and files removed per fold to enforce uniform structure (validation only)
 PRED_DIRS_TO_REMOVE = ("labelsTs", "labelsTs_tta", "labelsTs_tta_pp")
 FOLD_FILES_TO_REMOVE = ("labelsTs_tta_pp_summary.json",)
-CONFIG_FILES_TO_REMOVE = ("tta_postprocess.log",)  # TTA+PP-Log pro Config
+CONFIG_FILES_TO_REMOVE = ("tta_postprocess.log",)
 ANALYSIS_GLOBS_TO_REMOVE = ("trial_*_labelsTs_summary.json", "trial_*_labelsTs_tta_pp_summary.json")
 
 
-def _print_structure(root: Path) -> None:
-    """Zielstruktur pro Trial: nur Validation für Dice."""
-    print("Einheitliche Struktur pro Trial (Dice nur aus Validation):\n")
+def _print_structure() -> None:
+    """Print the target per-trial directory structure after cleaning."""
+    print("Uniform structure per trial (Dice from validation only):\n")
     print("  hpo/training_output/trial_<N>/")
     print("    nnUNet_results/<Dataset>/<Trainer>__<Plans>__<Config>/")
     print("      fold_0/")
-    print("        validation/           # bleibt – Dice aus validation/summary.json")
+    print("        validation/           # retained — Dice from validation/summary.json")
     print("        checkpoint_best.pth, training_log_*.txt, ...")
-    print("        (keine labelsTs/, labelsTs_tta/, labelsTs_tta_pp/)")
-    print("      (kein crossval_results_folds_0/, kein tta_postprocess.log)")
+    print("        (no labelsTs/, labelsTs_tta/, labelsTs_tta_pp/)")
+    print("      (no crossval_results_folds_0/, no tta_postprocess.log)")
     print("")
     print("  hpo/analysis/")
-    print("    (keine trial_*_labelsTs*.json)")
+    print("    (no trial_*_labelsTs*.json)")
     print("")
-    print("Gelöscht wird: labelsTs*, crossval_results_folds_0, tta_postprocess.log, trial_*_labelsTs*.json.")
+    print("Removed: labelsTs*, crossval_results_folds_0, tta_postprocess.log, trial_*_labelsTs*.json.")
 
 
 def main():
-    p = argparse.ArgumentParser(description="Einheitliche Struktur: nur Validation behalten, Test-Ausgaben löschen.")
-    p.add_argument("--dry_run", action="store_true", help="Only print what would be deleted.")
-    p.add_argument("--show_structure", action="store_true", help="Print target per-trial structure and exit.")
-    args = p.parse_args()
+    """Parse arguments and run the cleanup."""
+    parser = argparse.ArgumentParser(
+        description="Standardize trial structure: keep only validation, remove test-set outputs."
+    )
+    parser.add_argument("--dry_run", action="store_true", help="Only print what would be deleted.")
+    parser.add_argument("--show_structure", action="store_true",
+                        help="Print target per-trial structure and exit.")
+    args = parser.parse_args()
 
     root = Path("hpo")
     if args.show_structure:
-        _print_structure(root)
+        _print_structure()
         return
     training_root = root / "training_output"
     analysis_root = root / "analysis"
@@ -143,9 +148,9 @@ def main():
     if args.dry_run:
         print("Run without --dry_run to actually delete.")
     if not args.dry_run and (removed_dirs + removed_files) > 0:
-        print("\nDice kommt nur noch aus validation. Als nächstes:")
+        print("\nDice is now sourced exclusively from validation. Next steps:")
         print("  python hpo/scripts/analysis/summarize_trials.py")
-        print("  python scripts/analysis/analyze_trial_parameters.py")
+        print("  python scripts/analysis/training/analyze_trial_parameters.py")
 
 
 if __name__ == "__main__":

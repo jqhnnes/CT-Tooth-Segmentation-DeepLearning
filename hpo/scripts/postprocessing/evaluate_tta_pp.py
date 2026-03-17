@@ -25,31 +25,50 @@ import os
 
 
 def parse_args() -> argparse.Namespace:
-    p = argparse.ArgumentParser(description="Evaluate labelsTs_tta_pp for trials.")
-    p.add_argument("--dataset_name", default="Dataset001_GroundTruth")
-    p.add_argument("--trials", nargs="*", help="Specific trials (e.g., trial_0 trial_12). Default: all.")
-    p.add_argument("--folds", nargs="+", default=["0"], help="Folds to evaluate (default: 0).")
-    p.add_argument("--trainer", default="nnUNetTrainer")
-    p.add_argument("--configuration", default="3d_fullres")
-    p.add_argument("--plans_name", default="nnUNetPlans")
-    p.add_argument(
+    """Parse command-line arguments for TTA+PP evaluation.
+
+    Returns:
+        Parsed argument namespace.
+    """
+    parser = argparse.ArgumentParser(description="Evaluate labelsTs_tta_pp for trials.")
+    parser.add_argument("--dataset_name", default="Dataset001_GroundTruth")
+    parser.add_argument("--trials", nargs="*",
+                        help="Specific trials (e.g., trial_0 trial_12). Default: all.")
+    parser.add_argument("--folds", nargs="+", default=["0"],
+                        help="Folds to evaluate (default: 0).")
+    parser.add_argument("--trainer", default="nnUNetTrainer")
+    parser.add_argument("--configuration", default="3d_fullres")
+    parser.add_argument("--plans_name", default="nnUNetPlans")
+    parser.add_argument(
         "--labels_ts",
-        default="/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/data/nnUNet_raw/Dataset001_GroundTruth/labelsTs",
-        help="Path to labelsTs ground truth.",
+        default="data/nnUNet_raw/Dataset001_GroundTruth/labelsTs",
+        help="Path to labelsTs ground truth (relative to project root).",
     )
-    p.add_argument(
+    parser.add_argument(
         "--force",
         action="store_true",
         help="Re-evaluate even if summary already exists.",
     )
-    return p.parse_args()
+    return parser.parse_args()
 
 
 def list_trials(root: Path) -> List[Path]:
-    return sorted([p for p in root.glob("trial_*") if p.is_dir()], key=lambda x: int(x.name.split("_")[1]))
+    """Return all ``trial_*`` subdirectories sorted by trial number.
+
+    Args:
+        root: Directory containing ``trial_0``, ``trial_1``, … subdirectories.
+
+    Returns:
+        Sorted list of trial directory paths.
+    """
+    return sorted(
+        [p for p in root.glob("trial_*") if p.is_dir()],
+        key=lambda x: int(x.name.split("_")[1]),
+    )
 
 
-def main():
+def main() -> None:
+    """Evaluate postprocessed TTA predictions for all (or selected) trials."""
     args = parse_args()
     trial_root = Path("hpo") / "training_output"
     analysis_root = Path("hpo") / "analysis"

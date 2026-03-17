@@ -18,13 +18,26 @@ import matplotlib.pyplot as plt
 
 
 def load_trials(summary_path: Path) -> List[Dict[str, Any]]:
+    """Load the trials summary JSON produced by ``summarize_trials.py``.
+
+    Args:
+        summary_path: Path to ``trials_summary.json``.
+
+    Returns:
+        List of trial dictionaries, each containing keys such as ``spacing``,
+        ``dice_labelsTs_tta_pp``, ``features_base``, etc.
+
+    Raises:
+        FileNotFoundError: If ``summary_path`` does not exist.
+    """
     if not summary_path.exists():
         raise FileNotFoundError(f"{summary_path} not found. Run summarize_trials.py first.")
     with summary_path.open() as f:
         return json.load(f)
 
 
-def main():
+def main() -> None:
+    """Read trials_summary.json and save a Dice-vs-spacing scatter plot."""
     root = Path("hpo")
     analysis_root = root / "analysis"
     plots_root = analysis_root / "plots"

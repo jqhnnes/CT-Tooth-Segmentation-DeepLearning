@@ -129,26 +129,29 @@ bash scripts/04_ensemble.sh Dataset001_GroundTruth 3d_fullres
 
 ### Analysis scripts (`scripts/analysis/`)
 
-Skripte für Auswertungen und Visualisierungen; Ausgaben landen in `analysis_results/` (siehe `analysis_results/README.md`).
+Scripts for evaluation and visualization; outputs are written to `analysis_results/`.
+See [`scripts/analysis/README.md`](analysis/README.md) for full documentation.
 
-| Skript | Zweck |
-|--------|--------|
-| `dataset/analyze_grayscale_statistics.py` | Grauwert-Statistiken + Histogramme |
-| `dataset/create_grauwert_histogram.py` | Grauwert-Histogramm (alternativ) |
-| `dataset/create_label_histogram.py` | Label-Verteilung pro Dataset |
-| `dataset/analyze_dataset_metadata.py` | Dataset-Metadaten (Spacing, Dimensionen, Labels) |
-| `training/analyze_trial_parameters.py` | HPO-Trial-Parameter (Spacing, Patch, Features, Batch) |
-| `training/analyze_training_and_ensemble.py` | Training/Ensemble-Analyse (Folds, Metriken) |
-| `evaluation/evaluate_folds.py` | Dice/IoU pro Label und Fold (Validation) |
-| `evaluation/evaluate_ensemble.py` | Ensemble-Evaluation (Test-Set via `nnUNetv2_evaluate_folder`) |
+| Script | Purpose |
+|--------|---------|
+| `dataset/analyze_grayscale_statistics.py` | CT intensity statistics and histograms |
+| `dataset/create_grayscale_histogram.py` | Grayscale histogram (line/fill plot) |
+| `dataset/create_label_histogram.py` | Label voxel distribution per dataset |
+| `dataset/analyze_dataset_metadata.py` | Dataset metadata (spacing, dimensions, labels) |
+| `training/analyze_trial_parameters.py` | HPO trial parameters (spacing, patch, features, batch) |
+| `training/analyze_training_and_ensemble.py` | Training/ensemble analysis (folds, metrics) |
+| `evaluation/evaluate_folds.py` | Dice/IoU per label and fold (validation) |
+| `evaluation/evaluate_ensemble.py` | Ensemble evaluation on test set via `nnUNetv2_evaluate_folder` |
 
-Beispiele:
+Examples:
 ```bash
 python scripts/analysis/dataset/analyze_grayscale_statistics.py --dataset Dataset002_Karies
 python scripts/analysis/training/analyze_trial_parameters.py
 python scripts/analysis/dataset/analyze_dataset_metadata.py --dataset Dataset002_Karies
 python scripts/analysis/evaluation/evaluate_folds.py --dataset Dataset001_GroundTruth
-python scripts/analysis/evaluation/evaluate_ensemble.py --dataset Dataset001_GroundTruth
+python scripts/analysis/evaluation/evaluate_ensemble.py --dataset Dataset001_GroundTruth \
+    --pred_dir ensemble_predictions/Dataset001_GroundTruth_3d_fullres \
+    --labels_dir data/nnUNet_raw/Dataset001_GroundTruth/labelsTs
 ```
 
 All additional automation (HPO, analysis, utilities) lives under `hpo/scripts/`.

@@ -1,25 +1,29 @@
 #!/usr/bin/env python3
 """
-Summarize all trials: parameters + metrics (validation, labelsTs, labelsTs_tta_pp).
+Aggregate trial hyperparameters and Dice metrics into a single JSON summary.
 
-Outputs:
-  hpo/analysis/trials_summary.json
+Reads each trial's ``plans.json`` for architecture/spacing parameters and
+``fold_0/validation/summary.json`` for the validation Dice score.
+Optionally includes Dice from ``labelsTs`` and ``labelsTs_tta_pp`` summaries
+if they exist under ``hpo/analysis/``.
 
-Validation-Dice: Aus fold_0/validation/summary.json (foreground_mean.Dice).
-Reicht für vergleichbare Dice-Kurve über Trials – jeder Trial braucht nur den validation-Ordner.
+Output: ``hpo/analysis/trials_summary.json``
 
-Each entry:
-{
-  "trial": "trial_XX",
-  "spacing": [...],
-  "dice_validation": float | null,   # aus validation/summary.json, einheitlich für alle
-  "dice_labelsTs": float | null,
-  "dice_labelsTs_tta_pp": float | null,
-  ...
-}
+Each entry has the structure::
+
+    {
+        "trial": "trial_XX",
+        "spacing": [...],
+        "patch_size": [...],
+        "batch_size": int,
+        "features_base": int,
+        "dice_validation": float | null,
+        "dice_labelsTs": float | null,
+        "dice_labelsTs_tta_pp": float | null,
+    }
 
 Usage:
-  python hpo/scripts/analysis/summarize_trials.py
+    python hpo/scripts/analysis/summarize_trials.py
 """
 from __future__ import annotations
 
@@ -29,6 +33,14 @@ from typing import Any, Dict, List, Optional, Tuple
 
 
 def load_json(path: Path) -> Optional[Dict[str, Any]]:
+    """Load a JSON file, returning ``None`` on any error.
+
+    Args:
+        path: Path to the JSON file.
+
+    Returns:
+        Parsed JSON object, or ``None`` if the file is missing or malformed.
+    """
     try:
         with path.open() as f:
             return json.load(f)
@@ -36,7 +48,8 @@ def load_json(path: Path) -> Optional[Dict[str, Any]]:
         return None
 
 
-def main():
+def main() -> None:
+    """Collect per-trial parameters and metrics, write trials_summary.json."""
     root = Path("hpo")
     training_root = root / "training_output"
     analysis_root = root / "analysis"
@@ -58,8 +71,7 @@ def main():
         features_per_stage = arch.get("features_per_stage", [])
         features_base = features_per_stage[0] if features_per_stage else None
 
-        tname = trial_dir.name
-        # Validation-Dice: aus fold_0/validation/summary.json – reicht für alle Trials (einheitlich)
+        trial_name = trial_dir.name
         model_base = trial_dir / "nnUNet_results" / "Dataset001_GroundTruth" / "nnUNetTrainer__nnUNetPlans__3d_fullres"
         val_summary = model_base / "fold_0" / "validation" / "summary.json"
         dice_validation = None
@@ -68,8 +80,8 @@ def main():
             if d:
                 dice_validation = d.get("foreground_mean", {}).get("Dice")
 
-        lbl_summary_path = analysis_root / f"{tname}_labelsTs_summary.json"
-        tta_pp_summary_path = analysis_root / f"{tname}_labelsTs_tta_pp_summary.json"
+        lbl_summary_path = analysis_root / f"{trial_name}_labelsTs_summary.json"
+        tta_pp_summary_path = analysis_root / f"{trial_name}_labelsTs_tta_pp_summary.json"
         dice_lbl = None
         dice_tta_pp = None
         if lbl_summary_path.exists():
@@ -83,7 +95,7 @@ def main():
 
         results.append(
             {
-                "trial": tname,
+                "trial": trial_name,
                 "spacing": spacing,
                 "patch_size": patch,
                 "batch_size": batch_size,
@@ -92,7 +104,9 @@ def main():
                 "dice_labelsTs": dice_lbl,
                 "dice_labelsTs_tta_pp": dice_tta_pp,
                 "summary_labelsTs": str(lbl_summary_path) if lbl_summary_path.exists() else None,
-                "summary_labelsTs_tta_pp": str(tta_pp_summary_path) if tta_pp_summary_path.exists() else None,
+                "summary_labelsTs_tta_pp": (
+                    str(tta_pp_summary_path) if tta_pp_summary_path.exists() else None
+                ),
             }
         )
 

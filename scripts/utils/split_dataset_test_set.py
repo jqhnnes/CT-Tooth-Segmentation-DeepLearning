@@ -16,7 +16,18 @@ import numpy as np
 
 
 def get_case_ids(images_dir: Path, file_ending: str = ".nii.gz") -> list[str]:
-    """Extract unique case IDs from image filenames (e.g. AW001-C0005278_0000.nii.gz -> AW001-C0005278)."""
+    """Extract unique case IDs from nnU-Net image filenames.
+
+    Strips the ``_0000`` channel suffix so that ``AW001-C0005278_0000.nii.gz``
+    becomes ``AW001-C0005278``.
+
+    Args:
+        images_dir: Directory containing the ``_0000`` image files.
+        file_ending: File extension to look for (default: ``".nii.gz"``).
+
+    Returns:
+        Sorted list of unique case ID strings.
+    """
     case_ids = set()
     for f in images_dir.iterdir():
         if f.is_file() and f.name.endswith(file_ending) and "_0000" in f.name:
@@ -26,6 +37,7 @@ def get_case_ids(images_dir: Path, file_ending: str = ".nii.gz") -> list[str]:
 
 
 def main() -> None:
+    """Entry point: parse arguments and perform the train/test split."""
     parser = argparse.ArgumentParser(
         description="Split nnUNet dataset: move test_fraction of cases to imagesTs/labelsTs."
     )

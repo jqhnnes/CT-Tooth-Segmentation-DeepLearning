@@ -15,6 +15,16 @@ from pathlib import Path
 
 
 def copy_cases(src_root: Path, dst_root: Path, case_ids: list[str]) -> None:
+    """Copy a list of files from one directory to another.
+
+    Only files that actually exist in ``src_root`` are copied; missing entries
+    are silently skipped.
+
+    Args:
+        src_root: Source directory containing the files.
+        dst_root: Destination directory (created if it does not exist).
+        case_ids: List of filenames (e.g. ``"case_0001_0000.nii.gz"``) to copy.
+    """
     dst_root.mkdir(parents=True, exist_ok=True)
     for case in case_ids:
         src_path = src_root / case
@@ -23,6 +33,7 @@ def copy_cases(src_root: Path, dst_root: Path, case_ids: list[str]) -> None:
 
 
 def main() -> None:
+    """Entry point: parse arguments and create the validation subset."""
     parser = argparse.ArgumentParser(description="Create validation subset from nnUNet imagesTr/labelsTr.")
     parser.add_argument(
         "--dataset",

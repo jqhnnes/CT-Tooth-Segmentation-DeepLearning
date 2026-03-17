@@ -1,10 +1,26 @@
+"""
+Load nnU-Net environment variables from the companion shell script into the current process.
+
+Typical usage at the top of any HPO or training script:
+
+    from scripts.nnunet_env import load_env
+    load_env()
+"""
 import os
 import subprocess
 from pathlib import Path
 
-def load_env():
-    """
-    Loads nnU-Net environment variables from the nnunet_env.sh script into Python.
+
+def load_env() -> None:
+    """Source nnunet_env.sh and inject all exported variables into os.environ.
+
+    Reads ``scripts/nnunet_env.sh`` (located next to this module), sources it
+    in a subprocess, captures the resulting environment, and updates
+    ``os.environ`` with every key=value pair found.
+
+    Raises:
+        FileNotFoundError: If ``nnunet_env.sh`` does not exist alongside this
+            module.
     """
     script_path = Path(__file__).parent / "nnunet_env.sh"
 
@@ -20,7 +36,6 @@ def load_env():
     )
     output = proc.communicate()[0].decode()
 
-    # Parse environment variables
     for line in output.split("\n"):
         if "=" in line:
             key, value = line.split("=", 1)
