@@ -225,7 +225,7 @@ python scripts/analysis/evaluation/evaluate_ensemble.py \
 
 *Example results: IoU per case, 3D renderings and ensemble vs. ground truth (2D slices).*
 
-![Dataset001 — Ensemble overview: IoU scores and segmentation comparison (3 cases)](docs/images/ensemble_uebersicht.png)
+![Dataset001 — Ensemble overview: IoU scores and segmentation comparison (3 cases)](docs/images/ensemble_overview.png)
 
 ### Dataset002_Karies — Cross-validation (mean over 5 folds)
 
@@ -239,11 +239,11 @@ python scripts/analysis/evaluation/evaluate_ensemble.py \
 
 *Example results: IoU per case including caries labels, 3D/2D prediction vs. ground truth.*
 
-![Dataset002 Karies — Overview: IoU scores and segmentation comparison including caries](docs/images/karies_uebersicht.png)
+![Dataset002 Karies — Overview: IoU scores and segmentation comparison including caries](docs/images/caries_ensemble_overview.png)
 
 *Stability across folds: per-label performance comparison (Dice/IoU) for Dataset002_Karies.*
 
-![Dataset002 Karies — Fold comparison (Dice/IoU)](docs/images/fold_comparison_karies.png)
+![Dataset002 Karies — Fold comparison (Dice/IoU)](docs/images/fold_comparison_caries.png)
 
 **Best HPO result:** trial_43, fold 0, validation Dice ≈ 0.783 (foreground_mean).
 
