@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """
-Split an nnUNet dataset into training and test set, moving 10% to imagesTs/labelsTs.
-Mirrors the structure used for Dataset001_GroundTruth.
+Split an nnUNet dataset into training and test set, moving a fraction of cases to imagesTs/labelsTs.
+
+Used for Dataset002_Karies (seed 42, 10% test fraction).
+Dataset001_GroundTruth was split manually (first 20 cases moved to imagesTs/labelsTs).
 
 Example:
-    python scripts/utils/split_dataset_test_set.py --dataset Dataset002_Karies --test_fraction 0.1
+    python scripts/utils/split_dataset_test_set.py --dataset Dataset002_Karies --seed 42
 """
 
 import argparse

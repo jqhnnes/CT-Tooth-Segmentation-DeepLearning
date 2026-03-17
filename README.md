@@ -64,11 +64,13 @@ data/nnUNet_raw/<DatasetXXX_Name>/
 └── dataset.json    # Label map and metadata
 ```
 
-The test set (10 %, seed 42) is split from the training data with:
+The test sets were split from the training data differently per dataset:
+
+- **Dataset001_GroundTruth:** manually split — the first 20 cases were moved to `imagesTs/labelsTs` as the held-out test set.
+- **Dataset002_Karies:** randomly split using a fixed random seed for reproducibility:
 
 ```bash
-python scripts/utils/split_dataset_test_set.py --dataset Dataset001_GroundTruth
-python scripts/utils/split_dataset_test_set.py --dataset Dataset002_Karies
+python scripts/utils/split_dataset_test_set.py --dataset Dataset002_Karies --seed 42
 ```
 
 ---
@@ -278,7 +280,7 @@ CT-Tooth-Segmentation-DeepLearning/
 │   │   ├── evaluation/           # evaluate_folds, evaluate_ensemble
 │   │   └── README.md
 │   ├── utils/
-│   │   ├── split_dataset_test_set.py    # Split 10% test set (seed 42)
+│   │   ├── split_dataset_test_set.py    # Split test set (used for Dataset002_Karies, seed 42)
 │   │   └── create_validation_subset.py  # Create smaller validation subset
 │   └── README.md
 │
