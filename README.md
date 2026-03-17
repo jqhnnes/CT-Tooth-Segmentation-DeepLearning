@@ -38,13 +38,17 @@ Includes hyperparameter optimization (HPO) with Optuna, 5-fold cross-validation,
 
 ### Dataset001_GroundTruth — 3-class segmentation
 
-| Label | Class ID |
-|-------|----------|
-| Pulp  | 1        |
-| Dentin | 2       |
-| Enamel | 3       |
+200 µCT cases total · 180 training · 20 test (manually split)
+
+| Label  | Class ID |
+|--------|----------|
+| Pulp   | 1        |
+| Dentin | 2        |
+| Enamel | 3        |
 
 ### Dataset002_Karies — 5-class segmentation (includes caries)
+
+127 µCT cases total · 114 training · 13 test (random split, seed 42)
 
 | Label           | Class ID |
 |-----------------|----------|
@@ -152,6 +156,8 @@ Output: `ensemble_predictions/Dataset001_GroundTruth_3d_fullres/`
 ## HPO Pipeline
 
 The HPO pipeline uses Optuna to search over spacing, patch size, feature capacity, and batch-dice settings. Each trial gets its own preprocessed data and archived training results.
+
+> **Reproducibility note:** No fixed random seed was set for the Optuna sampler (TPE). Trial results are therefore not exactly reproducible by re-running the HPO search, but all trained trial artifacts (plans, checkpoints, validation summaries) are archived under `hpo/training_output/`.
 
 **Full documentation:** [`hpo/README.md`](hpo/README.md)  
 **Methodology background:** [`hpo/METHODOLOGY.md`](hpo/METHODOLOGY.md)  
