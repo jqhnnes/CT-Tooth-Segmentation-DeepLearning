@@ -157,7 +157,7 @@ Output: `ensemble_predictions/Dataset001_GroundTruth_3d_fullres/`
 
 The HPO pipeline uses Optuna to search over spacing, patch size, feature capacity, and batch-dice settings. Each trial gets its own preprocessed data and archived training results.
 
-> **Reproducibility note:** No fixed random seed was set for the Optuna sampler (TPE). Trial results are therefore not exactly reproducible by re-running the HPO search, but all trained trial artifacts (plans, checkpoints, validation summaries) are archived under `hpo/training_output/`.
+> **Reproducibility note:** No fixed random seed was set for the Optuna sampler (TPE). Trial results are therefore not exactly reproducible by re-running the HPO search.
 
 **Full documentation:** [`hpo/README.md`](hpo/README.md)  
 **Methodology background:** [`hpo/METHODOLOGY.md`](hpo/METHODOLOGY.md)  
