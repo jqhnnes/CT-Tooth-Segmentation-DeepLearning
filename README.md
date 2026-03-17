@@ -241,14 +241,6 @@ python scripts/analysis/evaluation/evaluate_ensemble.py \
 
 ![Dataset002 Karies — Overview: IoU scores and segmentation comparison including caries](docs/images/caries_ensemble_overview.png)
 
-*Stability across folds: per-label performance comparison (Dice/IoU) for Dataset002_Karies.*
-
-![Dataset002 Karies — Fold comparison (Dice/IoU)](docs/images/fold_comparison_caries.png)
-
-**Best HPO result:** trial_43, fold 0, validation Dice ≈ 0.783 (foreground_mean).
-
-**Metrics:** Dice (primary), IoU, Hausdorff Distance 95 (HD95), FP/FN voxel counts — as reported by `nnUNetv2_evaluate_folder`.
-
 ---
 
 ## Project Structure
