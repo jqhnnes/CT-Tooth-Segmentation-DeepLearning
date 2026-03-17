@@ -1,0 +1,7 @@
+fold,total_epochs,best_training_dice,final_val_loss,converged,convergence_status,validation_dice,validation_hd95,test_dice
+0,99,0.8774999976158142,-0.7694,False,Still improving (improvement: 0.0079 in last 10 epochs),,,0.787584839071736
+1,99,0.8619999885559082,-0.7825,False,Still improving (improvement: 0.0061 in last 10 epochs),,,0.7893166355558477
+2,99,0.8589000105857849,-0.7535,False,Still improving (improvement: 0.0067 in last 10 epochs),,,0.7887368969688442
+3,99,0.8567000031471252,-0.7645,False,Still improving (improvement: 0.0060 in last 10 epochs),,,0.7902263478797847
+4,99,0.8414000272750854,-0.7602,False,Still improving (improvement: 0.0097 in last 10 epochs),,,0.7839141390687878
+ensemble,,,,,,,,0.7963679621982255

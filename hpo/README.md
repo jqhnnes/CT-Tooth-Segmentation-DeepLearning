@@ -1,39 +1,29 @@
 # nnU-Net HPO Runbook
 
-This folder contains everything needed to conduct hyperparameter optimization (HPO)
-for nnU-Net on the CT Tooth Segmentation task. The goal: generate many plan variants
-(via Optuna), train each trial in isolation, and compare how preprocessing choices
-impact downstream Dice. All scripts, trial outputs, and logs live here so the entire
-workflow can be reproduced from a single README.
+Everything in `hpo/` to run hyperparameter optimization (HPO) for CT tooth segmentation with nnU-Net: generate plan variants (Optuna), train each trial, run inference + postprocessing, and analyze results.
 
-## 0. How this folder is organized
+## 0. Layout (current files)
 
 ```
 hpo/
-├── scripts/                    # All Python scripts
-│   ├── preprocessing/          # Preprocessing scripts
+├── scripts/
+│   ├── preprocessing/          # HPO + nnUNetv2_preprocess
 │   │   └── nnunet_hpo_preprocess.py
-│   ├── training/               # Training & Evaluation
+│   ├── training/               # Training & optional eval
 │   │   └── nnunet_train_eval_pipeline.py
-│   ├── analysis/               # Analysis & Comparison
-│   │   ├── compare_top3_trials.py
-│   │   └── prepare_best_model.py
-│   └── utils/                  # Utility scripts
-│       ├── check_trial_labels.py
-│       ├── fix_case_spacing_and_reprocess.py
-│       ├── fix_decoder_lengths.py
-│       └── remap_labels.py
-├── config/                     # Templates & Configuration
-│   └── nnUNetPlans_template.json
-├── docs/                       # Additional Documentation
-│   └── BEST_PARAMETERS_SUMMARY.md
-├── analysis/                   # Analysis Results (JSON)
-│   ├── best_parameters_summary.json
-│   └── top3_analysis.json
-├── best_model/                 # Best Model (trial_8)
-├── preprocessing_output/        # Trial-specific preprocessed datasets
-├── training_output/            # Archived training results
-└── results/                    # Evaluation logs per trial
+│   ├── postprocessing/         # Inference + PP + eval helpers
+│   │   ├── nnunet_tta_postprocess.py
+│   │   └── evaluate_tta_pp.py
+│   ├── analysis/               # Summaries/plots
+│   │   ├── summarize_trials.py
+│   │   └── plot_trials_summary.py
+│   └── utils/
+│       └── check_trial_labels.py
+├── config/                     # nnUNetPlans_template.json
+├── preprocessing_output/       # Trial-specific preprocessed data
+├── training_output/            # Archived training runs
+├── analysis/                   # trials_summary.json, plots/
+└── results/                    # Evaluation logs (if generated)
 ```
 
 ## 1. Environment
@@ -44,121 +34,141 @@ conda activate /ssd/geiger/myenv
 source scripts/nnunet_env.sh   # exports nnUNet_raw/_preprocessed/_results
 ```
 
-- Always execute new commands from the project root after the environment has been activated.
+Run commands from the project root with the environment activated.
 
-## 2. Preprocessing / HPO trial generation
+## 2. Preprocessing / HPO trial generation (Optuna)
 
-### Prepare raw dataset / labels (optional)
-
-- If labels contain unexpected IDs, remap them first:
-
-- `remap_labels.py` (fix invalid label IDs before preprocessing):
-
-```bash
-python hpo/scripts/utils/remap_labels.py --dataset Dataset001_GroundTruth --max_label 3
-```
-
-  - `--dataset`: name under `nnUNet_raw`; script reads `imagesTr/labelsTr`.
-  - `--max_label`: clamp any label value above this number down to the limit.
-  - Optional `--dry_run` shows stats without writing files.
-
-### Start new trials (Optuna + nnUNetv2_preprocess)
+Start new trials (Optuna + nnUNetv2_preprocess):
 
 ```bash
 python hpo/scripts/preprocessing/nnunet_hpo_preprocess.py --n_trials 5
 ```
 
-- Generates `n_trials` new hyperparameter samples, runs `nnUNetv2_preprocess` for each,
-  and stores the outputs in `hpo/preprocessing_output/Dataset001_GroundTruth/trial_X`.
-- Important args:
-  - `--n_trials`: number of Optuna samples to add.
-  - (Inside the script) patch size, batch size, feature configs are randomized.
-- Before running, make sure `nnUNet_raw` contains the cleaned dataset (e.g. label remap).
+- Creates `n_trials` plan variants under `hpo/preprocessing_output/Dataset001_GroundTruth/trial_X`.
+- Current high-end search space (VRAM-heavy, near OOM):
+  - Spacing 0.075 mm: patch (192×256×128), batch 1, features_base 64
+  - Spacing 0.080 mm: patch (224×256×128), batch 1, features_base 72
+  - Batch-Dice toggled per trial (True/False)
+- Key option: `--n_trials`.
+- Ensure `nnUNet_raw` points to the cleaned dataset before running.
 
-### After preprocessing / trial maintenance
-
-- Verify that every `trial_X` contains `Dataset001_GroundTruth/nnUNetPlans.json`
-  and `dataset_fingerprint.json`.
-- Some older trials may need their decoder setup fixed:
-
-- `fix_decoder_lengths.py` (repair old plan files):
+After preprocessing:
 
 ```bash
-python hpo/scripts/utils/fix_decoder_lengths.py --root hpo/preprocessing_output/Dataset001_GroundTruth
+python hpo/scripts/utils/check_trial_labels.py --dataset Dataset001_GroundTruth
 ```
 
-  - `--root`: directory that contains the `trial_X` folders.
-  - Optional `--dry_run` prints which files would change.
+Use it if you need to re-check labels; each trial should contain `nnUNetPlans.json` and `dataset_fingerprint.json`.
 
-- Inspect trial labels if needed:
-
-```bash
-python hpo/scripts/utils/check_trial_labels.py --source trials --trial trial_0
-```
-
-## 3. Fixing a broken case (e.g. AW062 spacing issue)
-
-```bash
-python hpo/scripts/utils/fix_case_spacing_and_reprocess.py \
-    --case_id AW062-C0005656 \
-    --spacing 0.04 0.04 0.04 \
-    --backup
-```
-
-- Rewrites the raw NIfTI headers (backup stored as `.bak` next to the file).
-- Regenerates this case inside every `trial_X` so all trials stay in sync.
-- Repeat later with `--skip_raw_fix` to rebuild trial data only.
-
-## 4. Resetting stale fold data (optional)
+## 3. Resetting stale fold data (optional)
 
 ```bash
 rm -rf data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_fullres/fold_0
 ```
 
-- Removes leftover checkpoints/logs if a previous run aborted mid-validation.
-- The pipeline already clears `fold_*`, but manual cleanup can be handy when debugging.
+Clears leftover checkpoints/logs if a previous run aborted. The training pipeline already cleans folds, but manual cleanup can help debugging.
 
-## 5. Launching the training pipeline
+## 4. Training pipeline
 
-### Train only (1 fold, no evaluation)
+Train only (1 fold, no evaluation):
 
 ```bash
 python hpo/scripts/training/nnunet_train_eval_pipeline.py --folds 0 --skip_evaluation
 ```
 
-- Trains all pending trials fold 0, archives results under `hpo/training_output/...`.
-- Useful parameters:
-  - `--folds 0 1 2`: choose which folds to run (strings accepted).
-  - `--trials trial_0 trial_5`: restrict to selected trials.
-  - `--skip_evaluation`: train only, leave evaluation for later.
-  - `--stop_on_error`: abort on first failure (default: continue).
+Useful parameters:
+- `--folds 0 1 2`: choose folds
+- `--trials trial_0 trial_5`: restrict trials
+- `--skip_evaluation`: train only
+- `--stop_on_error`: abort on first failure
 
-### Train + evaluate later
-
-1. Train with `--skip_evaluation` (fast screening).
-2. Evaluate archived results afterwards:
+Train then evaluate later:
 
 ```bash
 python hpo/scripts/training/nnunet_train_eval_pipeline.py \
-    --folds 0 \
-    --only_evaluate \
-    --trials trial_0 trial_1
+  --folds 0 \
+  --only_evaluate \
+  --trials trial_0 trial_1
 ```
 
-- Expects archived folders in `hpo/training_output/trial_X/...`.
-- Additional options:
-  - `--only_evaluate`: skip training, read from archived results.
-  - `--eval_timeout 7200`: abort evaluation after N seconds (per call).
-  - `--device cuda:1` / `--device cpu`: force a specific device.
-  - Automatic CPU fallback occurs if GPU evaluation raises OOM.
+Options:
+- `--only_evaluate`: skip training, read archived results
+- `--eval_timeout 7200`: timeout per eval call
+- `--device cuda:1` / `--device cpu`: force device (CPU fallback if GPU OOM)
+
+Train a specific trial manually (example: trial_43):
+
+```bash
+source scripts/nnunet_env.sh
+export nnUNet_preprocessed=/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/hpo/preprocessing_output/Dataset001_GroundTruth/trial_43
+export nnUNet_results=/ssd/geiger/CT-Tooth-Segmentation-DeepLearning/hpo/training_output/trial_43/nnUNet_results
+nnUNetv2_train Dataset001_GroundTruth 3d_fullres 0 -tr nnUNetTrainer -p nnUNetPlans
+```
+
+- Repeat per fold by changing the last argument (`0 → 1`, etc.).
+- To continue training, rerun the same command in the same `nnUNet_results` path; nnU-Net resumes from checkpoints (no `--continue_training` flag).
+- Log GPU usage while training:
+
+```bash
+nvidia-smi --query-gpu=timestamp,name,memory.used,memory.total,utilization.gpu \
+  --format=csv -l 60 > logs/trial_gpu_usage.csv
+```
+
+## 5. Inference + Postprocessing + Evaluation
+
+TTA prediction + postprocessing (optional evaluation):
+
+```bash
+/ssd/geiger/myenv/bin/python hpo/scripts/postprocessing/nnunet_tta_postprocess.py \
+  --trials trial_43 \
+  --folds 0 \
+  --input_dir data/nnUNet_raw/Dataset001_GroundTruth/imagesTs \
+  --eval_labels data/nnUNet_raw/Dataset001_GroundTruth/labelsTs
+```
+
+Steps: TTA predict → find_best_configuration (with `-f` folds) → apply_postprocessing → optional evaluate.
+
+Flags:
+- `--trials`: specific trials; default = all
+- `--folds`: folds to use (default 0)
+- `--input_dir`: input images (e.g., imagesTs)
+- `--eval_labels`: ground truth for evaluation; omit to skip eval
+- `--pred_subdir` / `--suffix`: output folder names (default: labelsTs_tta → labelsTs_tta_pp)
+- `--skip_predict`, `--skip_find`: skip steps if you already have outputs
+
+Evaluate existing `labelsTs_tta_pp` + ranking:
+
+```bash
+python hpo/scripts/postprocessing/evaluate_tta_pp.py --folds 0
+```
+
+Writes `hpo/analysis/trial_X_labelsTs_tta_pp_summary.json` per trial, then prints a ranking with ΔDice vs. baseline (`labelsTs`) and TTA-only (`labelsTs_tta`) if available. Use `--force` to recompute.
 
 ## 6. Monitoring
 
-- Training log: `data/nnUNet_results/.../fold_0/training_log_*.txt`
-- Evaluation log: `hpo/results/<dataset>/<trial>/<config>/<trainer>/evaluation.log`
+- Training logs: `data/nnUNet_results/.../fold_X/training_log_*.txt`
+- Evaluation logs: `hpo/results/<dataset>/<trial>/<config>/<trainer>/evaluation.log`
 - Archived checkpoints: `hpo/training_output/<trial>/nnUNet_results/...`
 
-## 7. Troubleshooting snippets
+## 7. Analysis
+
+Trial parameters + scores overview:
+
+```bash
+/ssd/geiger/myenv/bin/python hpo/scripts/analysis/summarize_trials.py
+```
+
+Reads all trials in `hpo/training_output`, pulls spacing/patch/batch/features_base from plans and Dice from `hpo/analysis/trial_*_labelsTs[_tta_pp]_summary.json`. Outputs `hpo/analysis/trials_summary.json`.
+
+Quick plot (Dice vs spacing):
+
+```bash
+/ssd/geiger/myenv/bin/python hpo/scripts/analysis/plot_trials_summary.py
+```
+
+Uses `trials_summary.json`, plots Dice (tta_pp if available, else labelsTs) vs spacing, colored by `features_base`. Output: `hpo/analysis/plots/trials_dice_vs_spacing.png`.
+
+## 8. Troubleshooting snippets
 
 Check spacing/shape of a single preprocessed case:
 
@@ -180,6 +190,5 @@ ls data/nnUNet_results/Dataset001_GroundTruth/nnUNetTrainer__nnUNetPlans__3d_ful
 
 ---
 
-Update this runbook whenever new operational steps or gotchas come up. A quick
-note here usually saves future digging through shell history.
+Keep this runbook up to date when scripts or procedures change.
 

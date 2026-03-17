@@ -45,6 +45,8 @@ datasets/
 *.hdf5
 *.h5
 
+.cache
+
 # Model checkpoints
 checkpoints/
 *.pth
@@ -94,3 +96,11 @@ hpo/**/*.npy
 hpo/**/__pycache__/
 hpo/**/*.pyc
 hpo/**/.DS_Store
+
+# Generated predictions and ensemble outputs
+predictions/
+ensemble_predictions/
+
+# Analysis results (generated outputs, not source)
+analysis_results/evaluation/
+analysis_results/gpu_monitoring*.csv
