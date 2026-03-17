@@ -1,6 +1,6 @@
 # nnU-Net HPO Runbook
 
-Everything in `hpo/` to run hyperparameter optimization (HPO) for CT tooth segmentation with nnU-Net: generate plan variants (Optuna), train each trial, run inference + postprocessing, and analyze results.
+Everything in `hpo/` to run hyperparameter optimization (HPO) for CT tooth segmentation with nnU-Net: generate plan variants (Optuna), train each trial, and analyze results.
 
 ## 0. Layout (current files)
 
@@ -11,9 +11,6 @@ hpo/
 │   │   └── nnunet_hpo_preprocess.py
 │   ├── training/               # Training & optional eval
 │   │   └── nnunet_train_eval_pipeline.py
-│   ├── postprocessing/         # Inference + PP + eval helpers
-│   │   ├── nnunet_tta_postprocess.py
-│   │   └── evaluate_tta_pp.py
 │   ├── analysis/               # Summaries/plots
 │   │   ├── summarize_trials.py
 │   │   └── plot_trials_summary.py
@@ -114,37 +111,7 @@ nvidia-smi --query-gpu=timestamp,name,memory.used,memory.total,utilization.gpu \
   --format=csv -l 60 > logs/trial_gpu_usage.csv
 ```
 
-## 5. Inference + Postprocessing + Evaluation
-
-TTA prediction + postprocessing (optional evaluation):
-
-```bash
-/ssd/geiger/myenv/bin/python hpo/scripts/postprocessing/nnunet_tta_postprocess.py \
-  --trials trial_43 \
-  --folds 0 \
-  --input_dir data/nnUNet_raw/Dataset001_GroundTruth/imagesTs \
-  --eval_labels data/nnUNet_raw/Dataset001_GroundTruth/labelsTs
-```
-
-Steps: TTA predict → find_best_configuration (with `-f` folds) → apply_postprocessing → optional evaluate.
-
-Flags:
-- `--trials`: specific trials; default = all
-- `--folds`: folds to use (default 0)
-- `--input_dir`: input images (e.g., imagesTs)
-- `--eval_labels`: ground truth for evaluation; omit to skip eval
-- `--pred_subdir` / `--suffix`: output folder names (default: labelsTs_tta → labelsTs_tta_pp)
-- `--skip_predict`, `--skip_find`: skip steps if you already have outputs
-
-Evaluate existing `labelsTs_tta_pp` + ranking:
-
-```bash
-python hpo/scripts/postprocessing/evaluate_tta_pp.py --folds 0
-```
-
-Writes `hpo/analysis/trial_X_labelsTs_tta_pp_summary.json` per trial, then prints a ranking with ΔDice vs. baseline (`labelsTs`) and TTA-only (`labelsTs_tta`) if available. Use `--force` to recompute.
-
-## 6. Monitoring
+## 5. Monitoring
 
 - Training logs: `data/nnUNet_results/.../fold_X/training_log_*.txt`
 - Evaluation logs: `hpo/results/<dataset>/<trial>/<config>/<trainer>/evaluation.log`
@@ -158,7 +125,7 @@ Trial parameters + scores overview:
 /ssd/geiger/myenv/bin/python hpo/scripts/analysis/summarize_trials.py
 ```
 
-Reads all trials in `hpo/training_output`, pulls spacing/patch/batch/features_base from plans and Dice from `hpo/analysis/trial_*_labelsTs[_tta_pp]_summary.json`. Outputs `hpo/analysis/trials_summary.json`.
+Reads all trials in `hpo/training_output`, pulls spacing/patch/batch/features_base from plans and validation Dice from `fold_0/validation/summary.json`. Outputs `hpo/analysis/trials_summary.json`.
 
 Quick plot (Dice vs spacing):
 
@@ -166,7 +133,7 @@ Quick plot (Dice vs spacing):
 /ssd/geiger/myenv/bin/python hpo/scripts/analysis/plot_trials_summary.py
 ```
 
-Uses `trials_summary.json`, plots Dice (tta_pp if available, else labelsTs) vs spacing, colored by `features_base`. Output: `hpo/analysis/plots/trials_dice_vs_spacing.png`.
+Uses `trials_summary.json`, plots validation Dice vs spacing, colored by `features_base`. Output: `hpo/analysis/plots/trials_dice_vs_spacing.png`.
 
 ## 8. Troubleshooting snippets
 

@@ -165,15 +165,6 @@ python hpo/scripts/preprocessing/nnunet_hpo_preprocess.py --n_trials 5
 # Train all trials (fold 0, no evaluation)
 python hpo/scripts/training/nnunet_train_eval_pipeline.py --folds 0 --skip_evaluation
 
-# TTA inference + postprocessing for trial_43
-python hpo/scripts/postprocessing/nnunet_tta_postprocess.py \
-    --trials trial_43 --folds 0 \
-    --input_dir data/nnUNet_raw/Dataset001_GroundTruth/imagesTs \
-    --eval_labels data/nnUNet_raw/Dataset001_GroundTruth/labelsTs
-
-# Evaluate and rank all trials
-python hpo/scripts/postprocessing/evaluate_tta_pp.py --folds 0
-
 # Summarize trial parameters + scores
 python hpo/scripts/analysis/summarize_trials.py
 python hpo/scripts/analysis/plot_trials_summary.py
@@ -237,7 +228,7 @@ python scripts/analysis/evaluation/evaluate_ensemble.py \
 | Enamel caries   | 0.082 | 0.046 |
 | Dentin caries   | 0.037 | 0.021 |
 
-**Best HPO result:** trial_43, fold 0, foreground Dice ≈ 0.783 (with TTA + postprocessing).
+**Best HPO result:** trial_43, fold 0, validation Dice ≈ 0.783 (foreground_mean).
 
 **Metrics:** Dice (primary), IoU, Hausdorff Distance 95 (HD95), FP/FN voxel counts — as reported by `nnUNetv2_evaluate_folder`.
 
@@ -252,8 +243,6 @@ CT-Tooth-Segmentation-DeepLearning/
 │   ├── scripts/
 │   │   ├── preprocessing/        # nnunet_hpo_preprocess.py
 │   │   ├── training/             # nnunet_train_eval_pipeline.py
-│   │   ├── postprocessing/       # nnunet_tta_postprocess.py, evaluate_tta_pp.py,
-│   │   │                         #   clean_postprocessed_outputs.py
 │   │   ├── analysis/             # summarize_trials.py, plot_trials_summary.py
 │   │   └── utils/                # check_trial_labels.py
 │   ├── config/                   # nnUNetPlans_template.json + trial configs
